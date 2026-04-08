@@ -4,6 +4,13 @@ from flask_login import LoginManager
 from config import Config
 from models import db, User
 
+# Carregar .env automaticamente se existir
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv não instalado, usa variáveis do sistema
+
 
 def create_app():
     app = Flask(__name__)

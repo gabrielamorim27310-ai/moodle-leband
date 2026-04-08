@@ -146,6 +146,59 @@ a:hover { color: #2d3e6e; }
 .btn-outline:hover { background: var(--card-bg); color: var(--text); }
 .btn-secondary { background: rgba(26,39,68,.08); color: var(--text); border: 1px solid var(--border); }
 .btn-secondary:hover { background: rgba(26,39,68,.14); }
+/* Botões hero da index */
+.btn-hero-solid {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    color: var(--accent);
+    padding: 13px 32px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all .25s;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+}
+.btn-hero-solid:hover { background: #f0ede8; color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+
+.btn-hero-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,.7);
+    padding: 11px 28px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all .25s;
+}
+.btn-hero-outline:hover { background: rgba(255,255,255,.15); color: white; transform: translateY(-2px); border-color: white; }
+
+.btn-hero-ms {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,.25);
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: .9rem;
+    text-decoration: none;
+    transition: all .25s;
+}
+.btn-hero-ms:hover { background: rgba(255,255,255,.2); color: white; transform: translateY(-2px); }
+
+/* Mantido para compatibilidade */
 .btn-hero {
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.3);

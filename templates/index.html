@@ -3,8 +3,11 @@
 
 {% block hero %}
 <div class="hero">
-    <div class="hero-icon"><img src="{{ url_for('static', filename='favicon.png') }}" alt="LEBand" style="height:80px;width:80px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))"></div>
-    <h1>LEBand</h1>
+    <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:16px">
+        <img src="{{ url_for('static', filename='favicon.png') }}" alt="LEBand"
+             style="height:100px;width:100px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))">
+        <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:900;margin:0">LEBand</h1>
+    </div>
     <p>Plataforma de aprendizado do LeBand. Disciplinas, materiais, avisos e entregas em um só lugar.</p>
     <div class="badges">
         <span class="badge badge-hero">Professores</span>
@@ -12,9 +15,22 @@
         <span class="badge badge-hero">Materiais</span>
         <span class="badge badge-hero">Trabalhos</span>
     </div>
-    <div style="display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;position:relative">
-        <a href="{{ url_for('auth.login') }}" class="btn btn-hero">Entrar</a>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-hero">Criar Conta</a>
+    <div style="display:flex;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap;position:relative">
+        <a href="{{ url_for('auth.login') }}" class="btn-hero-solid">
+            Entrar
+        </a>
+        <a href="{{ url_for('auth.register') }}" class="btn-hero-outline">
+            Criar Conta
+        </a>
+        <a href="{{ url_for('auth.microsoft_login') }}" class="btn-hero-ms">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 21 21" style="flex-shrink:0">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+            </svg>
+            Entrar com Microsoft
+        </a>
     </div>
 </div>
 {% endblock %}
