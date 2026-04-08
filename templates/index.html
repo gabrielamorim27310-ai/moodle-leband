@@ -1,29 +1,45 @@
 {% extends 'base.html' %}
-{% block title %}SaberFlow{% endblock %}
-{% block content %}
-<div style="text-align:center;padding:4rem 1rem">
-    <h1 style="font-size:2.5rem;color:#1e293b;margin-bottom:1rem">🎓 SaberFlow</h1>
-    <p style="font-size:1.2rem;color:#64748b;max-width:600px;margin:0 auto 2rem">
-        O conhecimento em fluxo contínuo. Acesse disciplinas, materiais de aula,
-        avisos e entregue seus trabalhos em um só lugar.
-    </p>
-    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-        <a href="{{ url_for('auth.login') }}" class="btn btn-primary" style="font-size:1.1rem;padding:14px 32px">Entrar</a>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-success" style="font-size:1.1rem;padding:14px 32px">Criar Conta</a>
-    </div>
+{% block title %}LEBand — Plataforma de Aprendizado{% endblock %}
 
-    <div class="grid grid-3" style="margin-top:4rem;text-align:center">
-        <div class="card">
-            <h3 style="margin-bottom:.5rem">Materiais de Aula</h3>
-            <p style="color:#64748b">Acesse slides, PDFs e documentos das suas disciplinas.</p>
+{% block hero %}
+<div class="hero">
+    <div class="hero-icon">🎓</div>
+    <h1>LEBand</h1>
+    <p>Plataforma de aprendizado do LeBand. Disciplinas, materiais, avisos e entregas em um só lugar.</p>
+    <div class="badges">
+        <span class="badge badge-hero">Professores</span>
+        <span class="badge badge-hero">Alunos</span>
+        <span class="badge badge-hero">Materiais</span>
+        <span class="badge badge-hero">Trabalhos</span>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;position:relative">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-hero">Entrar</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-hero">Criar Conta</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="grid grid-3" style="margin-top:36px">
+    <div class="card">
+        <div class="card-body">
+            <div style="font-size:1.8rem;margin-bottom:.6rem">📄</div>
+            <h3>Materiais de Aula</h3>
+            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Slides, PDFs e documentos organizados por disciplina.</p>
         </div>
-        <div class="card">
-            <h3 style="margin-bottom:.5rem">Avisos</h3>
-            <p style="color:#64748b">Fique por dentro das novidades e comunicados dos professores.</p>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div style="font-size:1.8rem;margin-bottom:.6rem">📢</div>
+            <h3>Avisos</h3>
+            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Comunicados dos professores sempre atualizados.</p>
         </div>
-        <div class="card">
-            <h3 style="margin-bottom:.5rem">Entrega de Trabalhos</h3>
-            <p style="color:#64748b">Envie seus trabalhos e acompanhe suas notas.</p>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div style="font-size:1.8rem;margin-bottom:.6rem">📝</div>
+            <h3>Entrega de Trabalhos</h3>
+            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Envie trabalhos e acompanhe suas notas e feedback.</p>
         </div>
     </div>
 </div>

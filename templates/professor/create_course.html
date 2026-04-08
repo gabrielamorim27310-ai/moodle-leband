@@ -1,24 +1,28 @@
 {% extends 'base.html' %}
-{% block title %}Nova Disciplina{% endblock %}
+{% block title %}Nova Disciplina — LEBand{% endblock %}
 {% block content %}
-<div class="form-card card">
-    <h2>Criar Nova Disciplina</h2>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.name.label }}
-            {{ form.name(placeholder="Ex: Programação Web") }}
-        </div>
-        <div class="form-group">
-            {{ form.code.label }}
-            {{ form.code(placeholder="Ex: PWB001") }}
-        </div>
-        <div class="form-group">
-            {{ form.description.label }}
-            {{ form.description(placeholder="Descrição da disciplina...") }}
-        </div>
-        {{ form.submit(class="btn btn-primary") }}
-        <a href="{{ url_for('professor.my_courses') }}" class="btn btn-secondary">Cancelar</a>
-    </form>
+<div class="auth-container" style="min-height:calc(100vh - 200px)">
+    <div class="auth-card" style="max-width:520px">
+        <h1 style="font-size:1.4rem">Nova Disciplina</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.name.label }}
+                {{ form.name(placeholder="Ex: Programação Web") }}
+            </div>
+            <div class="form-group">
+                {{ form.code.label }}
+                {{ form.code(placeholder="Ex: PWB001") }}
+            </div>
+            <div class="form-group">
+                {{ form.description.label }}
+                {{ form.description(placeholder="Descrição da disciplina...") }}
+            </div>
+            <div style="display:flex;gap:10px">
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('professor.my_courses') }}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

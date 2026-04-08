@@ -11,3 +11,5 @@ static/uploads/submissions/*
 !static/uploads/slides/.gitkeep
 !static/uploads/submissions/.gitkeep
 .vscode/
+
+.vercel

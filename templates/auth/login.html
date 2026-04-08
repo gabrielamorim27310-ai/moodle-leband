@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}Login - SaberFlow{% endblock %}
+{% block title %}Entrar — LEBand{% endblock %}
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
         <h1>Entrar</h1>
 
         {% if ms_enabled %}
-        <a href="{{ url_for('auth.microsoft_login') }}" class="btn btn-microsoft" style="width:100%;margin-bottom:1.2rem">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 21 21" style="vertical-align:middle;margin-right:8px">
+        <a href="{{ url_for('auth.microsoft_login') }}" class="btn-microsoft" style="width:100%;margin-bottom:1.2rem;text-decoration:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 21 21" style="vertical-align:middle;margin-right:8px;flex-shrink:0">
                 <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
                 <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
                 <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
@@ -15,18 +15,18 @@
             </svg>
             Entrar com Microsoft
         </a>
-        <div class="divider"><span>ou</span></div>
+        <div class="divider"><span>ou com e-mail</span></div>
         {% endif %}
 
         <form method="POST">
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.email.label }}
-                {{ form.email(class="form-control", placeholder="seu@email.com") }}
+                {{ form.email(placeholder="seu@email.com") }}
             </div>
             <div class="form-group">
                 {{ form.password.label }}
-                {{ form.password(class="form-control", placeholder="Sua senha") }}
+                {{ form.password(placeholder="Sua senha") }}
             </div>
             {{ form.submit(class="btn btn-primary", style="width:100%") }}
         </form>

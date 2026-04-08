@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Escolher Perfil - SaberFlow{% endblock %}
+{% block title %}Escolher Perfil — LEBand{% endblock %}
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
-        <h1>Bem-vindo ao SaberFlow!</h1>
-        <p style="color:#64748b;text-align:center;margin-bottom:1.5rem">
-            Olá, <strong>{{ ms_data.name }}</strong>! Como é a primeira vez que acessa pelo Microsoft,
-            escolha seu perfil para continuar.
+        <h1>Bem-vindo ao LEBand!</h1>
+        <p style="color:var(--text-light);text-align:center;margin-bottom:1.5rem;font-size:.9rem">
+            Olá, <strong>{{ ms_data.name }}</strong>! Primeiro acesso via Microsoft.<br>Escolha seu perfil para continuar.
         </p>
         <form method="POST">
             <div class="role-selection">
@@ -15,7 +14,7 @@
                     <div class="role-card">
                         <div style="font-size:2rem">🎒</div>
                         <strong>Aluno</strong>
-                        <p>Acessar disciplinas, materiais e entregar trabalhos</p>
+                        <p>Acessar disciplinas e entregar trabalhos</p>
                     </div>
                 </label>
                 <label class="role-option">
@@ -23,7 +22,7 @@
                     <div class="role-card">
                         <div style="font-size:2rem">👨‍🏫</div>
                         <strong>Professor</strong>
-                        <p>Criar disciplinas, publicar materiais e avaliar</p>
+                        <p>Criar disciplinas e avaliar alunos</p>
                     </div>
                 </label>
             </div>

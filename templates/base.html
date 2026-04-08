@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SaberFlow{% endblock %}</title>
+    <title>{% block title %}LEBand{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="{{ url_for('main.index') }}" class="nav-brand">🎓 SaberFlow</a>
+            <a href="{{ url_for('main.index') }}" class="nav-brand">🎓 LEBand</a>
             <div class="nav-links">
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
                     {% if current_user.is_professor %}
-                        <a href="{{ url_for('professor.my_courses') }}">Minhas Disciplinas</a>
+                        <a href="{{ url_for('professor.my_courses') }}">Disciplinas</a>
                     {% else %}
-                        <a href="{{ url_for('aluno.my_courses') }}">Minhas Disciplinas</a>
+                        <a href="{{ url_for('aluno.my_courses') }}">Disciplinas</a>
+                        <a href="{{ url_for('aluno.my_grades') }}">Notas</a>
                     {% endif %}
-                    <span class="nav-user">{{ current_user.name }} ({{ current_user.role }})</span>
+                    <span class="nav-user">{{ current_user.name }}</span>
                     <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-outline">Sair</a>
                 {% else %}
                     <a href="{{ url_for('auth.login') }}">Entrar</a>
@@ -28,7 +29,9 @@
         </div>
     </nav>
 
-    <main class="container">
+    {% block hero %}{% endblock %}
+
+    <div class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -36,12 +39,11 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-
         {% block content %}{% endblock %}
-    </main>
+    </div>
 
     <footer class="footer">
-        <p>&copy; 2026 SaberFlow - Plataforma de Aprendizado</p>
+        <p>&copy; 2026 LEBand — Plataforma de Aprendizado</p>
     </footer>
 </body>
 </html>

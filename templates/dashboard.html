@@ -1,23 +1,29 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard - SaberFlow{% endblock %}
-{% block content %}
-<div class="page-header">
-    <h1>Olá, {{ current_user.name }}!</h1>
-    <span class="badge {% if current_user.is_professor %}badge-professor{% else %}badge-aluno{% endif %}" style="font-size:.9rem;padding:6px 16px">
-        {{ current_user.role|capitalize }}
-    </span>
+{% block title %}Dashboard — LEBand{% endblock %}
+
+{% block hero %}
+<div class="hero" style="padding:40px 24px 36px">
+    <div style="position:relative">
+        <p style="font-size:.82rem;opacity:.6;font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">
+            {% if current_user.is_professor %}Professor{% else %}Aluno{% endif %}
+        </p>
+        <h1>Olá, {{ current_user.name.split()[0] }}!</h1>
+        <p>Bem-vindo de volta ao LEBand.</p>
+    </div>
 </div>
+{% endblock %}
+
+{% block content %}
 
 {% if current_user.is_professor %}
-<!-- Dashboard Professor -->
-<div class="stats">
+<div class="stats" style="margin-top:28px">
     <div class="stat-card">
         <div class="stat-number">{{ courses|length }}</div>
         <div class="stat-label">Disciplinas</div>
     </div>
     <div class="stat-card">
         <div class="stat-number">{{ total_students }}</div>
-        <div class="stat-label">Alunos Total</div>
+        <div class="stat-label">Alunos</div>
     </div>
     <div class="stat-card">
         <div class="stat-number">{{ total_slides }}</div>
@@ -30,7 +36,7 @@
 </div>
 
 <div class="page-header">
-    <h2>Suas Disciplinas</h2>
+    <h2 class="section-title" style="margin-bottom:0;flex:1">Suas Disciplinas</h2>
     <a href="{{ url_for('professor.create_course') }}" class="btn btn-sm btn-primary">+ Nova Disciplina</a>
 </div>
 
@@ -38,22 +44,35 @@
 <div class="grid grid-3">
     {% for course in courses %}
     <div class="card course-card">
-        <span class="course-code">{{ course.code }}</span>
-        <h3>{{ course.name }}</h3>
-        <p>{{ course.students|length }} aluno(s)</p>
-        <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="btn btn-sm btn-primary">Gerenciar</a>
+        <div class="card-header" style="padding:18px 20px 14px;display:flex;align-items:center;gap:12px">
+            <div class="course-icon" style="background:var(--accent)">📖</div>
+            <div>
+                <div class="course-name">{{ course.name }}</div>
+                <span class="course-code">{{ course.code }}</span>
+            </div>
+        </div>
+        <div class="card-body" style="padding:0 14px 14px">
+            <p>{{ course.students|length }} aluno(s) matriculado(s)</p>
+            <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="item-link" style="margin-top:6px">
+                <span class="dot"></span>
+                <span class="label">Gerenciar disciplina</span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
     </div>
     {% endfor %}
 </div>
 {% else %}
 <div class="empty-state">
+    <div class="icon">📖</div>
     <p>Crie sua primeira disciplina para começar.</p>
+    <a href="{{ url_for('professor.create_course') }}" class="btn btn-primary" style="margin-top:1rem">Criar Disciplina</a>
 </div>
 {% endif %}
 
 {% else %}
-<!-- Dashboard Aluno -->
-<div class="stats">
+
+<div class="stats" style="margin-top:28px">
     <div class="stat-card">
         <div class="stat-number">{{ courses|length }}</div>
         <div class="stat-label">Disciplinas</div>
@@ -61,18 +80,20 @@
 </div>
 
 {% if announcements %}
-<h2 style="margin-bottom:1rem">Avisos Recentes</h2>
+<p class="section-title">Avisos Recentes</p>
 {% for ann in announcements %}
 <div class="announcement">
-    <h3>{{ ann.title }}</h3>
-    <span class="date">{{ ann.course.name }} | {{ ann.created_at.strftime('%d/%m/%Y %H:%M') }}</span>
-    <p style="margin-top:.5rem">{{ ann.content }}</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+        <h3>{{ ann.title }}</h3>
+        <span class="date">{{ ann.course.name }} · {{ ann.created_at.strftime('%d/%m/%Y') }}</span>
+    </div>
+    <p>{{ ann.content }}</p>
 </div>
 {% endfor %}
 {% endif %}
 
 <div class="page-header" style="margin-top:2rem">
-    <h2>Suas Disciplinas</h2>
+    <p class="section-title" style="margin-bottom:0;flex:1">Suas Disciplinas</p>
     <a href="{{ url_for('aluno.enroll') }}" class="btn btn-sm btn-primary">+ Matricular-se</a>
 </div>
 
@@ -80,16 +101,29 @@
 <div class="grid grid-3">
     {% for course in courses %}
     <div class="card course-card">
-        <span class="course-code">{{ course.code }}</span>
-        <h3>{{ course.name }}</h3>
-        <p>Prof. {{ course.professor.name }}</p>
-        <a href="{{ url_for('aluno.view_course', course_id=course.id) }}" class="btn btn-sm btn-primary">Acessar</a>
+        <div class="card-header" style="padding:18px 20px 14px;display:flex;align-items:center;gap:12px">
+            <div class="course-icon" style="background:var(--accent)">📖</div>
+            <div>
+                <div class="course-name">{{ course.name }}</div>
+                <span class="course-code">{{ course.code }}</span>
+            </div>
+        </div>
+        <div class="card-body" style="padding:0 14px 14px">
+            <p>Prof. {{ course.professor.name }}</p>
+            <a href="{{ url_for('aluno.view_course', course_id=course.id) }}" class="item-link" style="margin-top:6px">
+                <span class="dot"></span>
+                <span class="label">Acessar disciplina</span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
     </div>
     {% endfor %}
 </div>
 {% else %}
 <div class="empty-state">
+    <div class="icon">📖</div>
     <p>Matricule-se em uma disciplina para começar.</p>
+    <a href="{{ url_for('aluno.enroll') }}" class="btn btn-primary" style="margin-top:1rem">Matricular-se</a>
 </div>
 {% endif %}
 {% endif %}
