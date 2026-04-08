@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Moodle LeBand{% endblock %}</title>
+    <title>{% block title %}SaberFlow{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="{{ url_for('main.index') }}" class="nav-brand">📚 Moodle LeBand</a>
+            <a href="{{ url_for('main.index') }}" class="nav-brand">🎓 SaberFlow</a>
             <div class="nav-links">
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
@@ -41,7 +41,7 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2026 Moodle LeBand - Sistema de Gerenciamento de Aprendizado</p>
+        <p>&copy; 2026 SaberFlow - Plataforma de Aprendizado</p>
     </footer>
 </body>
 </html>
