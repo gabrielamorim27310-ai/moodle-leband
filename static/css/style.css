@@ -198,6 +198,45 @@ a:hover { color: #2d3e6e; }
 }
 .btn-hero-ms:hover { background: rgba(255,255,255,.2); color: white; transform: translateY(-2px); }
 
+/* Botão Microsoft principal no hero */
+.btn-hero-ms-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    color: #1e1e1e;
+    padding: 15px 36px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    transition: all .25s;
+    box-shadow: 0 6px 24px rgba(0,0,0,.25);
+}
+.btn-hero-ms-main:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.3);
+    color: #1e1e1e;
+}
+
+/* Botão Microsoft no navbar */
+.btn-nav-ms {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--accent);
+    color: #fff;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: .82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .25s;
+}
+.btn-nav-ms:hover { background: #2d3e6e; color: #fff; transform: translateY(-1px); }
+
 /* Mantido para compatibilidade */
 .btn-hero {
     background: rgba(255,255,255,0.15);

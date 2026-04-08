@@ -9,21 +9,15 @@
         <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:900;margin:0">LEBand</h1>
     </div>
     <p>Plataforma de aprendizado do LeBand. Disciplinas, materiais, avisos e entregas em um só lugar.</p>
-    <div class="badges">
+    <div class="badges" style="margin-top:16px">
         <span class="badge badge-hero">Professores</span>
         <span class="badge badge-hero">Alunos</span>
         <span class="badge badge-hero">Materiais</span>
         <span class="badge badge-hero">Trabalhos</span>
     </div>
-    <div style="display:flex;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap;position:relative">
-        <a href="{{ url_for('auth.login') }}" class="btn-hero-solid">
-            Entrar
-        </a>
-        <a href="{{ url_for('auth.register') }}" class="btn-hero-outline">
-            Criar Conta
-        </a>
-        <a href="{{ url_for('auth.microsoft_login') }}" class="btn-hero-ms">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 21 21" style="flex-shrink:0">
+    <div style="position:relative;margin-top:32px">
+        <a href="{{ url_for('auth.microsoft_login') }}" class="btn-hero-ms-main">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 21 21" style="flex-shrink:0">
                 <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
                 <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
                 <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
