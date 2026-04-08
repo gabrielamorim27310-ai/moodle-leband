@@ -31,8 +31,8 @@ def login():
             return redirect(next_page or url_for('main.dashboard'))
         flash('E-mail ou senha inválidos.', 'danger')
 
-    ms_enabled = bool(current_app.config.get('MS_CLIENT_ID'))
-    return render_template('auth/login.html', form=form, ms_enabled=ms_enabled)
+    ms_configured = bool(current_app.config.get('MS_CLIENT_ID'))
+    return render_template('auth/login.html', form=form, ms_configured=ms_configured)
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
