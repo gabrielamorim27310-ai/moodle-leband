@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Entregas - {{ assignment.title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ assignment.title }}</h1>
+        <p style="color:#64748b">{{ course.name }} | Prazo: {{ assignment.due_date.strftime('%d/%m/%Y %H:%M') }}</p>
+    </div>
+    <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="btn btn-secondary">Voltar</a>
+</div>
+
+<div class="card">
+    <h3>Descrição</h3>
+    <p>{{ assignment.description }}</p>
+</div>
+
+<div class="card">
+    <h3>Entregas ({{ submissions|length }})</h3>
+    {% if submissions %}
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Aluno</th><th>Arquivo</th><th>Data</th><th>Nota</th><th>Ações</th></tr></thead>
+            <tbody>
+            {% for sub in submissions %}
+                <tr>
+                    <td>{{ sub.student.name }}</td>
+                    <td><a href="{{ url_for('static', filename='uploads/submissions/' + sub.filename) }}" target="_blank">{{ sub.original_filename }}</a></td>
+                    <td>
+                        {{ sub.submitted_at.strftime('%d/%m/%Y %H:%M') }}
+                        {% if sub.submitted_at > assignment.due_date %}
+                            <span class="badge badge-late">Atrasado</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sub.grade is not none %}
+                            <strong>{{ sub.grade }}</strong>
+                        {% else %}
+                            <span class="badge badge-pending">Pendente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('professor.grade_submission', submission_id=sub.id) }}" class="btn btn-sm btn-primary">Avaliar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><p>Nenhuma entrega recebida ainda.</p></div>
+    {% endif %}
+</div>
+{% endblock %}

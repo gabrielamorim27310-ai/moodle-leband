@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - Moodle LeBand{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Olá, {{ current_user.name }}!</h1>
+    <span class="badge {% if current_user.is_professor %}badge-professor{% else %}badge-aluno{% endif %}" style="font-size:.9rem;padding:6px 16px">
+        {{ current_user.role|capitalize }}
+    </span>
+</div>
+
+{% if current_user.is_professor %}
+<!-- Dashboard Professor -->
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ courses|length }}</div>
+        <div class="stat-label">Disciplinas</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_students }}</div>
+        <div class="stat-label">Alunos Total</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_slides }}</div>
+        <div class="stat-label">Materiais</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_assignments }}</div>
+        <div class="stat-label">Trabalhos</div>
+    </div>
+</div>
+
+<div class="page-header">
+    <h2>Suas Disciplinas</h2>
+    <a href="{{ url_for('professor.create_course') }}" class="btn btn-sm btn-primary">+ Nova Disciplina</a>
+</div>
+
+{% if courses %}
+<div class="grid grid-3">
+    {% for course in courses %}
+    <div class="card course-card">
+        <span class="course-code">{{ course.code }}</span>
+        <h3>{{ course.name }}</h3>
+        <p>{{ course.students|length }} aluno(s)</p>
+        <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="btn btn-sm btn-primary">Gerenciar</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>Crie sua primeira disciplina para começar.</p>
+</div>
+{% endif %}
+
+{% else %}
+<!-- Dashboard Aluno -->
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ courses|length }}</div>
+        <div class="stat-label">Disciplinas</div>
+    </div>
+</div>
+
+{% if announcements %}
+<h2 style="margin-bottom:1rem">Avisos Recentes</h2>
+{% for ann in announcements %}
+<div class="announcement">
+    <h3>{{ ann.title }}</h3>
+    <span class="date">{{ ann.course.name }} | {{ ann.created_at.strftime('%d/%m/%Y %H:%M') }}</span>
+    <p style="margin-top:.5rem">{{ ann.content }}</p>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="page-header" style="margin-top:2rem">
+    <h2>Suas Disciplinas</h2>
+    <a href="{{ url_for('aluno.enroll') }}" class="btn btn-sm btn-primary">+ Matricular-se</a>
+</div>
+
+{% if courses %}
+<div class="grid grid-3">
+    {% for course in courses %}
+    <div class="card course-card">
+        <span class="course-code">{{ course.code }}</span>
+        <h3>{{ course.name }}</h3>
+        <p>Prof. {{ course.professor.name }}</p>
+        <a href="{{ url_for('aluno.view_course', course_id=course.id) }}" class="btn btn-sm btn-primary">Acessar</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>Matricule-se em uma disciplina para começar.</p>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="course-code" style="font-size:1rem">{{ course.code }}</span>
+        <h1>{{ course.name }}</h1>
+        <p style="color:#64748b">Prof. {{ course.professor.name }}</p>
+    </div>
+    <a href="{{ url_for('aluno.my_courses') }}" class="btn btn-secondary">Voltar</a>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+    <div class="tab active" onclick="showTab('announcements')">Avisos</div>
+    <div class="tab" onclick="showTab('slides')">Materiais</div>
+    <div class="tab" onclick="showTab('assignments')">Trabalhos</div>
+</div>
+
+<!-- Avisos -->
+<div id="announcements" class="tab-content active">
+    {% if course.announcements %}
+        {% for ann in course.announcements|sort(attribute='created_at', reverse=True) %}
+        <div class="announcement">
+            <h3>{{ ann.title }}</h3>
+            <span class="date">{{ ann.created_at.strftime('%d/%m/%Y %H:%M') }}</span>
+            <p style="margin-top:.5rem">{{ ann.content }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="empty-state"><p>Nenhum aviso publicado.</p></div>
+    {% endif %}
+</div>
+
+<!-- Materiais -->
+<div id="slides" class="tab-content">
+    {% if course.slides %}
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Título</th><th>Arquivo</th><th>Data</th></tr></thead>
+            <tbody>
+            {% for slide in course.slides|sort(attribute='uploaded_at', reverse=True) %}
+                <tr>
+                    <td>{{ slide.title }}</td>
+                    <td><a href="{{ url_for('static', filename='uploads/slides/' + slide.filename) }}" target="_blank">{{ slide.original_filename }}</a></td>
+                    <td>{{ slide.uploaded_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><p>Nenhum material disponível.</p></div>
+    {% endif %}
+</div>
+
+<!-- Trabalhos -->
+<div id="assignments" class="tab-content">
+    {% if course.assignments %}
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Título</th><th>Prazo</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+            {% for a in course.assignments|sort(attribute='due_date', reverse=True) %}
+                {% set my_sub = None %}
+                {% for s in a.submissions if s.student_id == current_user.id %}
+                    {% set my_sub = s %}
+                {% endfor %}
+                <tr>
+                    <td>{{ a.title }}</td>
+                    <td>{{ a.due_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        {% if my_sub %}
+                            <span class="badge badge-submitted">Enviado</span>
+                            {% if my_sub.grade is not none %}
+                                | Nota: <strong>{{ my_sub.grade }}</strong>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge badge-pending">Pendente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('aluno.submit_assignment', course_id=course.id, assignment_id=a.id) }}" class="btn btn-sm btn-primary">
+                            {% if my_sub %}Reenviar{% else %}Entregar{% endif %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><p>Nenhum trabalho disponível.</p></div>
+    {% endif %}
+</div>
+
+<script>
+function showTab(name) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    event.target.classList.add('active');
+}
+</script>
+{% endblock %}

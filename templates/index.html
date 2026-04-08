@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Moodle LeBand{% endblock %}
+{% block content %}
+<div style="text-align:center;padding:4rem 1rem">
+    <h1 style="font-size:2.5rem;color:#1e293b;margin-bottom:1rem">Moodle LeBand</h1>
+    <p style="font-size:1.2rem;color:#64748b;max-width:600px;margin:0 auto 2rem">
+        Plataforma de gerenciamento de aprendizado. Acesse suas disciplinas, materiais de aula,
+        avisos e entregue seus trabalhos em um só lugar.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary" style="font-size:1.1rem;padding:14px 32px">Entrar</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-success" style="font-size:1.1rem;padding:14px 32px">Criar Conta</a>
+    </div>
+
+    <div class="grid grid-3" style="margin-top:4rem;text-align:center">
+        <div class="card">
+            <h3 style="margin-bottom:.5rem">Materiais de Aula</h3>
+            <p style="color:#64748b">Acesse slides, PDFs e documentos das suas disciplinas.</p>
+        </div>
+        <div class="card">
+            <h3 style="margin-bottom:.5rem">Avisos</h3>
+            <p style="color:#64748b">Fique por dentro das novidades e comunicados dos professores.</p>
+        </div>
+        <div class="card">
+            <h3 style="margin-bottom:.5rem">Entrega de Trabalhos</h3>
+            <p style="color:#64748b">Envie seus trabalhos e acompanhe suas notas.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

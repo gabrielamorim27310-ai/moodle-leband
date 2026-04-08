@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Login - Moodle LeBand{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Entrar</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.email.label }}
+                {{ form.email(class="form-control", placeholder="seu@email.com") }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label }}
+                {{ form.password(class="form-control", placeholder="Sua senha") }}
+            </div>
+            {{ form.submit(class="btn btn-primary", style="width:100%") }}
+        </form>
+        <div class="auth-footer">
+            Ainda não tem conta? <a href="{{ url_for('auth.register') }}">Cadastre-se</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

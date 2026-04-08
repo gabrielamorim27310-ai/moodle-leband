@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Moodle LeBand{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('main.index') }}" class="nav-brand">📚 Moodle LeBand</a>
+            <div class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+                    {% if current_user.is_professor %}
+                        <a href="{{ url_for('professor.my_courses') }}">Minhas Disciplinas</a>
+                    {% else %}
+                        <a href="{{ url_for('aluno.my_courses') }}">Minhas Disciplinas</a>
+                    {% endif %}
+                    <span class="nav-user">{{ current_user.name }} ({{ current_user.role }})</span>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-outline">Sair</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Entrar</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-sm btn-primary">Cadastrar</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Moodle LeBand - Sistema de Gerenciamento de Aprendizado</p>
+    </footer>
+</body>
+</html>

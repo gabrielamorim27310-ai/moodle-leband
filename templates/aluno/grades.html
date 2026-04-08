@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Minhas Notas{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Minhas Notas</h1>
+</div>
+
+{% if submissions %}
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Disciplina</th><th>Trabalho</th><th>Enviado em</th><th>Nota</th><th>Feedback</th></tr></thead>
+            <tbody>
+            {% for sub in submissions|sort(attribute='submitted_at', reverse=True) %}
+                <tr>
+                    <td>{{ sub.assignment.course.name }}</td>
+                    <td>{{ sub.assignment.title }}</td>
+                    <td>{{ sub.submitted_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        {% if sub.grade is not none %}
+                            <strong>{{ sub.grade }}</strong>
+                        {% else %}
+                            <span class="badge badge-pending">Pendente</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ sub.feedback or '-' }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="icon">📝</div>
+    <p>Você ainda não enviou nenhum trabalho.</p>
+</div>
+{% endif %}
+{% endblock %}

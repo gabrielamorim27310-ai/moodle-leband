@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Matricular-se{% endblock %}
+{% block content %}
+<div class="form-card card">
+    <h2>Matricular-se em Disciplina</h2>
+    <p style="color:#64748b;margin-bottom:1rem">Insira o código fornecido pelo professor.</p>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.code.label }}
+            {{ form.code(placeholder="Ex: PWB001") }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('aluno.my_courses') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Minhas Disciplinas - Professor{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Minhas Disciplinas</h1>
+    <a href="{{ url_for('professor.create_course') }}" class="btn btn-primary">+ Nova Disciplina</a>
+</div>
+
+{% if courses %}
+<div class="grid grid-3">
+    {% for course in courses %}
+    <div class="card course-card">
+        <span class="course-code">{{ course.code }}</span>
+        <h3>{{ course.name }}</h3>
+        <p>{{ course.description or 'Sem descrição' }}</p>
+        <p><strong>{{ course.students|length }}</strong> aluno(s) matriculado(s)</p>
+        <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="btn btn-sm btn-primary">Gerenciar</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="icon">📖</div>
+    <p>Você ainda não criou nenhuma disciplina.</p>
+    <a href="{{ url_for('professor.create_course') }}" class="btn btn-primary" style="margin-top:1rem">Criar Primeira Disciplina</a>
+</div>
+{% endif %}
+{% endblock %}

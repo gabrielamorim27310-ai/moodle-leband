@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Novo Trabalho - {{ course.name }}{% endblock %}
+{% block content %}
+<div class="form-card card">
+    <h2>Criar Trabalho</h2>
+    <p style="color:#64748b;margin-bottom:1rem">{{ course.name }}</p>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.title.label }}
+            {{ form.title(placeholder="Ex: Trabalho 1 - Algoritmos") }}
+        </div>
+        <div class="form-group">
+            {{ form.description.label }}
+            {{ form.description(placeholder="Instruções e requisitos do trabalho...") }}
+        </div>
+        <div class="form-group">
+            {{ form.due_date.label }}
+            {{ form.due_date() }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

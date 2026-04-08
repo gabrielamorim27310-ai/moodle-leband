@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Entregar Trabalho{% endblock %}
+{% block content %}
+<div class="form-card card">
+    <h2>{{ assignment.title }}</h2>
+    <p style="color:#64748b;margin-bottom:.5rem">{{ course.name }}</p>
+    <p style="color:#64748b;margin-bottom:1rem"><strong>Prazo:</strong> {{ assignment.due_date.strftime('%d/%m/%Y %H:%M') }}</p>
+
+    <div class="card" style="background:#f8fafc;margin-bottom:1rem">
+        <strong>Instruções:</strong>
+        <p>{{ assignment.description }}</p>
+    </div>
+
+    {% if existing %}
+    <div class="alert alert-info">
+        Você já enviou: <strong>{{ existing.original_filename }}</strong> em {{ existing.submitted_at.strftime('%d/%m/%Y %H:%M') }}.
+        {% if existing.grade is not none %}
+            <br>Nota: <strong>{{ existing.grade }}</strong>
+            {% if existing.feedback %} | Feedback: {{ existing.feedback }}{% endif %}
+        {% endif %}
+        <br>Enviar novamente substituirá a entrega anterior.
+    </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.file.label }}
+            {{ form.file() }}
+        </div>
+        <div class="form-group">
+            {{ form.comment.label }}
+            {{ form.comment(placeholder="Comentário opcional sobre sua entrega...") }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+        <a href="{{ url_for('aluno.view_course', course_id=course.id) }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
