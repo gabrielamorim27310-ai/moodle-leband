@@ -87,6 +87,17 @@ def microsoft_callback():
     ms_email = ms_profile.get('mail') or ms_profile.get('userPrincipalName', '')
     ms_name = ms_profile.get('displayName', ms_email)
 
+    allowed_domain = current_app.config.get('MS_ALLOWED_DOMAIN', '').strip().lower()
+    if allowed_domain:
+        email_domain = ms_email.split('@')[-1].lower() if '@' in ms_email else ''
+        if email_domain != allowed_domain:
+            flash(
+                f'Acesso restrito a e-mails @{allowed_domain}. '
+                f'Você entrou com {ms_email}.',
+                'danger',
+            )
+            return redirect(url_for('main.index'))
+
     user = User.query.filter_by(microsoft_id=ms_id).first()
 
     if not user:

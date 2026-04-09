@@ -26,3 +26,5 @@ class Config:
     MS_AUTHORITY = f"https://login.microsoftonline.com/{os.environ.get('MS_TENANT_ID', 'common')}"
     MS_REDIRECT_URI = os.environ.get('MS_REDIRECT_URI', 'http://localhost:5000/auth/microsoft/callback')
     MS_SCOPE = ['User.Read']
+    # Domínio de e-mail permitido (ex: "band.com.br"). Vazio = qualquer e-mail.
+    MS_ALLOWED_DOMAIN = os.environ.get('MS_ALLOWED_DOMAIN', '')
