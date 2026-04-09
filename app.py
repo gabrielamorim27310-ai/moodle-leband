@@ -9,23 +9,35 @@ try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
-    pass  # python-dotenv não instalado, usa variáveis do sistema
+    pass
 
 
 def create_app():
-    app = Flask(__name__)
+    IS_VERCEL = bool(os.environ.get('VERCEL'))
+
+    app = Flask(
+        __name__,
+        # No Vercel, templates e static ficam no mesmo nível de /var/task
+        template_folder=os.path.join(os.path.dirname(__file__), 'templates'),
+        static_folder=os.path.join(os.path.dirname(__file__), 'static'),
+        instance_path='/tmp' if IS_VERCEL else None,
+    )
     app.config.from_object(Config)
 
-    # Garantir que a pasta instance existe
-    os.makedirs(os.path.join(app.instance_path), exist_ok=True)
-    os.makedirs(app.config['UPLOAD_FOLDER_SLIDES'], exist_ok=True)
-    os.makedirs(app.config['UPLOAD_FOLDER_SUBMISSIONS'], exist_ok=True)
+    # Criar diretórios de upload (apenas graváveis no Vercel = /tmp)
+    try:
+        os.makedirs(app.config['UPLOAD_FOLDER_SLIDES'], exist_ok=True)
+        os.makedirs(app.config['UPLOAD_FOLDER_SUBMISSIONS'], exist_ok=True)
+        if not IS_VERCEL:
+            os.makedirs(app.instance_path, exist_ok=True)
+    except OSError:
+        pass
 
     # Inicializar extensões
     db.init_app(app)
 
     login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = 'auth.microsoft_login'
     login_manager.login_message = 'Faça login para acessar esta página.'
     login_manager.login_message_category = 'info'
     login_manager.init_app(app)
