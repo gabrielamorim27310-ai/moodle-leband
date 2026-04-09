@@ -5,7 +5,7 @@
 <div class="hero" style="padding:40px 24px 36px">
     <div style="position:relative">
         <p style="font-size:.82rem;opacity:.6;font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">
-            <a href="{{ url_for('aluno.my_courses') }}" style="color:rgba(255,255,255,.6);text-decoration:none">Courses</a> / Student
+            <a href="{{ url_for('aluno.my_courses') }}" style="color:rgba(255,255,255,.6);text-decoration:none">Disciplinas</a> / Aluno
         </p>
         <h1>{{ course.name }}</h1>
         <p>Prof. {{ course.professor.name }}</p>
@@ -18,56 +18,56 @@
 
 {% block content %}
 <div class="tabs" style="margin-top:28px">
-    <button class="tab active" onclick="showTab('announcements', this)">📢 Announcements</button>
-    <button class="tab" onclick="showTab('slides', this)">📄 Materials</button>
-    <button class="tab" onclick="showTab('assignments', this)">📝 Assignments</button>
+    <button class="tab active" onclick="showTab('announcements', this)">📢 Avisos</button>
+    <button class="tab" onclick="showTab('slides', this)">📄 Materiais</button>
+    <button class="tab" onclick="showTab('assignments', this)">📝 Trabalhos</button>
 </div>
 
-<!-- Announcements -->
+<!-- Avisos -->
 <div id="announcements" class="tab-content active">
     {% if course.announcements %}
         {% for ann in course.announcements|sort(attribute='created_at', reverse=True) %}
         <div class="announcement">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
                 <h3>{{ ann.title }}</h3>
-                <span class="date">{{ ann.created_at.strftime('%m/%d/%Y') }}</span>
+                <span class="date">{{ ann.created_at.strftime('%d/%m/%Y') }}</span>
             </div>
             <p>{{ ann.content }}</p>
         </div>
         {% endfor %}
     {% else %}
-    <div class="empty-state"><div class="icon">📢</div><p>No announcements yet.</p></div>
+    <div class="empty-state"><div class="icon">📢</div><p>Nenhum aviso publicado.</p></div>
     {% endif %}
 </div>
 
-<!-- Materials -->
+<!-- Materiais -->
 <div id="slides" class="tab-content">
     {% if course.slides %}
     <div class="table-container">
         <table>
-            <thead><tr><th>Title</th><th>File</th><th>Date</th></tr></thead>
+            <thead><tr><th>Título</th><th>Arquivo</th><th>Data</th></tr></thead>
             <tbody>
             {% for slide in course.slides|sort(attribute='uploaded_at', reverse=True) %}
             <tr>
                 <td><strong>{{ slide.title }}</strong></td>
                 <td><a href="{{ url_for('static', filename='uploads/slides/' + slide.filename) }}" target="_blank" style="color:var(--accent)">{{ slide.original_filename }}</a></td>
-                <td style="color:var(--text-light)">{{ slide.uploaded_at.strftime('%m/%d/%Y') }}</td>
+                <td style="color:var(--text-light)">{{ slide.uploaded_at.strftime('%d/%m/%Y') }}</td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
     {% else %}
-    <div class="empty-state"><div class="icon">📄</div><p>No materials available.</p></div>
+    <div class="empty-state"><div class="icon">📄</div><p>Nenhum material disponível.</p></div>
     {% endif %}
 </div>
 
-<!-- Assignments -->
+<!-- Trabalhos -->
 <div id="assignments" class="tab-content">
     {% if course.assignments %}
     <div class="table-container">
         <table>
-            <thead><tr><th>Title</th><th>Due Date</th><th>Status</th><th></th></tr></thead>
+            <thead><tr><th>Título</th><th>Prazo</th><th>Status</th><th></th></tr></thead>
             <tbody>
             {% for a in course.assignments|sort(attribute='due_date', reverse=True) %}
                 {% set my_sub = namespace(val=None) %}
@@ -76,18 +76,18 @@
                 {% endfor %}
                 <tr>
                     <td><strong>{{ a.title }}</strong></td>
-                    <td style="color:var(--text-light)">{{ a.due_date.strftime('%m/%d/%Y %H:%M') }}</td>
+                    <td style="color:var(--text-light)">{{ a.due_date.strftime('%d/%m/%Y %H:%M') }}</td>
                     <td>
                         {% if my_sub.val %}
-                            <span class="badge badge-submitted">Submitted</span>
+                            <span class="badge badge-submitted">Enviado</span>
                             {% if my_sub.val.grade is not none %}&nbsp;<strong>{{ my_sub.val.grade }}</strong>{% endif %}
                         {% else %}
-                            <span class="badge badge-pending">Pending</span>
+                            <span class="badge badge-pending">Pendente</span>
                         {% endif %}
                     </td>
                     <td>
                         <a href="{{ url_for('aluno.submit_assignment', course_id=course.id, assignment_id=a.id) }}" class="btn btn-sm btn-primary">
-                            {% if my_sub.val %}Resubmit{% else %}Submit{% endif %}
+                            {% if my_sub.val %}Reenviar{% else %}Entregar{% endif %}
                         </a>
                     </td>
                 </tr>
@@ -96,7 +96,7 @@
         </table>
     </div>
     {% else %}
-    <div class="empty-state"><div class="icon">📝</div><p>No assignments available.</p></div>
+    <div class="empty-state"><div class="icon">📝</div><p>Nenhum trabalho disponível.</p></div>
     {% endif %}
 </div>
 

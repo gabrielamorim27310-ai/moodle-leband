@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}LEBand — Learning Platform{% endblock %}
+{% block title %}LEBand — Plataforma de Aprendizado{% endblock %}
 
 {% block hero %}
 <div class="hero">
@@ -8,12 +8,12 @@
              style="height:100px;width:100px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))">
         <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:900;margin:0">LEBand</h1>
     </div>
-    <p>LEBand's learning platform. Courses, materials, announcements and assignments in one place.</p>
+    <p>Plataforma de aprendizado do LeBand. Disciplinas, materiais, avisos e entregas em um só lugar.</p>
     <div class="badges" style="margin-top:16px">
-        <span class="badge badge-hero">Teachers</span>
-        <span class="badge badge-hero">Students</span>
-        <span class="badge badge-hero">Materials</span>
-        <span class="badge badge-hero">Assignments</span>
+        <span class="badge badge-hero">Professores</span>
+        <span class="badge badge-hero">Alunos</span>
+        <span class="badge badge-hero">Materiais</span>
+        <span class="badge badge-hero">Trabalhos</span>
     </div>
     <div style="position:relative;margin-top:32px">
         <a href="{{ url_for('auth.microsoft_login') }}" class="btn-hero-ms-main">
@@ -23,7 +23,7 @@
                 <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
                 <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
             </svg>
-            Sign in with Microsoft
+            Entrar com Microsoft
         </a>
     </div>
 </div>
@@ -34,22 +34,22 @@
     <div class="card">
         <div class="card-body">
             <div style="font-size:1.8rem;margin-bottom:.6rem">📄</div>
-            <h3>Course Materials</h3>
-            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Slides, PDFs and documents organized by course.</p>
+            <h3>Materiais de Aula</h3>
+            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Slides, PDFs e documentos organizados por disciplina.</p>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <div style="font-size:1.8rem;margin-bottom:.6rem">📢</div>
-            <h3>Announcements</h3>
-            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Always up-to-date notices from your teachers.</p>
+            <h3>Avisos</h3>
+            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Comunicados dos professores sempre atualizados.</p>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <div style="font-size:1.8rem;margin-bottom:.6rem">📝</div>
-            <h3>Assignment Submissions</h3>
-            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Submit assignments and track your grades and feedback.</p>
+            <h3>Entrega de Trabalhos</h3>
+            <p style="color:var(--text-light);font-size:.88rem;margin-top:.3rem">Envie trabalhos e acompanhe suas notas e feedback.</p>
         </div>
     </div>
 </div>

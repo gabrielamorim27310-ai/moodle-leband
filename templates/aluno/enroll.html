@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}Enroll in a Course — LEBand{% endblock %}
+{% block title %}Matricular-se — LEBand{% endblock %}
 {% block content %}
 <div class="auth-container" style="min-height:calc(100vh - 200px)">
     <div class="auth-card" style="max-width:440px">
-        <h1 style="font-size:1.4rem">Enroll in a Course</h1>
-        <p style="color:var(--text-light);font-size:.88rem;margin-bottom:1.2rem">Enter the code provided by your teacher.</p>
+        <h1 style="font-size:1.4rem">Matricular-se</h1>
+        <p style="color:var(--text-light);font-size:.88rem;margin-bottom:1.2rem">Insira o código fornecido pelo professor.</p>
         <form method="POST">
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.code.label }}
-                {{ form.code(placeholder="e.g. PWB001") }}
+                {{ form.code(placeholder="Ex: PWB001") }}
             </div>
             <div style="display:flex;gap:10px">
                 {{ form.submit(class="btn btn-primary") }}
-                <a href="{{ url_for('aluno.my_courses') }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ url_for('aluno.my_courses') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,13 +18,13 @@
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
                     {% if current_user.is_professor %}
-                        <a href="{{ url_for('professor.my_courses') }}">Courses</a>
+                        <a href="{{ url_for('professor.my_courses') }}">Disciplinas</a>
                     {% else %}
-                        <a href="{{ url_for('aluno.my_courses') }}">Courses</a>
-                        <a href="{{ url_for('aluno.my_grades') }}">Grades</a>
+                        <a href="{{ url_for('aluno.my_courses') }}">Disciplinas</a>
+                        <a href="{{ url_for('aluno.my_grades') }}">Notas</a>
                     {% endif %}
                     <span class="nav-user">{{ current_user.name }}</span>
-                    <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-outline">Sign Out</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-outline">Sair</a>
                 {% else %}
                     <a href="{{ url_for('auth.microsoft_login') }}" class="btn-nav-ms">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 21 21" style="flex-shrink:0">
@@ -33,7 +33,7 @@
                             <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
                             <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
                         </svg>
-                        Sign in with Microsoft
+                        Entrar com Microsoft
                     </a>
                 {% endif %}
             </div>
@@ -54,7 +54,7 @@
     </div>
 
     <footer class="footer">
-        <p>&copy; 2026 LEBand — Learning Platform</p>
+        <p>&copy; 2026 LEBand — Plataforma de Aprendizado</p>
     </footer>
 </body>
 </html>

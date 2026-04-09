@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
-{% block title %}Upload Material — LEBand{% endblock %}
+{% block title %}Enviar Material — LEBand{% endblock %}
 {% block content %}
 <div class="auth-container" style="min-height:calc(100vh - 200px)">
     <div class="auth-card" style="max-width:520px">
-        <h1 style="font-size:1.4rem">Upload Course Material</h1>
+        <h1 style="font-size:1.4rem">Enviar Material de Aula</h1>
         <p style="color:var(--text-light);font-size:.88rem;margin-bottom:1.2rem">{{ course.name }}</p>
         <form method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.title.label }}
-                {{ form.title(placeholder="e.g. Lecture 01 — Introduction") }}
+                {{ form.title(placeholder="Ex: Aula 01 — Introdução") }}
             </div>
             <div class="form-group">
                 {{ form.file.label }}
@@ -17,7 +17,7 @@
             </div>
             <div style="display:flex;gap:10px">
                 {{ form.submit(class="btn btn-primary") }}
-                <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
