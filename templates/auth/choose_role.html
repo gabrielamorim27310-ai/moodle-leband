@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Escolher Perfil — LEBand{% endblock %}
+{% block title %}Choose Your Role — LEBand{% endblock %}
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
-        <h1>Bem-vindo ao LEBand!</h1>
+        <h1>Welcome to LEBand!</h1>
         <p style="color:var(--text-light);text-align:center;margin-bottom:1.5rem;font-size:.9rem">
-            Olá, <strong>{{ ms_data.name }}</strong>! Primeiro acesso via Microsoft.<br>Escolha seu perfil para continuar.
+            Hello, <strong>{{ ms_data.name }}</strong>! First time signing in with Microsoft.<br>Choose your role to continue.
         </p>
         <form method="POST">
             <div class="role-selection">
@@ -13,20 +13,20 @@
                     <input type="radio" name="role" value="aluno" checked>
                     <div class="role-card">
                         <div style="font-size:2rem">🎒</div>
-                        <strong>Aluno</strong>
-                        <p>Acessar disciplinas e entregar trabalhos</p>
+                        <strong>Student</strong>
+                        <p>Access courses and submit assignments</p>
                     </div>
                 </label>
                 <label class="role-option">
                     <input type="radio" name="role" value="professor">
                     <div class="role-card">
                         <div style="font-size:2rem">👨‍🏫</div>
-                        <strong>Professor</strong>
-                        <p>Criar disciplinas e avaliar alunos</p>
+                        <strong>Teacher</strong>
+                        <p>Create courses and grade students</p>
                     </div>
                 </label>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1.5rem">Continuar</button>
+            <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1.5rem">Continue</button>
         </form>
     </div>
 </div>

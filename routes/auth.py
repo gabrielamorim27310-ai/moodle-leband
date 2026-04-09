@@ -19,13 +19,11 @@ def _build_msal_app():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.dashboard'))
-    # Redireciona direto para o fluxo Microsoft
     return redirect(url_for('auth.microsoft_login'))
 
 
 @auth_bp.route('/register')
 def register():
-    # Cadastro também é feito via Microsoft
     return redirect(url_for('auth.microsoft_login'))
 
 
@@ -45,7 +43,7 @@ def microsoft_login():
         return redirect(url_for('main.dashboard'))
 
     if not current_app.config.get('MS_CLIENT_ID'):
-        flash('Login Microsoft não configurado. Configure MS_CLIENT_ID no .env.', 'danger')
+        flash('Microsoft login is not configured. Set MS_CLIENT_ID in your environment.', 'danger')
         return render_template('auth/ms_not_configured.html')
 
     app_msal = _build_msal_app()
@@ -61,14 +59,14 @@ def microsoft_login():
 def microsoft_callback():
     flow = session.pop('ms_auth_flow', None)
     if not flow:
-        flash('Sessão expirada. Tente novamente.', 'danger')
+        flash('Session expired. Please try again.', 'danger')
         return redirect(url_for('main.index'))
 
     app_msal = _build_msal_app()
     result = app_msal.acquire_token_by_auth_code_flow(flow, request.args)
 
     if 'error' in result:
-        flash(f"Erro Microsoft: {result.get('error_description', result['error'])}", 'danger')
+        flash(f"Microsoft error: {result.get('error_description', result['error'])}", 'danger')
         return redirect(url_for('main.index'))
 
     token = result['access_token']
@@ -79,7 +77,7 @@ def microsoft_callback():
     )
 
     if graph_resp.status_code != 200:
-        flash('Erro ao obter perfil Microsoft.', 'danger')
+        flash('Failed to retrieve Microsoft profile.', 'danger')
         return redirect(url_for('main.index'))
 
     ms_profile = graph_resp.json()
@@ -91,10 +89,10 @@ def microsoft_callback():
     if allowed_domains:
         email_domain = ms_email.split('@')[-1].lower() if '@' in ms_email else ''
         if email_domain not in allowed_domains:
-            domains_str = ' ou '.join(f'@{d}' for d in allowed_domains)
+            domains_str = ' or '.join(f'@{d}' for d in allowed_domains)
             flash(
-                f'Acesso restrito a {domains_str}. '
-                f'Você entrou com {ms_email}.',
+                f'Access restricted to {domains_str}. '
+                f'You signed in with {ms_email}.',
                 'danger',
             )
             return redirect(url_for('main.index'))
@@ -127,7 +125,7 @@ def microsoft_choose_role():
     if request.method == 'POST':
         role = request.form.get('role')
         if role not in ('professor', 'aluno'):
-            flash('Selecione um perfil válido.', 'danger')
+            flash('Please select a valid role.', 'danger')
             return render_template('auth/choose_role.html', ms_data=ms_pending)
 
         user = User(

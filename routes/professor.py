@@ -15,7 +15,7 @@ def professor_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if not current_user.is_professor:
-            flash('Acesso restrito a professores.', 'danger')
+            flash('Access restricted to teachers.', 'danger')
             return redirect(url_for('main.dashboard'))
         return f(*args, **kwargs)
     return decorated
@@ -36,7 +36,7 @@ def create_course():
     form = CourseForm()
     if form.validate_on_submit():
         if Course.query.filter_by(code=form.code.data).first():
-            flash('Código de disciplina já existe.', 'danger')
+            flash('A course with this code already exists.', 'danger')
             return render_template('professor/create_course.html', form=form)
 
         course = Course(
@@ -47,7 +47,7 @@ def create_course():
         )
         db.session.add(course)
         db.session.commit()
-        flash('Disciplina criada com sucesso!', 'success')
+        flash('Course created successfully!', 'success')
         return redirect(url_for('professor.view_course', course_id=course.id))
 
     return render_template('professor/create_course.html', form=form)
@@ -59,7 +59,7 @@ def create_course():
 def view_course(course_id):
     course = Course.query.get_or_404(course_id)
     if course.professor_id != current_user.id:
-        flash('Você não tem permissão para acessar esta disciplina.', 'danger')
+        flash('You do not have permission to access this course.', 'danger')
         return redirect(url_for('professor.my_courses'))
     return render_template('professor/view_course.html', course=course)
 
@@ -70,7 +70,7 @@ def view_course(course_id):
 def upload_slide(course_id):
     course = Course.query.get_or_404(course_id)
     if course.professor_id != current_user.id:
-        flash('Sem permissão.', 'danger')
+        flash('Permission denied.', 'danger')
         return redirect(url_for('professor.my_courses'))
 
     form = SlideForm()
@@ -92,7 +92,7 @@ def upload_slide(course_id):
         )
         db.session.add(slide)
         db.session.commit()
-        flash('Material enviado com sucesso!', 'success')
+        flash('Material uploaded successfully!', 'success')
         return redirect(url_for('professor.view_course', course_id=course.id))
 
     return render_template('professor/upload_slide.html', form=form, course=course)
@@ -104,7 +104,7 @@ def upload_slide(course_id):
 def delete_slide(course_id, slide_id):
     slide = Slide.query.get_or_404(slide_id)
     if slide.course.professor_id != current_user.id:
-        flash('Sem permissão.', 'danger')
+        flash('Permission denied.', 'danger')
         return redirect(url_for('professor.my_courses'))
 
     filepath = os.path.join(current_app.config['UPLOAD_FOLDER_SLIDES'], slide.filename)
@@ -113,7 +113,7 @@ def delete_slide(course_id, slide_id):
 
     db.session.delete(slide)
     db.session.commit()
-    flash('Material removido.', 'success')
+    flash('Material removed.', 'success')
     return redirect(url_for('professor.view_course', course_id=course_id))
 
 
@@ -123,7 +123,7 @@ def delete_slide(course_id, slide_id):
 def create_announcement(course_id):
     course = Course.query.get_or_404(course_id)
     if course.professor_id != current_user.id:
-        flash('Sem permissão.', 'danger')
+        flash('Permission denied.', 'danger')
         return redirect(url_for('professor.my_courses'))
 
     form = AnnouncementForm()
@@ -135,7 +135,7 @@ def create_announcement(course_id):
         )
         db.session.add(ann)
         db.session.commit()
-        flash('Aviso publicado!', 'success')
+        flash('Announcement posted!', 'success')
         return redirect(url_for('professor.view_course', course_id=course.id))
 
     return render_template('professor/create_announcement.html', form=form, course=course)
@@ -147,12 +147,12 @@ def create_announcement(course_id):
 def delete_announcement(course_id, ann_id):
     ann = Announcement.query.get_or_404(ann_id)
     if ann.course.professor_id != current_user.id:
-        flash('Sem permissão.', 'danger')
+        flash('Permission denied.', 'danger')
         return redirect(url_for('professor.my_courses'))
 
     db.session.delete(ann)
     db.session.commit()
-    flash('Aviso removido.', 'success')
+    flash('Announcement removed.', 'success')
     return redirect(url_for('professor.view_course', course_id=course_id))
 
 
@@ -162,7 +162,7 @@ def delete_announcement(course_id, ann_id):
 def create_assignment(course_id):
     course = Course.query.get_or_404(course_id)
     if course.professor_id != current_user.id:
-        flash('Sem permissão.', 'danger')
+        flash('Permission denied.', 'danger')
         return redirect(url_for('professor.my_courses'))
 
     form = AssignmentForm()
@@ -175,7 +175,7 @@ def create_assignment(course_id):
         )
         db.session.add(assignment)
         db.session.commit()
-        flash('Trabalho criado com sucesso!', 'success')
+        flash('Assignment created successfully!', 'success')
         return redirect(url_for('professor.view_course', course_id=course.id))
 
     return render_template('professor/create_assignment.html', form=form, course=course)
@@ -187,7 +187,7 @@ def create_assignment(course_id):
 def view_submissions(course_id, assignment_id):
     course = Course.query.get_or_404(course_id)
     if course.professor_id != current_user.id:
-        flash('Sem permissão.', 'danger')
+        flash('Permission denied.', 'danger')
         return redirect(url_for('professor.my_courses'))
 
     assignment = Assignment.query.get_or_404(assignment_id)
@@ -202,7 +202,7 @@ def view_submissions(course_id, assignment_id):
 def grade_submission(submission_id):
     submission = Submission.query.get_or_404(submission_id)
     if submission.assignment.course.professor_id != current_user.id:
-        flash('Sem permissão.', 'danger')
+        flash('Permission denied.', 'danger')
         return redirect(url_for('professor.my_courses'))
 
     form = GradeForm()
@@ -210,12 +210,12 @@ def grade_submission(submission_id):
         try:
             submission.grade = float(form.grade.data)
         except ValueError:
-            flash('Nota inválida.', 'danger')
+            flash('Invalid grade.', 'danger')
             return render_template('professor/grade_submission.html',
                                    form=form, submission=submission)
         submission.feedback = form.feedback.data
         db.session.commit()
-        flash('Nota salva!', 'success')
+        flash('Grade saved!', 'success')
         return redirect(url_for('professor.view_submissions',
                                 course_id=submission.assignment.course_id,
                                 assignment_id=submission.assignment_id))

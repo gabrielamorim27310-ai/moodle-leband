@@ -14,7 +14,7 @@ def aluno_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if not current_user.is_aluno:
-            flash('Acesso restrito a alunos.', 'danger')
+            flash('Access restricted to students.', 'danger')
             return redirect(url_for('main.dashboard'))
         return f(*args, **kwargs)
     return decorated
@@ -36,16 +36,16 @@ def enroll():
     if form.validate_on_submit():
         course = Course.query.filter_by(code=form.code.data.upper()).first()
         if not course:
-            flash('Disciplina não encontrada com esse código.', 'danger')
+            flash('No course found with that code.', 'danger')
             return render_template('aluno/enroll.html', form=form)
 
         if course in current_user.courses_enrolled:
-            flash('Você já está matriculado nesta disciplina.', 'warning')
+            flash('You are already enrolled in this course.', 'warning')
             return render_template('aluno/enroll.html', form=form)
 
         current_user.courses_enrolled.append(course)
         db.session.commit()
-        flash(f'Matriculado em {course.name} com sucesso!', 'success')
+        flash(f'Successfully enrolled in {course.name}!', 'success')
         return redirect(url_for('aluno.view_course', course_id=course.id))
 
     return render_template('aluno/enroll.html', form=form)
@@ -57,7 +57,7 @@ def enroll():
 def view_course(course_id):
     course = Course.query.get_or_404(course_id)
     if course not in current_user.courses_enrolled:
-        flash('Você não está matriculado nesta disciplina.', 'danger')
+        flash('You are not enrolled in this course.', 'danger')
         return redirect(url_for('aluno.my_courses'))
     return render_template('aluno/view_course.html', course=course)
 
@@ -68,7 +68,7 @@ def view_course(course_id):
 def submit_assignment(course_id, assignment_id):
     course = Course.query.get_or_404(course_id)
     if course not in current_user.courses_enrolled:
-        flash('Sem permissão.', 'danger')
+        flash('Permission denied.', 'danger')
         return redirect(url_for('aluno.my_courses'))
 
     assignment = Assignment.query.get_or_404(assignment_id)
@@ -98,7 +98,7 @@ def submit_assignment(course_id, assignment_id):
             existing.feedback = None
             from datetime import datetime, timezone
             existing.submitted_at = datetime.now(timezone.utc)
-            flash('Trabalho reenviado com sucesso!', 'success')
+            flash('Assignment resubmitted successfully!', 'success')
         else:
             submission = Submission(
                 filename=filename,
@@ -108,7 +108,7 @@ def submit_assignment(course_id, assignment_id):
                 assignment_id=assignment_id
             )
             db.session.add(submission)
-            flash('Trabalho enviado com sucesso!', 'success')
+            flash('Assignment submitted successfully!', 'success')
 
         db.session.commit()
         return redirect(url_for('aluno.view_course', course_id=course_id))

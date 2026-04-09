@@ -5,10 +5,10 @@
 <div class="hero" style="padding:40px 24px 36px">
     <div style="position:relative">
         <p style="font-size:.82rem;opacity:.6;font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">
-            {% if current_user.is_professor %}Professor{% else %}Aluno{% endif %}
+            {% if current_user.is_professor %}Teacher{% else %}Student{% endif %}
         </p>
-        <h1>Olá, {{ current_user.name.split()[0] }}!</h1>
-        <p>Bem-vindo de volta ao LEBand.</p>
+        <h1>Hello, {{ current_user.name.split()[0] }}!</h1>
+        <p>Welcome back to LEBand.</p>
     </div>
 </div>
 {% endblock %}
@@ -19,25 +19,25 @@
 <div class="stats" style="margin-top:28px">
     <div class="stat-card">
         <div class="stat-number">{{ courses|length }}</div>
-        <div class="stat-label">Disciplinas</div>
+        <div class="stat-label">Courses</div>
     </div>
     <div class="stat-card">
         <div class="stat-number">{{ total_students }}</div>
-        <div class="stat-label">Alunos</div>
+        <div class="stat-label">Students</div>
     </div>
     <div class="stat-card">
         <div class="stat-number">{{ total_slides }}</div>
-        <div class="stat-label">Materiais</div>
+        <div class="stat-label">Materials</div>
     </div>
     <div class="stat-card">
         <div class="stat-number">{{ total_assignments }}</div>
-        <div class="stat-label">Trabalhos</div>
+        <div class="stat-label">Assignments</div>
     </div>
 </div>
 
 <div class="page-header">
-    <h2 class="section-title" style="margin-bottom:0;flex:1">Suas Disciplinas</h2>
-    <a href="{{ url_for('professor.create_course') }}" class="btn btn-sm btn-primary">+ Nova Disciplina</a>
+    <h2 class="section-title" style="margin-bottom:0;flex:1">Your Courses</h2>
+    <a href="{{ url_for('professor.create_course') }}" class="btn btn-sm btn-primary">+ New Course</a>
 </div>
 
 {% if courses %}
@@ -52,10 +52,10 @@
             </div>
         </div>
         <div class="card-body" style="padding:0 14px 14px">
-            <p>{{ course.students|length }} aluno(s) matriculado(s)</p>
+            <p>{{ course.students|length }} student(s) enrolled</p>
             <a href="{{ url_for('professor.view_course', course_id=course.id) }}" class="item-link" style="margin-top:6px">
                 <span class="dot"></span>
-                <span class="label">Gerenciar disciplina</span>
+                <span class="label">Manage course</span>
                 <span class="arrow">→</span>
             </a>
         </div>
@@ -65,8 +65,8 @@
 {% else %}
 <div class="empty-state">
     <div class="icon">📖</div>
-    <p>Crie sua primeira disciplina para começar.</p>
-    <a href="{{ url_for('professor.create_course') }}" class="btn btn-primary" style="margin-top:1rem">Criar Disciplina</a>
+    <p>Create your first course to get started.</p>
+    <a href="{{ url_for('professor.create_course') }}" class="btn btn-primary" style="margin-top:1rem">Create Course</a>
 </div>
 {% endif %}
 
@@ -75,17 +75,17 @@
 <div class="stats" style="margin-top:28px">
     <div class="stat-card">
         <div class="stat-number">{{ courses|length }}</div>
-        <div class="stat-label">Disciplinas</div>
+        <div class="stat-label">Courses</div>
     </div>
 </div>
 
 {% if announcements %}
-<p class="section-title">Avisos Recentes</p>
+<p class="section-title">Recent Announcements</p>
 {% for ann in announcements %}
 <div class="announcement">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
         <h3>{{ ann.title }}</h3>
-        <span class="date">{{ ann.course.name }} · {{ ann.created_at.strftime('%d/%m/%Y') }}</span>
+        <span class="date">{{ ann.course.name }} · {{ ann.created_at.strftime('%m/%d/%Y') }}</span>
     </div>
     <p>{{ ann.content }}</p>
 </div>
@@ -93,8 +93,8 @@
 {% endif %}
 
 <div class="page-header" style="margin-top:2rem">
-    <p class="section-title" style="margin-bottom:0;flex:1">Suas Disciplinas</p>
-    <a href="{{ url_for('aluno.enroll') }}" class="btn btn-sm btn-primary">+ Matricular-se</a>
+    <p class="section-title" style="margin-bottom:0;flex:1">Your Courses</p>
+    <a href="{{ url_for('aluno.enroll') }}" class="btn btn-sm btn-primary">+ Enroll</a>
 </div>
 
 {% if courses %}
@@ -112,7 +112,7 @@
             <p>Prof. {{ course.professor.name }}</p>
             <a href="{{ url_for('aluno.view_course', course_id=course.id) }}" class="item-link" style="margin-top:6px">
                 <span class="dot"></span>
-                <span class="label">Acessar disciplina</span>
+                <span class="label">Open course</span>
                 <span class="arrow">→</span>
             </a>
         </div>
@@ -122,8 +122,8 @@
 {% else %}
 <div class="empty-state">
     <div class="icon">📖</div>
-    <p>Matricule-se em uma disciplina para começar.</p>
-    <a href="{{ url_for('aluno.enroll') }}" class="btn btn-primary" style="margin-top:1rem">Matricular-se</a>
+    <p>Enroll in a course to get started.</p>
+    <a href="{{ url_for('aluno.enroll') }}" class="btn btn-primary" style="margin-top:1rem">Enroll Now</a>
 </div>
 {% endif %}
 {% endif %}

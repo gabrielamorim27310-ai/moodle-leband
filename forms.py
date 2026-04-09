@@ -6,69 +6,69 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 
 class RegisterForm(FlaskForm):
-    name = StringField('Nome Completo', validators=[DataRequired(), Length(min=3, max=150)])
-    email = StringField('E-mail', validators=[DataRequired(), Email()])
-    role = SelectField('Perfil', choices=[('aluno', 'Aluno'), ('professor', 'Professor')],
+    name = StringField('Full Name', validators=[DataRequired(), Length(min=3, max=150)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    role = SelectField('Role', choices=[('aluno', 'Student'), ('professor', 'Teacher')],
                        validators=[DataRequired()])
-    password = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
-    confirm_password = PasswordField('Confirmar Senha',
-                                     validators=[DataRequired(), EqualTo('password', message='Senhas não conferem')])
-    submit = SubmitField('Cadastrar')
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirm Password',
+                                     validators=[DataRequired(), EqualTo('password', message='Passwords do not match')])
+    submit = SubmitField('Register')
 
 
 class LoginForm(FlaskForm):
-    email = StringField('E-mail', validators=[DataRequired(), Email()])
-    password = PasswordField('Senha', validators=[DataRequired()])
-    submit = SubmitField('Entrar')
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Sign In')
 
 
 class CourseForm(FlaskForm):
-    name = StringField('Nome da Disciplina', validators=[DataRequired(), Length(max=200)])
-    description = TextAreaField('Descrição')
-    code = StringField('Código da Disciplina', validators=[DataRequired(), Length(max=20)])
-    submit = SubmitField('Criar Disciplina')
+    name = StringField('Course Name', validators=[DataRequired(), Length(max=200)])
+    description = TextAreaField('Description')
+    code = StringField('Course Code', validators=[DataRequired(), Length(max=20)])
+    submit = SubmitField('Create Course')
 
 
 class SlideForm(FlaskForm):
-    title = StringField('Título do Material', validators=[DataRequired(), Length(max=200)])
-    file = FileField('Arquivo', validators=[
+    title = StringField('Material Title', validators=[DataRequired(), Length(max=200)])
+    file = FileField('File', validators=[
         FileRequired(),
         FileAllowed(['pdf', 'ppt', 'pptx', 'doc', 'docx', 'png', 'jpg', 'zip'],
-                     'Formatos permitidos: PDF, PPT, PPTX, DOC, DOCX, PNG, JPG, ZIP')
+                     'Allowed formats: PDF, PPT, PPTX, DOC, DOCX, PNG, JPG, ZIP')
     ])
-    submit = SubmitField('Enviar Material')
+    submit = SubmitField('Upload Material')
 
 
 class AnnouncementForm(FlaskForm):
-    title = StringField('Título', validators=[DataRequired(), Length(max=200)])
-    content = TextAreaField('Conteúdo', validators=[DataRequired()])
-    submit = SubmitField('Publicar Aviso')
+    title = StringField('Title', validators=[DataRequired(), Length(max=200)])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post Announcement')
 
 
 class AssignmentForm(FlaskForm):
-    title = StringField('Título do Trabalho', validators=[DataRequired(), Length(max=200)])
-    description = TextAreaField('Descrição / Instruções', validators=[DataRequired()])
-    due_date = DateTimeLocalField('Data de Entrega', format='%Y-%m-%dT%H:%M',
+    title = StringField('Assignment Title', validators=[DataRequired(), Length(max=200)])
+    description = TextAreaField('Description / Instructions', validators=[DataRequired()])
+    due_date = DateTimeLocalField('Due Date', format='%Y-%m-%dT%H:%M',
                                   validators=[DataRequired()])
-    submit = SubmitField('Criar Trabalho')
+    submit = SubmitField('Create Assignment')
 
 
 class SubmissionForm(FlaskForm):
-    file = FileField('Arquivo do Trabalho', validators=[
+    file = FileField('Assignment File', validators=[
         FileRequired(),
         FileAllowed(['pdf', 'doc', 'docx', 'zip', 'rar', 'py', 'java', 'cpp', 'txt', 'png', 'jpg'],
-                     'Formato não permitido')
+                     'File format not allowed')
     ])
-    comment = TextAreaField('Comentário (opcional)')
-    submit = SubmitField('Enviar Trabalho')
+    comment = TextAreaField('Comment (optional)')
+    submit = SubmitField('Submit Assignment')
 
 
 class EnrollForm(FlaskForm):
-    code = StringField('Código da Disciplina', validators=[DataRequired()])
-    submit = SubmitField('Matricular-se')
+    code = StringField('Course Code', validators=[DataRequired()])
+    submit = SubmitField('Enroll')
 
 
 class GradeForm(FlaskForm):
-    grade = StringField('Nota', validators=[DataRequired()])
-    feedback = TextAreaField('Feedback (opcional)')
-    submit = SubmitField('Salvar Nota')
+    grade = StringField('Grade', validators=[DataRequired()])
+    feedback = TextAreaField('Feedback (optional)')
+    submit = SubmitField('Save Grade')
