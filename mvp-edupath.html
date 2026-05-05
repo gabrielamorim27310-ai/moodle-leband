@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduPath — Trilhas de Aprendizado com IA</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
+
+  :root {
+    --purple: #6c63ff;
+    --purple-dark: #4338ca;
+    --purple-light: #a89fff;
+    --purple-pale: #ede9fe;
+    --orange: #f59e0b;
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --border: #e5e7eb;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--purple), var(--purple-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--purple); }
+  .nav-cta {
+    background: var(--purple);
+    color: white !important;
+    padding: 9px 22px;
+    border-radius: 8px;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+  }
+  .nav-cta:hover { opacity: 0.9; }
+
+  /* BACK */
+  .back-bar {
+    background: #f3f4f6;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .back-bar a { color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+  .back-bar a:hover { color: var(--purple); }
+  .liga-tag { background: var(--purple-pale); color: var(--purple-dark); padding: 2px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0f0a2e 0%, #1e1152 50%, #2d1b69 100%);
+    color: white;
+    padding: 80px 24px 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% -20%, rgba(108,99,255,0.4), transparent 60%),
+      radial-gradient(ellipse 40% 40% at -10% 120%, rgba(245,158,11,0.2), transparent 60%);
+  }
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: flex-end;
+    position: relative;
+  }
+  .hero-content { padding-bottom: 72px; }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(108,99,255,0.2);
+    border: 1px solid rgba(168,159,255,0.3);
+    color: #c4beff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 22px;
+  }
+  .hero h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(2rem, 3.5vw, 2.9rem);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+  .hero h1 span { color: #a89fff; }
+  .hero p { font-size: 1rem; opacity: 0.8; line-height: 1.75; margin-bottom: 32px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, var(--purple), var(--purple-light));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-outline {
+    padding: 14px 28px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.14); }
+
+  /* APP MOCKUP — DESKTOP CARD STYLE */
+  .hero-app {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+  .app-window {
+    background: #1a1a2e;
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+    box-shadow: 0 -8px 40px rgba(108,99,255,0.3);
+  }
+  .window-bar {
+    background: #111127;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .window-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .window-title { color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-left: 8px; font-family: monospace; }
+  .window-body { padding: 20px; }
+  .trail-label { color: rgba(255,255,255,0.4); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .trail-progress {
+    background: #252540;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .trail-title { color: white; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; }
+  .trail-bar-bg { background: rgba(255,255,255,0.1); border-radius: 4px; height: 6px; }
+  .trail-bar-fill { background: linear-gradient(90deg, var(--purple), var(--purple-light)); height: 6px; border-radius: 4px; }
+  .trail-meta { display: flex; justify-content: space-between; margin-top: 8px; }
+  .trail-pct { color: var(--purple-light); font-size: 0.72rem; font-weight: 700; }
+  .trail-time { color: rgba(255,255,255,0.35); font-size: 0.7rem; }
+
+  .modules-label { color: rgba(255,255,255,0.4); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 16px 0 10px; }
+  .module-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 7px;
+    transition: background 0.2s;
+  }
+  .module-item.done { background: rgba(108,99,255,0.12); }
+  .module-item.active { background: rgba(108,99,255,0.2); border: 1px solid rgba(108,99,255,0.3); }
+  .module-item.locked { opacity: 0.35; }
+  .mod-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+  .mod-info { flex: 1; }
+  .mod-name { color: white; font-size: 0.78rem; font-weight: 600; }
+  .mod-sub { color: rgba(255,255,255,0.35); font-size: 0.65rem; margin-top: 1px; }
+  .mod-status { font-size: 0.7rem; font-weight: 700; }
+  .mod-status.done { color: #a89fff; }
+  .mod-status.active { color: #fbbf24; }
+
+  /* XP BAR */
+  .xp-bar-wrap {
+    background: #252540;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .xp-icon { font-size: 1.2rem; }
+  .xp-info { flex: 1; }
+  .xp-label { color: rgba(255,255,255,0.5); font-size: 0.65rem; margin-bottom: 4px; }
+  .xp-bar-bg { background: rgba(255,255,255,0.1); border-radius: 3px; height: 5px; }
+  .xp-bar-fill { background: linear-gradient(90deg, #f59e0b, #fbbf24); height: 5px; border-radius: 3px; width: 73%; }
+  .xp-pts { color: #fbbf24; font-weight: 800; font-size: 0.78rem; }
+
+  /* PROOF */
+  .proof-bar {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+  }
+  .proof-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .proof-stat { text-align: center; }
+  .proof-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--purple); }
+  .proof-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+
+  /* FEATURES */
+  .features { max-width: 1100px; margin: 0 auto; padding: 72px 24px; }
+  .section-header { text-align: center; margin-bottom: 52px; }
+  .section-tag { display: inline-block; background: var(--purple-pale); color: var(--purple-dark); padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .section-header h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; margin-bottom: 12px; }
+  .section-header p { color: var(--text-muted); font-size: 1rem; max-width: 500px; margin: 0 auto; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: box-shadow 0.25s, transform 0.25s; }
+  .feature-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--purple-pale); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 18px; }
+  .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .feature-card p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* GAMIFICATION */
+  .game-section {
+    background: linear-gradient(135deg, #0f0a2e, #1e1152);
+    color: white;
+    padding: 72px 24px;
+  }
+  .game-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .game-text h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; margin-bottom: 16px; }
+  .game-text p { opacity: 0.75; line-height: 1.75; font-size: 0.95rem; margin-bottom: 24px; }
+  .game-items { display: flex; flex-direction: column; gap: 14px; }
+  .game-item { display: flex; align-items: flex-start; gap: 12px; }
+  .game-item-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .game-item strong { display: block; font-size: 0.9rem; margin-bottom: 3px; }
+  .game-item span { font-size: 0.8rem; opacity: 0.6; }
+
+  .leaderboard {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .lb-header { background: rgba(108,99,255,0.25); padding: 14px 20px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+  }
+  .lb-row:hover { background: rgba(255,255,255,0.04); }
+  .lb-row.me { background: rgba(108,99,255,0.12); }
+  .lb-pos { width: 24px; font-size: 0.85rem; font-weight: 800; color: rgba(255,255,255,0.4); text-align: center; }
+  .lb-pos.top { color: #fbbf24; }
+  .lb-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+  .lb-name { flex: 1; font-size: 0.83rem; font-weight: 600; }
+  .lb-xp { font-size: 0.78rem; color: #a89fff; font-weight: 700; }
+
+  /* CTA */
+  .cta { max-width: 1100px; margin: 0 auto; padding: 72px 24px; text-align: center; }
+  .cta h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900; margin-bottom: 16px; }
+  .cta p { color: var(--text-muted); font-size: 1rem; margin-bottom: 32px; max-width: 440px; margin-left: auto; margin-right: auto; }
+
+  footer { background: #111827; color: rgba(255,255,255,0.5); text-align: center; padding: 28px 24px; font-size: 0.8rem; }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-app { display: none; }
+    .game-inner { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BACK -->
+<div class="back-bar">
+  <a href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar ao Repositório de MVPs
+  </a>
+  <span>·</span>
+  <span class="liga-tag">Liga de Empreendedorismo · Grupo 2</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="logo-icon">🎓</div>
+    EduPath
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Trilhas</a></li>
+    <li><a href="#">Ranking</a></li>
+    <li><a href="#">Para escolas</a></li>
+    <li><a class="nav-cta" href="#">Estudar grátis</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag">🚀 EdTech com IA</div>
+      <h1>Aprenda do jeito que<br>seu <span>cérebro</span> pede</h1>
+      <p>O EduPath cria trilhas de estudo personalizadas para cada aluno, usando IA e gamificação para manter a motivação alta do início ao fim.</p>
+      <div class="hero-actions">
+        <button class="btn-primary">Começar agora — grátis</button>
+        <button class="btn-outline">Ver trilhas disponíveis</button>
+      </div>
+    </div>
+    <div class="hero-app">
+      <div class="app-window">
+        <div class="window-bar">
+          <div class="window-dot" style="background:#ff5f57"></div>
+          <div class="window-dot" style="background:#febc2e"></div>
+          <div class="window-dot" style="background:#28c840"></div>
+          <div class="window-title">EduPath · Minha trilha</div>
+        </div>
+        <div class="window-body">
+          <div class="trail-label">Trilha atual</div>
+          <div class="trail-progress">
+            <div class="trail-title">📐 Matemática para o ENEM</div>
+            <div class="trail-bar-bg"><div class="trail-bar-fill" style="width:58%"></div></div>
+            <div class="trail-meta">
+              <span class="trail-pct">58% concluído</span>
+              <span class="trail-time">~4h restantes</span>
+            </div>
+          </div>
+
+          <div class="modules-label">Módulos</div>
+          <div class="module-item done">
+            <div class="mod-icon" style="background:rgba(108,99,255,0.2)">✅</div>
+            <div class="mod-info">
+              <div class="mod-name">Funções e Gráficos</div>
+              <div class="mod-sub">12 aulas · Concluído</div>
+            </div>
+            <div class="mod-status done">+240 XP</div>
+          </div>
+          <div class="module-item done">
+            <div class="mod-icon" style="background:rgba(108,99,255,0.2)">✅</div>
+            <div class="mod-info">
+              <div class="mod-name">Progressões (PA e PG)</div>
+              <div class="mod-sub">8 aulas · Concluído</div>
+            </div>
+            <div class="mod-status done">+180 XP</div>
+          </div>
+          <div class="module-item active">
+            <div class="mod-icon" style="background:rgba(245,158,11,0.2)">🔥</div>
+            <div class="mod-info">
+              <div class="mod-name">Trigonometria</div>
+              <div class="mod-sub">10 aulas · Em andamento</div>
+            </div>
+            <div class="mod-status active">Cursando</div>
+          </div>
+          <div class="module-item locked">
+            <div class="mod-icon" style="background:rgba(255,255,255,0.08)">🔒</div>
+            <div class="mod-info">
+              <div class="mod-name">Geometria Espacial</div>
+              <div class="mod-sub">15 aulas · Bloqueado</div>
+            </div>
+          </div>
+
+          <div class="xp-bar-wrap">
+            <div class="xp-icon">⚡</div>
+            <div class="xp-info">
+              <div class="xp-label">Nível 7 · Explorador</div>
+              <div class="xp-bar-bg"><div class="xp-bar-fill"></div></div>
+            </div>
+            <div class="xp-pts">1.460 XP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<div class="proof-bar">
+  <div class="proof-inner">
+    <div class="proof-stat"><div class="proof-num">8.300+</div><div class="proof-label">estudantes ativos</div></div>
+    <div class="proof-stat"><div class="proof-num">+34%</div><div class="proof-label">nota média no ENEM</div></div>
+    <div class="proof-stat"><div class="proof-num">47</div><div class="proof-label">trilhas disponíveis</div></div>
+    <div class="proof-stat"><div class="proof-num">92%</div><div class="proof-label">concluem a trilha</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-header">
+    <div class="section-tag">Funcionalidades</div>
+    <h2>Aprendizado que se adapta a você</h2>
+    <p>Tecnologia que entende seu ritmo e mantém você evoluindo todos os dias.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🗺️</div>
+      <h3>Trilhas personalizadas por IA</h3>
+      <p>A IA analisa seu nível atual e objetivo (ENEM, vestibular, concurso) e monta a sequência ideal de conteúdos para você.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎮</div>
+      <h3>Gamificação real</h3>
+      <p>XP, níveis, conquistas e ranking entre amigos. Cada aula concluída é uma vitória — e você pode ver seu crescimento.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>Tutor de IA 24h</h3>
+      <p>Travou em algum exercício? O tutor IA explica o raciocínio passo a passo de forma personalizada, como um professor particular.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Mobile-first</h3>
+      <p>Estude em qualquer lugar — no ônibus, na fila, antes de dormir. O app salva seu progresso em tempo real.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Relatório semanal</h3>
+      <p>Relatório com seus pontos fortes, onde precisa melhorar e previsão de desempenho na prova — para você e seus pais.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏫</div>
+      <h3>Para escolas também</h3>
+      <p>Painel para professores acompanharem o progresso de cada aluno em tempo real com alertas de dificuldades.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GAMIFICATION -->
+<section class="game-section">
+  <div class="game-inner">
+    <div class="game-text">
+      <h2>Competição saudável que vicia em estudar</h2>
+      <p>Quem disse que estudar precisa ser chato? Com o EduPath, cada aula te deixa mais perto do topo do ranking.</p>
+      <div class="game-items">
+        <div class="game-item">
+          <div class="game-item-icon">🏆</div>
+          <div>
+            <strong>Ranking semanal</strong>
+            <span>Compete com amigos e alunos da sua cidade na sua matéria favorita.</span>
+          </div>
+        </div>
+        <div class="game-item">
+          <div class="game-item-icon">🔥</div>
+          <div>
+            <strong>Sequências (Streaks)</strong>
+            <span>Estude dias seguidos e desbloqueie bônus de XP e conquistas exclusivas.</span>
+          </div>
+        </div>
+        <div class="game-item">
+          <div class="game-item-icon">🎖️</div>
+          <div>
+            <strong>Conquistas e badges</strong>
+            <span>Mais de 80 conquistas para colecionar e mostrar no seu perfil.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="leaderboard">
+        <div class="lb-header">🏆 Ranking — Matemática · Semana</div>
+        <div class="lb-row">
+          <div class="lb-pos top">🥇</div>
+          <div class="lb-avatar">😎</div>
+          <div class="lb-name">Pedro Alves</div>
+          <div class="lb-xp">2.840 XP</div>
+        </div>
+        <div class="lb-row">
+          <div class="lb-pos top">🥈</div>
+          <div class="lb-avatar">🧑‍💻</div>
+          <div class="lb-name">Ana Costa</div>
+          <div class="lb-xp">2.610 XP</div>
+        </div>
+        <div class="lb-row">
+          <div class="lb-pos top">🥉</div>
+          <div class="lb-avatar">🧑‍🎓</div>
+          <div class="lb-name">Lucas M.</div>
+          <div class="lb-xp">2.190 XP</div>
+        </div>
+        <div class="lb-row">
+          <div class="lb-pos">4</div>
+          <div class="lb-avatar">👦</div>
+          <div class="lb-name">Rafael S.</div>
+          <div class="lb-xp">1.890 XP</div>
+        </div>
+        <div class="lb-row me">
+          <div class="lb-pos" style="color:#a89fff">7</div>
+          <div class="lb-avatar" style="background:rgba(108,99,255,0.3)">🙋</div>
+          <div class="lb-name" style="color:#a89fff">Você</div>
+          <div class="lb-xp">1.460 XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Pronto para subir no ranking?</h2>
+  <p>Crie sua conta grátis e comece sua trilha personalizada em menos de 2 minutos.</p>
+  <button class="btn-primary" style="font-size:1rem; padding: 16px 36px;">Estudar grátis agora</button>
+</section>
+
+<footer>
+  <strong>EduPath</strong> · MVP gerado por Claude Code (Anthropic) para a Liga de Empreendedorismo · Grupo 2
+</footer>
+
+</body>
+</html>
