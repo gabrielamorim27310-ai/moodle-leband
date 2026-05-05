@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>MedGo — Fila Virtual Hospitalar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
+
+  :root {
+    --teal: #00b4c8;
+    --teal-dark: #007a8c;
+    --teal-deep: #004f5c;
+    --teal-pale: #e0f7fa;
+    --navy: #1a2e4a;
+    --navy-light: #253a54;
+    --bg: #f4f9fb;
+    --surface: #ffffff;
+    --border: #dde8ec;
+    --text: #0f1f2e;
+    --text-muted: #5a7080;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --green: #22c55e;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.07);
+    --shadow-lg: 0 16px 48px rgba(0,180,200,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── BACK BAR ── */
+  .back-bar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .back-bar a { color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+  .back-bar a:hover { color: var(--teal); }
+  .liga-tag { background: var(--teal-pale); color: var(--teal-dark); padding: 2px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; }
+
+  /* ── NAV ── */
+  nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--teal), #4dd9e8);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark svg { width: 22px; height: 22px; }
+  .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-cta {
+    background: var(--teal);
+    color: white !important;
+    padding: 9px 22px;
+    border-radius: 8px;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--teal-dark) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-light) 50%, #1a4a5c 100%);
+    color: white;
+    padding: 72px 24px 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 55% 50% at 80% -10%, rgba(0,180,200,0.25), transparent 60%),
+      radial-gradient(ellipse 40% 60% at -5% 100%, rgba(0,180,200,0.12), transparent 55%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 52px;
+    align-items: flex-end;
+    position: relative;
+  }
+  .hero-content { padding-bottom: 72px; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,180,200,0.18);
+    border: 1px solid rgba(0,180,200,0.35);
+    color: #7ee8f0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+  .hero h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(2rem, 3.5vw, 2.9rem);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+  .hero h1 span { color: #7ee8f0; }
+  .hero p { font-size: 1rem; opacity: 0.8; line-height: 1.8; margin-bottom: 32px; max-width: 480px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; }
+  .btn-primary {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, var(--teal), #4dd9e8);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-outline {
+    padding: 14px 28px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.14); }
+  .hero-mini-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+  .mini-stat { }
+  .mini-stat-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 900; color: #7ee8f0; }
+  .mini-stat-label { font-size: 0.72rem; opacity: 0.6; margin-top: 1px; }
+
+  /* ── APP MOCKUP ── */
+  .hero-phone {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+  .phone-frame {
+    width: 260px;
+    background: #0d1117;
+    border-radius: 38px;
+    padding: 12px;
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .phone-screen {
+    background: var(--bg);
+    border-radius: 28px;
+    overflow: hidden;
+    height: 520px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Status bar */
+  .phone-status {
+    background: var(--navy);
+    padding: 10px 16px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 600;
+  }
+  .phone-notch {
+    width: 70px; height: 12px;
+    background: #0d1117;
+    border-radius: 0 0 8px 8px;
+    margin: 0 auto;
+  }
+
+  /* App header */
+  .app-header {
+    background: var(--navy);
+    padding: 8px 14px 14px;
+    color: white;
+  }
+  .app-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .app-logo-small { font-weight: 900; font-size: 0.9rem; color: #7ee8f0; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .app-avatar-sm { width: 26px; height: 26px; border-radius: 50%; background: rgba(0,180,200,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+  .app-location { font-size: 0.65rem; opacity: 0.6; margin-bottom: 4px; }
+  .app-location-name { font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+
+  /* MAP area */
+  .app-map {
+    background: #e8f4f8;
+    height: 140px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  /* Fake map grid */
+  .app-map::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,180,200,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,180,200,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .map-road-h {
+    position: absolute;
+    height: 6px;
+    background: white;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    left: 0; right: 0;
+  }
+  .map-road-v {
+    position: absolute;
+    width: 6px;
+    background: white;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    top: 0; bottom: 0;
+  }
+  .map-pin {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+  }
+  .pin-bubble {
+    background: white;
+    border-radius: 8px;
+    padding: 3px 7px;
+    font-size: 0.55rem;
+    font-weight: 800;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+  }
+  .pin-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .pin-tail {
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid white;
+    margin-top: -1px;
+  }
+  .my-location {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: var(--teal);
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 5px rgba(0,180,200,0.2);
+  }
+
+  /* Queue card */
+  .my-queue-card {
+    margin: 10px 12px 0;
+    background: linear-gradient(135deg, var(--navy), var(--teal-deep));
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .queue-icon { font-size: 1.4rem; }
+  .queue-info { flex: 1; }
+  .queue-label { font-size: 0.58rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .queue-pos { font-size: 1.1rem; font-weight: 900; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .queue-sub { font-size: 0.58rem; opacity: 0.65; margin-top: 1px; }
+  .queue-time {
+    text-align: right;
+  }
+  .queue-time-num { font-size: 1.3rem; font-weight: 900; color: #7ee8f0; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .queue-time-label { font-size: 0.55rem; opacity: 0.6; }
+
+  /* Hospitals nearby */
+  .nearby-label {
+    padding: 10px 12px 6px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .hospital-list { padding: 0 12px; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; flex: 1; }
+  .hospital-item {
+    background: white;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .hosp-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--teal-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .hosp-info { flex: 1; min-width: 0; }
+  .hosp-name { font-size: 0.72rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hosp-dist { font-size: 0.6rem; color: var(--text-muted); margin-top: 1px; }
+  .hosp-wait {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .wait-time { font-size: 0.82rem; font-weight: 800; }
+  .wait-label { font-size: 0.55rem; color: var(--text-muted); }
+  .wait-low { color: var(--green); }
+  .wait-med { color: var(--orange); }
+  .wait-high { color: var(--red); }
+
+  /* Bottom nav */
+  .app-bottom-nav {
+    background: white;
+    border-top: 1px solid var(--border);
+    padding: 8px 0 10px;
+    display: flex;
+    justify-content: space-around;
+    flex-shrink: 0;
+  }
+  .bot-nav-item { text-align: center; cursor: pointer; opacity: 0.45; }
+  .bot-nav-item.active { opacity: 1; }
+  .bot-nav-item .ico { font-size: 1rem; }
+  .bot-nav-item .lbl { font-size: 0.5rem; margin-top: 2px; color: var(--text-muted); display: block; font-weight: 600; }
+  .bot-nav-item.active .lbl { color: var(--teal); }
+
+  /* ── PROOF ── */
+  .proof-bar {
+    background: white;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+  }
+  .proof-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .proof-stat { text-align: center; }
+  .proof-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--teal-dark); }
+  .proof-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+
+  /* ── SECTIONS ── */
+  .section { max-width: 1100px; margin: 0 auto; padding: 72px 24px; }
+  .section-header { text-align: center; margin-bottom: 52px; }
+  .section-tag { display: inline-block; background: var(--teal-pale); color: var(--teal-dark); padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .section-header h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; margin-bottom: 12px; }
+  .section-header p { color: var(--text-muted); font-size: 1rem; max-width: 520px; margin: 0 auto; }
+
+  /* ── FEATURES GRID ── */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .feature-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+  }
+  .feature-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); border-color: rgba(0,180,200,0.3); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--teal-pale); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 18px; }
+  .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .feature-card p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* ── DUAL VIEW ── */
+  .dual-view {
+    background: linear-gradient(160deg, var(--navy), #1a4a5c);
+    color: white;
+    padding: 72px 24px;
+  }
+  .dual-inner { max-width: 1100px; margin: 0 auto; }
+  .dual-inner h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; text-align: center; margin-bottom: 48px; }
+  .dual-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .dual-col {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .dual-col-icon { font-size: 2rem; margin-bottom: 14px; }
+  .dual-col h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 18px; color: #7ee8f0; }
+  .dual-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
+  .dual-item-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; margin-top: 7px; }
+  .dual-item p { font-size: 0.87rem; opacity: 0.8; line-height: 1.6; }
+
+  /* ── HOW IT WORKS ── */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+  .step { text-align: center; }
+  .step-num {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: var(--teal-pale);
+    border: 2px solid rgba(0,180,200,0.25);
+    color: var(--teal-dark);
+    font-size: 1.2rem;
+    font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .step h3 { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
+  .step p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* ── COMPLIANCE ── */
+  .compliance-bar {
+    background: white;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 24px;
+  }
+  .compliance-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+  .compliance-item { display: flex; align-items: center; gap: 8px; font-size: 0.83rem; color: var(--text-muted); font-weight: 600; }
+  .compliance-icon { font-size: 1.1rem; }
+
+  /* ── CTA ── */
+  .cta { max-width: 1100px; margin: 0 auto; padding: 72px 24px; text-align: center; }
+  .cta h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900; margin-bottom: 16px; }
+  .cta p { color: var(--text-muted); font-size: 1rem; margin-bottom: 36px; max-width: 460px; margin-left: auto; margin-right: auto; }
+  .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-cta-primary {
+    padding: 16px 36px;
+    background: linear-gradient(135deg, var(--teal), #4dd9e8);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-cta-secondary {
+    padding: 16px 36px;
+    background: white;
+    color: var(--teal-dark);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .btn-cta-secondary:hover { border-color: var(--teal); }
+
+  footer { background: var(--navy); color: rgba(255,255,255,0.45); text-align: center; padding: 28px 24px; font-size: 0.8rem; }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-phone { display: none; }
+    .dual-cols { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BACK -->
+<div class="back-bar">
+  <a href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar ao Repositório de MVPs
+  </a>
+  <span>·</span>
+  <span class="liga-tag">Liga de Empreendedorismo · 2025</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="2" width="14" height="20" rx="2"/>
+        <path d="M12 6v4M10 8h4"/>
+        <path d="M8 14h8M8 17h5"/>
+      </svg>
+    </div>
+    MedGo
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Para hospitais</a></li>
+    <li><a href="#">Para planos de saúde</a></li>
+    <li><a href="#">Para pacientes</a></li>
+    <li><a class="nav-cta" href="#">Falar com consultor</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="dot"></span> HealthTech · Fila Virtual</div>
+      <h1>Fim da espera.<br>Saúde que <span>funciona</span>.</h1>
+      <p>O MedGo conecta pacientes, hospitais e planos de saúde em tempo real — mostrando o tempo de espera e gerenciando filas de forma virtual para acabar com as horas perdidas na recepção.</p>
+      <div class="hero-actions">
+        <button class="btn-primary">Agendar demonstração</button>
+        <button class="btn-outline">Ver como funciona</button>
+      </div>
+      <div class="hero-mini-stats">
+        <div class="mini-stat">
+          <div class="mini-stat-num">4h→15min</div>
+          <div class="mini-stat-label">redução no tempo de espera</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">872</div>
+          <div class="mini-stat-label">hospitais em São Paulo</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">B2B</div>
+          <div class="mini-stat-label">white-label para hospitais</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHONE MOCKUP -->
+    <div class="hero-phone">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <!-- Status bar -->
+          <div class="phone-status">
+            <span>9:41</span>
+            <div class="phone-notch"></div>
+            <span>●●● 100%</span>
+          </div>
+
+          <!-- App header -->
+          <div class="app-header">
+            <div class="app-header-top">
+              <div class="app-logo-small">MedGo</div>
+              <div class="app-avatar-sm">👤</div>
+            </div>
+            <div class="app-location">Sua localização</div>
+            <div class="app-location-name">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7ee8f0" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              Jardins, São Paulo · SP
+            </div>
+          </div>
+
+          <!-- MAP -->
+          <div class="app-map">
+            <div class="map-road-h" style="top:40%"></div>
+            <div class="map-road-h" style="top:70%"></div>
+            <div class="map-road-v" style="left:30%"></div>
+            <div class="map-road-v" style="left:65%"></div>
+
+            <!-- My location -->
+            <div class="my-location" style="left:48%;top:48%"></div>
+
+            <!-- Hospital pins -->
+            <div class="map-pin" style="left:18%;top:22%">
+              <div class="pin-bubble"><span class="pin-dot" style="background:var(--green)"></span>12 min</div>
+              <div class="pin-tail"></div>
+            </div>
+            <div class="map-pin" style="left:58%;top:12%">
+              <div class="pin-bubble"><span class="pin-dot" style="background:var(--orange)"></span>34 min</div>
+              <div class="pin-tail"></div>
+            </div>
+            <div class="map-pin" style="left:72%;top:55%">
+              <div class="pin-bubble"><span class="pin-dot" style="background:var(--red)"></span>1h 12 min</div>
+              <div class="pin-tail"></div>
+            </div>
+          </div>
+
+          <!-- My queue card -->
+          <div class="my-queue-card">
+            <div class="queue-icon">🏥</div>
+            <div class="queue-info">
+              <div class="queue-label">Você está na fila</div>
+              <div class="queue-pos">Hospital São Luiz · Itaim</div>
+              <div class="queue-sub">Posição #4 · Clinica Geral</div>
+            </div>
+            <div class="queue-time">
+              <div class="queue-time-num">12</div>
+              <div class="queue-time-label">min est.</div>
+            </div>
+          </div>
+
+          <!-- Hospitals nearby -->
+          <div class="nearby-label">Hospitais próximos</div>
+          <div class="hospital-list">
+            <div class="hospital-item">
+              <div class="hosp-icon">🏥</div>
+              <div class="hosp-info">
+                <div class="hosp-name">Hospital São Luiz · Itaim</div>
+                <div class="hosp-dist">0.8 km · Plano Amil aceito</div>
+              </div>
+              <div class="hosp-wait">
+                <div class="wait-time wait-low">12 min</div>
+                <div class="wait-label">espera</div>
+              </div>
+            </div>
+            <div class="hospital-item">
+              <div class="hosp-icon">🏨</div>
+              <div class="hosp-info">
+                <div class="hosp-name">Hospital Sírio-Libanês</div>
+                <div class="hosp-dist">1.4 km · Particular</div>
+              </div>
+              <div class="hosp-wait">
+                <div class="wait-time wait-med">34 min</div>
+                <div class="wait-label">espera</div>
+              </div>
+            </div>
+            <div class="hospital-item">
+              <div class="hosp-icon">🏦</div>
+              <div class="hosp-info">
+                <div class="hosp-name">UPA Vila Mariana</div>
+                <div class="hosp-dist">2.1 km · SUS</div>
+              </div>
+              <div class="hosp-wait">
+                <div class="wait-time wait-high">1h 12</div>
+                <div class="wait-label">espera</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom nav -->
+          <div class="app-bottom-nav">
+            <div class="bot-nav-item active">
+              <div class="ico">🗺️</div>
+              <span class="lbl">Mapa</span>
+            </div>
+            <div class="bot-nav-item">
+              <div class="ico">🎟️</div>
+              <span class="lbl">Minha fila</span>
+            </div>
+            <div class="bot-nav-item">
+              <div class="ico">📋</div>
+              <span class="lbl">Histórico</span>
+            </div>
+            <div class="bot-nav-item">
+              <div class="ico">👤</div>
+              <span class="lbl">Perfil</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-inner">
+    <div class="proof-stat"><div class="proof-num">4–8h</div><div class="proof-label">tempo médio de espera atual</div></div>
+    <div class="proof-stat"><div class="proof-num">872</div><div class="proof-label">hospitais particulares em SP</div></div>
+    <div class="proof-stat"><div class="proof-num">R$54M</div><div class="proof-label">receita projetada/ano</div></div>
+    <div class="proof-stat"><div class="proof-num">305</div><div class="proof-label">hospitais no mercado-alvo (35%)</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-tag">Funcionalidades</div>
+    <h2>Tudo que o sistema de saúde precisa</h2>
+    <p>Do paciente ao hospital, uma plataforma integrada que elimina filas físicas e burocracias.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Fila Virtual por App</h3>
+      <p>Paciente entra na fila digitalmente antes de sair de casa, acompanha sua posição em tempo real e recebe notificação quando está próximo de ser atendido.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗺️</div>
+      <h3>Geolocalização inteligente</h3>
+      <p>Integração com Maps e Waze para recomendar a unidade conveniada mais próxima com menor tempo de espera, considerando o plano de saúde do usuário.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>IA de estimativa dinâmica</h3>
+      <p>Algoritmo de machine learning calcula o tempo de espera em tempo real com base no histórico do hospital, tipo de atendimento e fluxo do dia.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏥</div>
+      <h3>Integração com planos de saúde</h3>
+      <p>Conectado automaticamente às operadoras para validação de cobertura, autorização de procedimentos e encaminhamentos — sem papel, sem impressoras.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>Prontuário eletrônico TISS</h3>
+      <p>Recepção 100% digital com prontuário integrado no padrão TISS da ANS, eliminando fichas físicas e reduzindo custos com equipe administrativa.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>Segurança e LGPD</h3>
+      <p>Dados dos pacientes protegidos com criptografia ponta a ponta e conformidade total com a Lei Geral de Proteção de Dados.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHOM -->
+<section class="dual-view">
+  <div class="dual-inner">
+    <h2>Uma plataforma, dois mundos</h2>
+    <div class="dual-cols">
+      <div class="dual-col">
+        <div class="dual-col-icon">🧑‍⚕️</div>
+        <h3>Para o paciente</h3>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Entre na fila do hospital sem sair de casa</p></div>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Acompanhe o tempo de espera em tempo real</p></div>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Encontre o hospital mais próximo com seu plano</p></div>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Receba notificações quando for sua vez</p></div>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Histórico completo de atendimentos no app</p></div>
+      </div>
+      <div class="dual-col">
+        <div class="dual-col-icon">🏥</div>
+        <h3>Para o hospital</h3>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Redução do time administrativo na recepção</p></div>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Elimine impressoras, papéis e fichas físicas</p></div>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Dashboard em tempo real com fluxo de pacientes</p></div>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>White-label com a identidade visual do hospital</p></div>
+        <div class="dual-item"><div class="dual-item-dot"></div><p>Relatórios e analytics de atendimento por período</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-tag">Como funciona</div>
+    <h2>Simples para o paciente. Poderoso para o hospital.</h2>
+    <p>Do cadastro ao atendimento, em 4 passos.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Paciente abre o app</h3>
+      <p>Visualiza hospitais próximos, tempo de espera e cobertura do seu plano em tempo real.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Entra na fila virtual</h3>
+      <p>Seleciona o hospital e especialidade. A fila começa a contar sem ele precisar estar lá.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Recebe a notificação</h3>
+      <p>Quando estiver próximo de ser chamado, o app avisa — com tempo estimado para chegar.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Atendimento digital</h3>
+      <p>Check-in com QR Code. Dados e histórico já carregados. Recepção sem papel e sem fila.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<div class="compliance-bar">
+  <div class="compliance-inner">
+    <div class="compliance-item"><span class="compliance-icon">🛡️</span> Conformidade LGPD</div>
+    <div class="compliance-item"><span class="compliance-icon">📋</span> Padrão TISS / ANS</div>
+    <div class="compliance-item"><span class="compliance-icon">🔐</span> Dados criptografados</div>
+    <div class="compliance-item"><span class="compliance-icon">🏥</span> Integração com operadoras</div>
+    <div class="compliance-item"><span class="compliance-icon">📍</span> Maps & Waze integrado</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Transforme a recepção do seu hospital</h2>
+  <p>Agende uma demonstração gratuita e veja o MedGo funcionando em menos de 30 minutos.</p>
+  <div class="cta-btns">
+    <button class="btn-cta-primary">Agendar demonstração</button>
+    <button class="btn-cta-secondary">Falar com o time</button>
+  </div>
+</section>
+
+<footer>
+  <strong>MedGo</strong> · MVP gerado por Claude Code (Anthropic) para a Liga de Empreendedorismo · 2025
+</footer>
+
+</body>
+</html>
