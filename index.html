@@ -366,9 +366,9 @@
   <h1>Repositório de <span>MVPs</span></h1>
   <p>Interfaces de produto geradas por IA para os grupos da liga — prontas para o pitch deck.</p>
   <div class="hero-stats">
-    <div class="stat"><span class="stat-num" id="total-groups">—</span><span class="stat-label">Grupos</span></div>
-    <div class="stat"><span class="stat-num" id="ready-count">—</span><span class="stat-label">MVPs prontos</span></div>
-    <div class="stat"><span class="stat-num" id="building-count">—</span><span class="stat-label">Em desenvolvimento</span></div>
+    <div class="stat"><span class="stat-num">8</span><span class="stat-label">Grupos</span></div>
+    <div class="stat"><span class="stat-num">3</span><span class="stat-label">Exemplos de MVP</span></div>
+    <div class="stat"><span class="stat-num">8</span><span class="stat-label">Em desenvolvimento</span></div>
   </div>
 </header>
 
@@ -626,17 +626,6 @@
 </footer>
 
 <script>
-  // Conta estatísticas
-  function updateStats() {
-    const cards = document.querySelectorAll('.mvp-card');
-    const ready = [...cards].filter(c => c.dataset.status === 'ready').length;
-    const building = [...cards].filter(c => c.dataset.status === 'building').length;
-    document.getElementById('total-groups').textContent = cards.length;
-    document.getElementById('ready-count').textContent = ready;
-    document.getElementById('building-count').textContent = building;
-  }
-
-  // Filtro
   function filterCards(status, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -645,8 +634,6 @@
       card.style.display = show ? '' : 'none';
     });
   }
-
-  updateStats();
 </script>
 </body>
 </html>
