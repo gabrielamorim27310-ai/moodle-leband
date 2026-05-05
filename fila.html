@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>Fila de MVPs — Admin</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
+
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #1a1d24;
+    --border: #2a2d35;
+    --text: #f0f2f7;
+    --text-muted: #8b8fa8;
+    --accent: #6c63ff;
+    --green: #22c55e;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* LOGIN */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+  }
+  .login-screen::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(108,99,255,0.1), transparent 65%);
+  }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 380px;
+    position: relative;
+    text-align: center;
+  }
+  .login-icon { font-size: 2.5rem; margin-bottom: 16px; }
+  .login-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 900; margin-bottom: 6px; }
+  .login-sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 28px; }
+  .login-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    outline: none;
+    text-align: center;
+    letter-spacing: 0.12em;
+    transition: border-color 0.2s;
+  }
+  .login-input:focus { border-color: var(--accent); }
+  .login-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--accent), #9b93ff);
+    color: white; border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .login-btn:hover { opacity: 0.9; }
+  .login-error { color: var(--red); font-size: 0.8rem; margin-top: 10px; display: none; }
+
+  /* ADMIN PANEL */
+  .admin-panel { display: none; }
+
+  /* TOP BAR */
+  .top-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .top-bar-left { display: flex; align-items: center; gap: 12px; }
+  .top-bar-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 900; font-size: 1rem; }
+  .admin-badge { background: rgba(108,99,255,0.15); border: 1px solid rgba(108,99,255,0.3); color: #a89fff; padding: 3px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .top-bar-right { display: flex; align-items: center; gap: 12px; }
+  .btn-refresh { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 7px 14px; border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: border-color 0.2s; }
+  .btn-refresh:hover { border-color: var(--accent); color: var(--text); }
+  .btn-formspree { background: linear-gradient(135deg, var(--accent), #9b93ff); color: white; padding: 7px 14px; border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 700; cursor: pointer; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+
+  /* MAIN */
+  main { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* STATS */
+  .stats-row { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; flex: 1; min-width: 140px; }
+  .stat-card-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; font-weight: 900; }
+  .stat-card-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-top: 3px; }
+  .stat-card-num.pending { color: var(--yellow); }
+  .stat-card-num.done { color: var(--green); }
+  .stat-card-num.total { color: var(--accent); }
+
+  /* FILTER ROW */
+  .filter-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .filter-tabs { display: flex; gap: 8px; }
+  .filter-tab { padding: 7px 16px; border: 1px solid var(--border); border-radius: 20px; background: transparent; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .filter-tab:hover { border-color: var(--accent); color: var(--text); }
+  .filter-tab.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .sort-select { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.8rem; padding: 7px 12px; outline: none; }
+
+  /* QUEUE TABLE */
+  .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .queue-list { display: flex; flex-direction: column; gap: 12px; }
+  .queue-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    transition: border-color 0.2s;
+  }
+  .queue-card:hover { border-color: rgba(108,99,255,0.3); }
+  .queue-card.status-done { border-left: 3px solid var(--green); }
+  .queue-card.status-pending { border-left: 3px solid var(--yellow); }
+
+  .queue-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+  .queue-card-info { flex: 1; min-width: 0; }
+  .queue-card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .queue-grupo { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+  .queue-startup { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; }
+  .queue-setor { background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.2); color: #a89fff; font-size: 0.68rem; font-weight: 700; padding: 2px 9px; border-radius: 6px; }
+  .queue-date { font-size: 0.72rem; color: var(--text-muted); }
+
+  .queue-prompt {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 14px;
+    max-height: 80px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: max-height 0.3s;
+  }
+  .queue-prompt.expanded { max-height: 500px; }
+  .queue-prompt::after {
+    content: 'Ver mais ↓';
+    position: absolute; bottom: 8px; right: 12px;
+    font-size: 0.72rem; color: var(--accent); font-weight: 700;
+  }
+  .queue-prompt.expanded::after { content: 'Recolher ↑'; }
+
+  .queue-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn-copy-prompt {
+    padding: 8px 16px;
+    background: rgba(108,99,255,0.12);
+    border: 1px solid rgba(108,99,255,0.25);
+    color: #a89fff;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-copy-prompt:hover { background: rgba(108,99,255,0.2); border-color: rgba(108,99,255,0.4); }
+  .btn-copy-prompt.copied { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); color: var(--green); }
+
+  .btn-mark-done {
+    padding: 8px 16px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.25);
+    color: var(--green);
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-mark-done:hover { background: rgba(34,197,94,0.2); }
+  .btn-mark-done.is-done { opacity: 0.5; cursor: default; }
+
+  .btn-view-file {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+  }
+  .btn-view-file:hover { border-color: var(--accent); color: var(--text); }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.7rem; font-weight: 700;
+    padding: 4px 10px; border-radius: 6px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .status-pill .dot { width: 5px; height: 5px; border-radius: 50%; }
+  .status-pill.pending { background: rgba(245,158,11,0.12); color: var(--yellow); }
+  .status-pill.pending .dot { background: var(--yellow); animation: pulse 2s infinite; }
+  .status-pill.done { background: rgba(34,197,94,0.1); color: var(--green); }
+  .status-pill.done .dot { background: var(--green); }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 64px 24px; color: var(--text-muted); }
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .empty-state p { font-size: 0.9rem; line-height: 1.7; }
+
+  /* FORMSPREE SETUP NOTICE */
+  .setup-notice {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 28px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .setup-notice .ico { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+  .setup-notice p { font-size: 0.85rem; line-height: 1.65; color: var(--text-muted); }
+  .setup-notice p strong { color: var(--text); }
+  .setup-notice a { color: #f59e0b; text-decoration: none; font-weight: 600; }
+  .setup-notice a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    main { padding: 24px 16px 60px; }
+    .stats-row { gap: 10px; }
+    .queue-card-top { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-icon">🔐</div>
+    <div class="login-title">Acesso do mentor</div>
+    <div class="login-sub">Fila de submissões da Liga de Empreendedorismo</div>
+    <input type="password" class="login-input" id="login-input" placeholder="Senha" onkeydown="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">Entrar</button>
+    <div class="login-error" id="login-error">Senha incorreta.</div>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div class="admin-panel" id="admin-panel">
+
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <div class="top-bar-title">Fila de MVPs</div>
+      <div class="admin-badge">Admin</div>
+    </div>
+    <div class="top-bar-right">
+      <button class="btn-refresh" onclick="renderQueue()">↻ Atualizar</button>
+      <a class="btn-formspree" href="https://formspree.io/forms" target="_blank">
+        Ver no Formspree
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- SETUP NOTICE -->
+    <div class="setup-notice" id="setup-notice">
+      <div class="ico">⚙️</div>
+      <p>
+        <strong>Configure o Formspree para receber submissões:</strong><br>
+        1. Acesse <a href="https://formspree.io" target="_blank">formspree.io</a> e crie uma conta com seu e-mail.<br>
+        2. Crie um novo form e copie o <strong>Form ID</strong> (ex: <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">xpznrkqd</code>).<br>
+        3. No arquivo <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">submit.html</code>, substitua <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">SUBSTITUA_PELO_SEU_FORM_ID</code> pelo seu ID.<br>
+        4. Nesta página, substitua <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">SEU_API_KEY</code> e <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">SEU_FORM_ID</code> abaixo no script.<br>
+        As submissões passarão a aparecer aqui automaticamente.
+      </p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card-num total" id="stat-total">—</div>
+        <div class="stat-card-label">Submissões totais</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num pending" id="stat-pending">—</div>
+        <div class="stat-card-label">Aguardando MVP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num done" id="stat-done">—</div>
+        <div class="stat-card-label">MVPs gerados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" id="stat-groups" style="color:var(--text-muted)">8</div>
+        <div class="stat-card-label">Grupos na liga</div>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-row">
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter('all',this)">Todos</button>
+        <button class="filter-tab" onclick="setFilter('pending',this)">Aguardando</button>
+        <button class="filter-tab" onclick="setFilter('done',this)">Feitos</button>
+      </div>
+      <select class="sort-select" id="sort-select" onchange="renderQueue()">
+        <option value="newest">Mais recentes primeiro</option>
+        <option value="oldest">Mais antigos primeiro</option>
+        <option value="grupo">Por grupo</option>
+      </select>
+    </div>
+
+    <!-- QUEUE -->
+    <div class="section-label">Submissões</div>
+    <div class="queue-list" id="queue-list">
+      <div class="empty-state">
+        <div class="icon">📭</div>
+        <p>Nenhuma submissão ainda.<br>Configure o Formspree e as submissões aparecerão aqui.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // ── CONFIG — substitua estes valores após criar a conta no Formspree ──
+  const FORMSPREE_API_KEY = 'SEU_API_KEY';
+  const FORMSPREE_FORM_ID = 'SEU_FORM_ID';
+  const ADMIN_PASSWORD    = 'liga2025';     // altere para a senha que quiser
+  // ─────────────────────────────────────────────────────────────────────
+
+  let currentFilter = 'all';
+  let submissions   = [];
+
+  // ── LOGIN ──
+  function login() {
+    const val = document.getElementById('login-input').value;
+    if (val === ADMIN_PASSWORD) {
+      document.getElementById('login-screen').style.display  = 'none';
+      document.getElementById('admin-panel').style.display   = 'block';
+      loadSubmissions();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('login-input').value = '';
+      document.getElementById('login-input').focus();
+    }
+  }
+
+  // ── LOAD FROM FORMSPREE API ──
+  async function loadSubmissions() {
+    if (FORMSPREE_API_KEY === 'SEU_API_KEY') {
+      // modo demo: mostra cards de exemplo
+      submissions = getDemoData();
+      renderQueue();
+      return;
+    }
+    try {
+      const res = await fetch(`https://formspree.io/api/0/forms/${FORMSPREE_FORM_ID}/submissions`, {
+        headers: { 'Authorization': `Bearer ${FORMSPREE_API_KEY}` }
+      });
+      const data = await res.json();
+      submissions = (data.submissions || []).map(s => ({
+        id:          s.id,
+        grupo:       s.data?.grupo       || '—',
+        startup:     s.data?.startup     || 'Sem nome',
+        setor:       s.data?.setor       || '—',
+        prompt:      s.data?.prompt      || '',
+        email:       s.data?.email       || '',
+        responsavel: s.data?.responsavel || '',
+        link_pitch:  s.data?.link_pitch  || '',
+        date:        s.createdAt,
+        status:      getStatus(s.id),
+      }));
+    } catch(e) {
+      submissions = getDemoData();
+    }
+    renderQueue();
+  }
+
+  // Status salvo em localStorage
+  function getStatus(id)      { return localStorage.getItem('mvp_status_' + id) || 'pending'; }
+  function setStatus(id, st)  { localStorage.setItem('mvp_status_' + id, st); }
+
+  // ── RENDER ──
+  function renderQueue() {
+    let list = [...submissions];
+    if (currentFilter !== 'all') list = list.filter(s => s.status === currentFilter);
+
+    const sort = document.getElementById('sort-select').value;
+    if (sort === 'newest') list.sort((a,b) => new Date(b.date) - new Date(a.date));
+    if (sort === 'oldest') list.sort((a,b) => new Date(a.date) - new Date(b.date));
+    if (sort === 'grupo')  list.sort((a,b) => a.grupo.localeCompare(b.grupo));
+
+    const total   = submissions.length;
+    const pending = submissions.filter(s => s.status === 'pending').length;
+    const done    = submissions.filter(s => s.status === 'done').length;
+
+    document.getElementById('stat-total').textContent   = total;
+    document.getElementById('stat-pending').textContent = pending;
+    document.getElementById('stat-done').textContent    = done;
+
+    const el = document.getElementById('queue-list');
+    if (!list.length) {
+      el.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>Nenhuma submissão ${currentFilter !== 'all' ? 'nesta categoria' : 'ainda'}.</p></div>`;
+      return;
+    }
+    el.innerHTML = list.map(s => cardHTML(s)).join('');
+  }
+
+  function cardHTML(s) {
+    const dateStr = s.date ? new Date(s.date).toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '—';
+    const isDone  = s.status === 'done';
+    const prompt  = s.prompt || 'Sem prompt';
+    const shortPrompt = prompt.length > 180 ? prompt.slice(0, 180) + '…' : prompt;
+
+    return `
+    <div class="queue-card status-${s.status}" id="card-${s.id}">
+      <div class="queue-card-top">
+        <div class="queue-card-info">
+          <div class="queue-card-meta">
+            <span class="queue-grupo">${s.grupo}</span>
+            ${s.setor ? `<span class="queue-setor">${s.setor}</span>` : ''}
+            <span class="queue-date">· ${dateStr}</span>
+          </div>
+          <div class="queue-startup">${s.startup || 'Startup sem nome'}</div>
+          ${s.responsavel ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px">${s.responsavel} · ${s.email}</div>` : ''}
+        </div>
+        <div class="status-pill ${s.status}">
+          <span class="dot"></span>
+          ${isDone ? 'MVP Feito' : 'Aguardando'}
+        </div>
+      </div>
+
+      <div class="queue-prompt" id="prompt-${s.id}" onclick="togglePrompt('${s.id}')">${prompt}</div>
+
+      <div class="queue-card-actions">
+        <button class="btn-copy-prompt" id="copy-${s.id}" onclick="copyPrompt('${s.id}', \`${escapeForAttr(prompt)}\`)">
+          📋 Copiar prompt para Claude
+        </button>
+        ${s.link_pitch ? `<a class="btn-view-file" href="${s.link_pitch}" target="_blank">🔗 Ver pitch deck</a>` : ''}
+        <button class="btn-mark-done ${isDone ? 'is-done' : ''}" id="done-${s.id}" onclick="markDone('${s.id}')" ${isDone ? 'disabled' : ''}>
+          ${isDone ? '✓ MVP gerado' : '✓ Marcar como feito'}
+        </button>
+      </div>
+    </div>`;
+  }
+
+  function escapeForAttr(str) {
+    return (str || '').replace(/`/g, "'").replace(/\\/g, '\\\\');
+  }
+
+  function togglePrompt(id) {
+    document.getElementById('prompt-' + id)?.classList.toggle('expanded');
+  }
+
+  async function copyPrompt(id, prompt) {
+    const fullPrompt = `Gere uma interface HTML completa para o MVP do seguinte grupo da Liga de Empreendedorismo:\n\n${prompt}\n\nO arquivo deve ser salvo como mvp-[nome-da-startup].html e depois adicione o card no index.html.`;
+    try {
+      await navigator.clipboard.writeText(fullPrompt);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = fullPrompt;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const btn = document.getElementById('copy-' + id);
+    btn.classList.add('copied');
+    btn.innerHTML = '✓ Copiado!';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '📋 Copiar prompt para Claude'; }, 2500);
+  }
+
+  function markDone(id) {
+    const s = submissions.find(x => x.id === id);
+    if (!s || s.status === 'done') return;
+    s.status = 'done';
+    setStatus(id, 'done');
+    renderQueue();
+  }
+
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderQueue();
+  }
+
+  // ── DEMO DATA (antes de configurar o Formspree) ──
+  function getDemoData() {
+    return [
+      {
+        id: 'demo-1',
+        grupo: 'Grupo 3', startup: 'PayFácil', setor: 'FinTech',
+        prompt: 'Somos uma plataforma de pagamentos para MEIs. O problema: MEIs não conseguem cobrar de forma profissional sem pagar taxas absurdas. Nossa solução é um link de pagamento simples, com QR Code e transferência automática para conta bancária, cobrando apenas 1% por transação.',
+        email: 'grupo3@liga.com', responsavel: 'Pedro Alves',
+        link_pitch: '', date: new Date(Date.now() - 86400000 * 2).toISOString(),
+        status: getStatus('demo-1'),
+      },
+      {
+        id: 'demo-2',
+        grupo: 'Grupo 5', startup: 'AgroSense', setor: 'AgTech',
+        prompt: 'App para pequenos agricultores monitorarem plantações via sensores IoT de baixo custo. O agricultor instala sensores no solo que mandam dados de umidade, temperatura e pH para o app. A IA avisa quando irrigar ou adubar. Público: agricultores familiares, 35-60 anos.',
+        email: 'grupo5@liga.com', responsavel: 'Ana Lima',
+        link_pitch: 'https://drive.google.com/exemplo', date: new Date(Date.now() - 3600000 * 5).toISOString(),
+        status: getStatus('demo-2'),
+      },
+    ];
+  }
+</script>
+</body>
+</html>

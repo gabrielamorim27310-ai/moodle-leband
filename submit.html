@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>Envie seu Pitch — Liga de Empreendedorismo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
+
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #1a1d24;
+    --border: #2a2d35;
+    --text: #f0f2f7;
+    --text-muted: #8b8fa8;
+    --accent: #6c63ff;
+    --accent-pale: rgba(108,99,255,0.12);
+    --green: #22c55e;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* BACK */
+  .back-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; color: var(--text-muted);
+  }
+  .back-bar a { color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+  .back-bar a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    padding: 64px 24px 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% -5%, rgba(108,99,255,0.18), transparent 60%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.3);
+    color: #a89fff;
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 0.78rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 22px; position: relative;
+  }
+  .hero h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900; line-height: 1.2;
+    margin-bottom: 14px; position: relative;
+  }
+  .hero h1 span { background: linear-gradient(135deg, #6c63ff, #a89fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero p { font-size: 1rem; color: var(--text-muted); max-width: 520px; margin: 0 auto; line-height: 1.75; position: relative; }
+
+  /* STEPS */
+  .steps-bar {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 32px 24px 0;
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+  .steps-bar::before {
+    content: '';
+    position: absolute;
+    top: 48px; left: calc(24px + 20px); right: calc(24px + 20px);
+    height: 1px; background: var(--border);
+  }
+  .step-item { flex: 1; text-align: center; }
+  .step-circle {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 800;
+    color: var(--text-muted); margin: 0 auto 8px;
+    position: relative; z-index: 1;
+  }
+  .step-circle.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .step-circle.done { background: var(--green); border-color: var(--green); color: white; }
+  .step-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
+
+  /* FORM CARD */
+  .form-wrap {
+    max-width: 700px;
+    margin: 36px auto 80px;
+    padding: 0 24px;
+  }
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .form-section {
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-section:last-of-type { border-bottom: none; }
+  .form-section-title {
+    font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--text-muted); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .form-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-row.full { grid-template-columns: 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .form-group:last-child { margin-bottom: 0; }
+  label { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+  label .required { color: var(--accent); margin-left: 2px; }
+  label .optional { color: var(--text-muted); font-weight: 400; font-size: 0.75rem; margin-left: 4px; }
+
+  input, select, textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    padding: 11px 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    outline: none;
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-muted); }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.12);
+  }
+  select option { background: #1a1d24; }
+  textarea { resize: vertical; min-height: 140px; line-height: 1.65; }
+
+  /* Prompt field */
+  .prompt-field textarea {
+    min-height: 200px;
+    font-size: 0.88rem;
+    border-color: rgba(108,99,255,0.3);
+  }
+  .prompt-field textarea:focus { border-color: var(--accent); }
+  .prompt-hint {
+    margin-top: 8px;
+    background: rgba(108,99,255,0.08);
+    border: 1px solid rgba(108,99,255,0.2);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 0.78rem;
+    color: #a89fff;
+    line-height: 1.6;
+  }
+  .prompt-hint strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+  /* File upload */
+  .file-drop {
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .file-drop:hover { border-color: var(--accent); background: var(--accent-pale); }
+  .file-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .file-drop-icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .file-drop-label { font-size: 0.85rem; color: var(--text-muted); }
+  .file-drop-label strong { color: var(--accent); }
+  .file-drop-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; }
+  .file-name { margin-top: 10px; font-size: 0.78rem; color: var(--green); display: none; }
+
+  /* OR divider */
+  .or-divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--text-muted); font-size: 0.75rem; font-weight: 600; }
+  .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Submit */
+  .form-footer { padding: 24px 32px; background: var(--surface2); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .form-footer-note { font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .btn-submit {
+    padding: 13px 32px;
+    background: linear-gradient(135deg, var(--accent), #9b93ff);
+    color: white; border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* SUCCESS STATE */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 64px 32px;
+  }
+  .success-icon { font-size: 3.5rem; margin-bottom: 20px; }
+  .success-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 900; margin-bottom: 10px; }
+  .success-msg { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; max-width: 400px; margin: 0 auto 28px; }
+  .btn-back { padding: 11px 26px; background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
+  .btn-back:hover { border-color: var(--accent); color: var(--text); }
+
+  @media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+    .form-section { padding: 22px 20px; }
+    .form-footer { flex-direction: column; align-items: stretch; }
+    .btn-submit { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="back-bar">
+  <a href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar ao Repositório de MVPs
+  </a>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">📨 Submissão de MVP</div>
+  <h1>Envie o pitch do<br>seu <span>grupo</span></h1>
+  <p>Descreva seu produto ou envie o pitch deck. Seu mentor vai analisar e gerar a interface do MVP para o seu grupo.</p>
+</div>
+
+<!-- STEPS -->
+<div class="steps-bar">
+  <div class="step-item">
+    <div class="step-circle active">1</div>
+    <div class="step-label">Preencha o form</div>
+  </div>
+  <div class="step-item">
+    <div class="step-circle">2</div>
+    <div class="step-label">Entra na fila</div>
+  </div>
+  <div class="step-item">
+    <div class="step-circle">3</div>
+    <div class="step-label">MVP gerado por IA</div>
+  </div>
+  <div class="step-item">
+    <div class="step-circle">4</div>
+    <div class="step-label">No pitch deck</div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap">
+  <div class="form-card" id="form-card">
+
+    <form id="mvp-form" action="https://formspree.io/f/SUBSTITUA_PELO_SEU_FORM_ID" method="POST" enctype="multipart/form-data">
+
+      <!-- IDENTIFICAÇÃO -->
+      <div class="form-section">
+        <div class="form-section-title">Identificação do grupo</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Número do grupo <span class="required">*</span></label>
+            <select name="grupo" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Grupo 1">Grupo 1</option>
+              <option value="Grupo 2">Grupo 2</option>
+              <option value="Grupo 3">Grupo 3</option>
+              <option value="Grupo 4">Grupo 4</option>
+              <option value="Grupo 5">Grupo 5</option>
+              <option value="Grupo 6">Grupo 6</option>
+              <option value="Grupo 7">Grupo 7</option>
+              <option value="Grupo 8">Grupo 8</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nome da startup <span class="optional">(opcional)</span></label>
+            <input type="text" name="startup" placeholder="ex: MedGo, EduPath...">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Setor <span class="required">*</span></label>
+            <select name="setor" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option>HealthTech</option>
+              <option>EdTech</option>
+              <option>FoodTech</option>
+              <option>FinTech</option>
+              <option>AgTech</option>
+              <option>RetailTech</option>
+              <option>SaaS / B2B</option>
+              <option>Marketplace</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Email do grupo <span class="required">*</span></label>
+            <input type="email" name="email" placeholder="email@exemplo.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Integrante responsável <span class="required">*</span></label>
+          <input type="text" name="responsavel" placeholder="Nome completo" required>
+        </div>
+      </div>
+
+      <!-- PROMPT -->
+      <div class="form-section">
+        <div class="form-section-title">Descrição do produto</div>
+        <div class="form-group prompt-field">
+          <label>Descreva seu produto para o Claude Code <span class="required">*</span></label>
+          <textarea name="prompt" required placeholder="Descreva seu produto aqui. Quanto mais detalhes, melhor será o MVP gerado..."></textarea>
+          <div class="prompt-hint">
+            <strong>O que incluir na descrição:</strong>
+            Problema que resolve · Público-alvo · Como funciona · Funcionalidades principais (4–6) · Paleta de cores preferida · Referências visuais · Qual tela é mais importante para o pitch
+          </div>
+        </div>
+      </div>
+
+      <!-- PITCH DECK -->
+      <div class="form-section">
+        <div class="form-section-title">Pitch deck <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.85rem;color:var(--text-muted)"> — pelo menos um dos dois</span></div>
+
+        <div class="form-group">
+          <label>Envie o arquivo do pitch deck <span class="optional">(PDF ou PPT, até 10MB)</span></label>
+          <div class="file-drop" id="file-drop">
+            <input type="file" name="arquivo_pitch" accept=".pdf,.ppt,.pptx" id="file-input">
+            <div class="file-drop-icon">📎</div>
+            <div class="file-drop-label"><strong>Clique para selecionar</strong> ou arraste aqui</div>
+            <div class="file-drop-sub">PDF, PPT ou PPTX — máx. 10MB</div>
+            <div class="file-name" id="file-name"></div>
+          </div>
+        </div>
+
+        <div class="or-divider">ou</div>
+
+        <div class="form-group">
+          <label>Link do Google Drive / Canva <span class="optional">(se preferir compartilhar por link)</span></label>
+          <input type="url" name="link_pitch" placeholder="https://drive.google.com/...">
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="form-footer">
+        <div class="form-footer-note">
+          🔒 Suas informações ficam seguras e vão direto para o mentor.
+        </div>
+        <button type="submit" class="btn-submit" id="btn-submit">
+          Enviar para a fila
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+    </form>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="success-screen">
+      <div class="success-icon">🚀</div>
+      <div class="success-title">Pitch enviado com sucesso!</div>
+      <div class="success-msg">Seu grupo entrou na fila. O mentor vai analisar e logo a interface do MVP do seu produto estará aqui no repositório.</div>
+      <a href="index.html" class="btn-back">← Voltar ao repositório</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Mostrar nome do arquivo selecionado
+  document.getElementById('file-input').addEventListener('change', function() {
+    const name = this.files[0]?.name;
+    const el = document.getElementById('file-name');
+    if (name) { el.textContent = '✓ ' + name; el.style.display = 'block'; }
+  });
+
+  // Submit via fetch (sem redirecionar)
+  document.getElementById('mvp-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.innerHTML = 'Enviando... <span style="opacity:.6">⏳</span>';
+
+    const formData = new FormData(this);
+    try {
+      const res = await fetch(this.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } });
+      if (res.ok) {
+        document.getElementById('mvp-form').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+      } else {
+        throw new Error();
+      }
+    } catch {
+      btn.disabled = false;
+      btn.innerHTML = 'Enviar para a fila <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+      alert('Erro ao enviar. Tente novamente ou mande o pitch direto para o mentor.');
+    }
+  });
+</script>
+</body>
+</html>

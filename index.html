@@ -350,11 +350,40 @@
     margin: 0 auto;
   }
 
+  /* ── SUBMIT CTA ── */
+  .submit-cta {
+    background: linear-gradient(135deg, #0d0f1a 0%, #131728 50%, #0d1525 100%);
+    border-top: 1px solid var(--border);
+    padding: 56px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 30% 50%, rgba(108,99,255,0.12), transparent 60%);
+    pointer-events: none;
+  }
+  .submit-cta-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap; position: relative;
+  }
+  .submit-cta-badge { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #a89fff; margin-bottom: 10px; }
+  .submit-cta-text h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.4rem, 2.5vw, 1.9rem); font-weight: 900; margin-bottom: 8px; }
+  .submit-cta-text p { font-size: 0.9rem; color: var(--text-muted); max-width: 460px; line-height: 1.7; }
+  .submit-cta-actions { display: flex; gap: 12px; flex-shrink: 0; flex-wrap: wrap; }
+  .btn-submit-cta { padding: 13px 28px; background: linear-gradient(135deg, var(--accent), #9b93ff); color: white; text-decoration: none; border-radius: var(--radius-sm); font-size: 0.92rem; font-weight: 700; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
+  .btn-submit-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-admin-cta { padding: 13px 22px; background: transparent; border: 1px solid var(--border); color: var(--text-muted); text-decoration: none; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; transition: border-color 0.2s, color 0.2s; white-space: nowrap; }
+  .btn-admin-cta:hover { border-color: var(--accent); color: var(--text); }
+
   @media (max-width: 640px) {
     .mvp-grid { grid-template-columns: 1fr; }
     .hero { padding: 56px 20px 50px; }
     main { padding: 0 16px 60px; }
     .how-section { padding: 24px 20px; }
+    .submit-cta-inner { flex-direction: column; }
   }
 </style>
 </head>
@@ -620,6 +649,21 @@
   </div>
 
 </main>
+
+<!-- ── SUBMIT CTA ── -->
+<section class="submit-cta">
+  <div class="submit-cta-inner">
+    <div class="submit-cta-text">
+      <div class="submit-cta-badge">📨 Seu grupo ainda não enviou?</div>
+      <h2>Envie o pitch e entre na fila</h2>
+      <p>Descreva seu produto ou envie o pitch deck. O mentor analisa e a IA gera a interface do MVP para você.</p>
+    </div>
+    <div class="submit-cta-actions">
+      <a class="btn-submit-cta" href="submit.html">Enviar meu pitch →</a>
+      <a class="btn-admin-cta" href="fila.html">Acesso do mentor</a>
+    </div>
+  </div>
+</section>
 
 <footer>
   Liga de Empreendedorismo · Repositório de MVPs · Interfaces geradas por Claude Code (Anthropic)
