@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236c63ff'/><text x='50' y='73' font-size='62' font-family='Arial,sans-serif' font-weight='bold' fill='white' text-anchor='middle'>L</text></svg>">
 <title>Fila de MVPs — Admin</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
@@ -283,15 +283,15 @@
   <main>
 
     <!-- SETUP NOTICE -->
-    <div class="setup-notice" id="setup-notice">
-      <div class="ico">⚙️</div>
+    <div class="setup-notice" id="setup-notice" style="display:none">
+      <div class="ico">🧪</div>
       <p>
-        <strong>Último passo: adicione sua API Key do Formspree.</strong><br>
-        Form ID já configurado (<code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">mzdorrwa</code>). Para carregar submissões aqui:<br>
-        1. Acesse <a href="https://formspree.io/account/apikeys" target="_blank">formspree.io/account/apikeys</a><br>
-        2. Crie uma API Key e copie o valor<br>
-        3. Substitua <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">SEU_API_KEY</code> no script deste arquivo<br>
-        Enquanto isso, os dados de exemplo abaixo mostram como a fila vai funcionar.
+        <strong>Modo demonstração.</strong> O backend seguro ainda não foi configurado, então a fila está mostrando dados de exemplo.<br>
+        Para carregar as submissões reais, defina as variáveis de ambiente no Vercel
+        (<code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">ADMIN_PASSWORD</code>,
+        <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">FORMSPREE_API_KEY</code>)
+        — a API Key é gerada em <a href="https://formspree.io/account/apikeys" target="_blank">formspree.io/account/apikeys</a>.
+        A senha e a key ficam só no servidor, nunca neste arquivo.
       </p>
     </div>
 
@@ -342,43 +342,67 @@
 </div>
 
 <script>
-  // ── CONFIG — substitua estes valores após criar a conta no Formspree ──
-  const FORMSPREE_API_KEY = 'SEU_API_KEY';
-  const FORMSPREE_FORM_ID = 'mzdorrwa';
-  const ADMIN_PASSWORD    = 'liga2025';     // altere para a senha que quiser
-  // ─────────────────────────────────────────────────────────────────────
+  // ── CONFIG ──
+  // A senha do mentor e a API Key do Formspree ficam no SERVIDOR (variáveis de
+  // ambiente lidas por /api/submissions). Nada de segredos neste arquivo.
+  const API_ENDPOINT = '/api/submissions';
 
   let currentFilter = 'all';
   let submissions   = [];
 
   // ── LOGIN ──
-  function login() {
-    const val = document.getElementById('login-input').value;
-    if (val === ADMIN_PASSWORD) {
-      document.getElementById('login-screen').style.display  = 'none';
-      document.getElementById('admin-panel').style.display   = 'block';
-      loadSubmissions();
+  // A senha é validada no backend. Acertou → recebe as submissões e abre o painel.
+  async function login() {
+    const input = document.getElementById('login-input');
+    const errEl = document.getElementById('login-error');
+    const btn   = document.querySelector('.login-btn');
+    const val   = input.value;
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
+
+    const result = await fetchSubmissions(val);
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+
+    if (result.ok || result.demo) {
+      submissions = result.submissions;
+      document.getElementById('setup-notice').style.display = result.demo ? 'flex' : 'none';
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-panel').style.display  = 'block';
+      renderQueue();
     } else {
-      document.getElementById('login-error').style.display = 'block';
-      document.getElementById('login-input').value = '';
-      document.getElementById('login-input').focus();
+      errEl.textContent = result.message || 'Senha incorreta.';
+      errEl.style.display = 'block';
+      input.value = '';
+      input.focus();
     }
   }
 
-  // ── LOAD FROM FORMSPREE API ──
-  async function loadSubmissions() {
-    if (FORMSPREE_API_KEY === 'SEU_API_KEY') {
-      // modo demo: mostra cards de exemplo
-      submissions = getDemoData();
-      renderQueue();
-      return;
-    }
+  // ── BUSCA SEGURA VIA SERVERLESS FUNCTION ──
+  // Retorna { ok, demo, submissions, message }.
+  async function fetchSubmissions(password) {
     try {
-      const res = await fetch(`https://formspree.io/api/0/forms/${FORMSPREE_FORM_ID}/submissions`, {
-        headers: { 'Authorization': `Bearer ${FORMSPREE_API_KEY}` }
+      const res = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
       });
+
+      // 503/404 → backend não configurado (ou rodando como site estático puro):
+      // cai em modo demonstração, sem expor dados reais.
+      if (res.status === 503 || res.status === 404) {
+        return { ok: false, demo: true, submissions: getDemoData() };
+      }
+      if (res.status === 401) {
+        return { ok: false, demo: false, message: 'Senha incorreta.' };
+      }
+      if (!res.ok) {
+        return { ok: false, demo: false, message: 'Erro no servidor. Tente novamente.' };
+      }
+
       const data = await res.json();
-      submissions = (data.submissions || []).map(s => ({
+      const mapped = (data.submissions || []).map(s => ({
         id:          s.id,
         grupo:       s.data?.grupo       || '—',
         startup:     s.data?.startup     || 'Sem nome',
@@ -390,10 +414,11 @@
         date:        s.createdAt,
         status:      getStatus(s.id),
       }));
-    } catch(e) {
-      submissions = getDemoData();
+      return { ok: true, demo: false, submissions: mapped };
+    } catch (e) {
+      // Sem rede / endpoint inexistente → modo demonstração.
+      return { ok: false, demo: true, submissions: getDemoData() };
     }
-    renderQueue();
   }
 
   // Status salvo em localStorage
