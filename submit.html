@@ -266,7 +266,7 @@
 <div class="form-wrap">
   <div class="form-card" id="form-card">
 
-    <form id="mvp-form" action="https://formspree.io/f/mzdorrwa" method="POST" enctype="multipart/form-data">
+    <form id="mvp-form">
 
       <!-- IDENTIFICAÇÃO -->
       <div class="form-section">
@@ -333,24 +333,14 @@
 
       <!-- PITCH DECK -->
       <div class="form-section">
-        <div class="form-section-title">Pitch deck <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.85rem;color:var(--text-muted)"> — pelo menos um dos dois</span></div>
+        <div class="form-section-title">Pitch deck <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.85rem;color:var(--text-muted)"> — opcional</span></div>
 
         <div class="form-group">
-          <label>Envie o arquivo do pitch deck <span class="optional">(PDF ou PPT, até 10MB)</span></label>
-          <div class="file-drop" id="file-drop">
-            <input type="file" name="arquivo_pitch" accept=".pdf,.ppt,.pptx" id="file-input">
-            <div class="file-drop-icon">📎</div>
-            <div class="file-drop-label"><strong>Clique para selecionar</strong> ou arraste aqui</div>
-            <div class="file-drop-sub">PDF, PPT ou PPTX — máx. 10MB</div>
-            <div class="file-name" id="file-name"></div>
-          </div>
-        </div>
-
-        <div class="or-divider">ou</div>
-
-        <div class="form-group">
-          <label>Link do Google Drive / Canva <span class="optional">(se preferir compartilhar por link)</span></label>
+          <label>Link do pitch deck <span class="optional">(Google Drive, Canva, etc.)</span></label>
           <input type="url" name="link_pitch" placeholder="https://drive.google.com/...">
+          <div class="prompt-hint" style="margin-top:8px">
+            Compartilhe o arquivo como <strong>link público</strong> (Drive: "qualquer pessoa com o link"). Assim o mentor consegue abrir direto da fila.
+          </div>
         </div>
       </div>
 
@@ -379,28 +369,40 @@
 </div>
 
 <script>
-  // Mostrar nome do arquivo selecionado
-  document.getElementById('file-input').addEventListener('change', function() {
-    const name = this.files[0]?.name;
-    const el = document.getElementById('file-name');
-    if (name) { el.textContent = '✓ ' + name; el.style.display = 'block'; }
-  });
+  // ── CONFIG ──
+  // Cole aqui a MESMA URL do app da Web do Google Apps Script usada em fila.html
+  // (termina em /exec). Passo a passo no DEPLOY.md.
+  const APPS_SCRIPT_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
 
-  // Submit via fetch (sem redirecionar)
+  // Submit via fetch (sem recarregar a página)
   document.getElementById('mvp-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const btn = document.getElementById('btn-submit');
     btn.disabled = true;
     btn.innerHTML = 'Enviando... <span style="opacity:.6">⏳</span>';
 
-    const formData = new FormData(this);
+    const payload = Object.fromEntries(new FormData(this).entries());
+
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.startsWith('COLE_AQUI')) {
+      btn.disabled = false;
+      btn.innerHTML = 'Enviar para a fila <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+      alert('O envio ainda não foi configurado (APPS_SCRIPT_URL). Avise o mentor.');
+      return;
+    }
+
     try {
-      const res = await fetch(this.action, { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } });
-      if (res.ok) {
+      // text/plain evita o preflight de CORS do Apps Script.
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data && data.ok) {
         document.getElementById('mvp-form').style.display = 'none';
         document.getElementById('success-screen').style.display = 'block';
       } else {
-        throw new Error();
+        throw new Error('resposta inválida');
       }
     } catch {
       btn.disabled = false;

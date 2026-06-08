@@ -272,11 +272,8 @@
       <div class="admin-badge">Admin</div>
     </div>
     <div class="top-bar-right">
-      <button class="btn-refresh" onclick="renderQueue()">↻ Atualizar</button>
-      <a class="btn-formspree" href="https://formspree.io/forms" target="_blank">
-        Ver no Formspree
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-      </a>
+      <button class="btn-refresh" onclick="refresh()">↻ Atualizar</button>
+      <button class="btn-refresh" onclick="location.reload()">Sair</button>
     </div>
   </div>
 
@@ -286,12 +283,11 @@
     <div class="setup-notice" id="setup-notice" style="display:none">
       <div class="ico">🧪</div>
       <p>
-        <strong>Modo demonstração.</strong> O backend seguro ainda não foi configurado, então a fila está mostrando dados de exemplo.<br>
-        Para carregar as submissões reais, defina as variáveis de ambiente no Vercel
-        (<code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">ADMIN_PASSWORD</code>,
-        <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">FORMSPREE_API_KEY</code>)
-        — a API Key é gerada em <a href="https://formspree.io/account/apikeys" target="_blank">formspree.io/account/apikeys</a>.
-        A senha e a key ficam só no servidor, nunca neste arquivo.
+        <strong>Modo demonstração.</strong> O backend do Google Apps Script ainda não foi configurado, então a fila está mostrando dados de exemplo.<br>
+        Para carregar as submissões reais: publique o Apps Script, cole a URL em
+        <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">APPS_SCRIPT_URL</code>
+        (neste arquivo) e defina <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">ADMIN_PASSWORD</code>
+        nas Script Properties. Passo a passo no <strong>DEPLOY.md</strong>.
       </p>
     </div>
 
@@ -334,7 +330,7 @@
     <div class="queue-list" id="queue-list">
       <div class="empty-state">
         <div class="icon">📭</div>
-        <p>Nenhuma submissão ainda.<br>Configure o Formspree e as submissões aparecerão aqui.</p>
+        <p>Nenhuma submissão ainda.<br>Configure o Apps Script e as submissões aparecerão aqui.</p>
       </div>
     </div>
 
@@ -343,15 +339,21 @@
 
 <script>
   // ── CONFIG ──
-  // A senha do mentor e a API Key do Formspree ficam no SERVIDOR (variáveis de
-  // ambiente lidas por /api/submissions). Nada de segredos neste arquivo.
-  const API_ENDPOINT = '/api/submissions';
+  // Cole aqui a URL do app da Web do Google Apps Script (termina em /exec).
+  // Veja DEPLOY.md. A senha do mentor NÃO fica aqui: é digitada no login e
+  // validada no Apps Script (guardada nas Script Properties do projeto).
+  const APPS_SCRIPT_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
 
   let currentFilter = 'all';
   let submissions   = [];
+  let adminPassword = '';   // guardada só em memória durante a sessão
+
+  function isConfigured() {
+    return APPS_SCRIPT_URL && !APPS_SCRIPT_URL.startsWith('COLE_AQUI');
+  }
 
   // ── LOGIN ──
-  // A senha é validada no backend. Acertou → recebe as submissões e abre o painel.
+  // A senha é validada no Apps Script. Acertou → recebe as submissões e abre o painel.
   async function login() {
     const input = document.getElementById('login-input');
     const errEl = document.getElementById('login-error');
@@ -365,12 +367,15 @@
     btn.disabled = false;
     btn.textContent = 'Entrar';
 
-    if (result.ok || result.demo) {
+    if (result.ok) {
+      adminPassword = val;
       submissions = result.submissions;
-      document.getElementById('setup-notice').style.display = result.demo ? 'flex' : 'none';
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-panel').style.display  = 'block';
-      renderQueue();
+      document.getElementById('setup-notice').style.display = 'none';
+      enterPanel();
+    } else if (result.demo) {
+      submissions = result.submissions;
+      document.getElementById('setup-notice').style.display = 'flex';
+      enterPanel();
     } else {
       errEl.textContent = result.message || 'Senha incorreta.';
       errEl.style.display = 'block';
@@ -379,51 +384,46 @@
     }
   }
 
-  // ── BUSCA SEGURA VIA SERVERLESS FUNCTION ──
+  function enterPanel() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-panel').style.display  = 'block';
+    renderQueue();
+  }
+
+  // ── BUSCA AS SUBMISSÕES NO APPS SCRIPT ──
   // Retorna { ok, demo, submissions, message }.
   async function fetchSubmissions(password) {
+    if (!isConfigured()) {
+      // Backend ainda não configurado → modo demonstração (sem dados reais).
+      return { demo: true, submissions: getDemoData() };
+    }
     try {
-      const res = await fetch(API_ENDPOINT, {
+      // text/plain evita o preflight de CORS do Apps Script.
+      const res = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'list', password }),
       });
-
-      // 503/404 → backend não configurado (ou rodando como site estático puro):
-      // cai em modo demonstração, sem expor dados reais.
-      if (res.status === 503 || res.status === 404) {
-        return { ok: false, demo: true, submissions: getDemoData() };
-      }
-      if (res.status === 401) {
-        return { ok: false, demo: false, message: 'Senha incorreta.' };
-      }
-      if (!res.ok) {
-        return { ok: false, demo: false, message: 'Erro no servidor. Tente novamente.' };
-      }
-
       const data = await res.json();
-      const mapped = (data.submissions || []).map(s => ({
-        id:          s.id,
-        grupo:       s.data?.grupo       || '—',
-        startup:     s.data?.startup     || 'Sem nome',
-        setor:       s.data?.setor       || '—',
-        prompt:      s.data?.prompt      || '',
-        email:       s.data?.email       || '',
-        responsavel: s.data?.responsavel || '',
-        link_pitch:  s.data?.link_pitch  || '',
-        date:        s.createdAt,
-        status:      getStatus(s.id),
-      }));
-      return { ok: true, demo: false, submissions: mapped };
+      if (data.ok) {
+        return { ok: true, submissions: data.submissions || [] };
+      }
+      if (data.error === 'unauthorized') {
+        return { message: 'Senha incorreta.' };
+      }
+      return { message: 'Erro ao carregar a fila. Tente novamente.' };
     } catch (e) {
-      // Sem rede / endpoint inexistente → modo demonstração.
-      return { ok: false, demo: true, submissions: getDemoData() };
+      return { message: 'Falha de conexão com o servidor.' };
     }
   }
 
-  // Status salvo em localStorage
-  function getStatus(id)      { return localStorage.getItem('mvp_status_' + id) || 'pending'; }
-  function setStatus(id, st)  { localStorage.setItem('mvp_status_' + id, st); }
+  // Recarrega os dados reais usando a senha já validada na sessão.
+  async function refresh() {
+    if (!isConfigured() || !adminPassword) { renderQueue(); return; }
+    const result = await fetchSubmissions(adminPassword);
+    if (result.ok) submissions = result.submissions;
+    renderQueue();
+  }
 
   // ── RENDER ──
   function renderQueue() {
@@ -515,12 +515,21 @@
     setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '📋 Copiar prompt para Claude'; }, 2500);
   }
 
-  function markDone(id) {
+  async function markDone(id) {
     const s = submissions.find(x => x.id === id);
     if (!s || s.status === 'done') return;
-    s.status = 'done';
-    setStatus(id, 'done');
+    s.status = 'done';          // atualização otimista
     renderQueue();
+    if (!isConfigured()) return; // modo demo: não persiste
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'setStatus', id, status: 'done', password: adminPassword }),
+      });
+    } catch (e) {
+      alert('Não consegui salvar o status no servidor. Verifique a conexão e atualize.');
+    }
   }
 
   function setFilter(f, btn) {
@@ -530,7 +539,7 @@
     renderQueue();
   }
 
-  // ── DEMO DATA (antes de configurar o Formspree) ──
+  // ── DEMO DATA (antes de configurar o Apps Script) ──
   function getDemoData() {
     return [
       {
@@ -539,7 +548,7 @@
         prompt: 'Somos uma plataforma de pagamentos para MEIs. O problema: MEIs não conseguem cobrar de forma profissional sem pagar taxas absurdas. Nossa solução é um link de pagamento simples, com QR Code e transferência automática para conta bancária, cobrando apenas 1% por transação.',
         email: 'grupo3@liga.com', responsavel: 'Pedro Alves',
         link_pitch: '', date: new Date(Date.now() - 86400000 * 2).toISOString(),
-        status: getStatus('demo-1'),
+        status: 'pending',
       },
       {
         id: 'demo-2',
@@ -547,7 +556,7 @@
         prompt: 'App para pequenos agricultores monitorarem plantações via sensores IoT de baixo custo. O agricultor instala sensores no solo que mandam dados de umidade, temperatura e pH para o app. A IA avisa quando irrigar ou adubar. Público: agricultores familiares, 35-60 anos.',
         email: 'grupo5@liga.com', responsavel: 'Ana Lima',
         link_pitch: 'https://drive.google.com/exemplo', date: new Date(Date.now() - 3600000 * 5).toISOString(),
-        status: getStatus('demo-2'),
+        status: 'done',
       },
     ];
   }

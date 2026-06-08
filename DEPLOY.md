@@ -1,30 +1,51 @@
 # Deploy e configuração
 
-Site estático + uma serverless function no Vercel. Nenhum segredo fica no código.
+O site é estático (pode ficar no Vercel, GitHub Pages, etc.). O backend da fila
+é **gratuito**, feito com **Google Apps Script + Google Sheets** — substitui o
+Formspree (sem plano pago, sem limite de API).
 
-## Variáveis de ambiente (Vercel → Project → Settings → Environment Variables)
+## 1. Criar o backend (Google Apps Script)
 
-| Variável | Obrigatória | Descrição |
-|---|---|---|
-| `ADMIN_PASSWORD` | sim | Senha que o mentor digita para abrir a fila (`fila.html`). |
-| `FORMSPREE_API_KEY` | sim | API Key gerada em [formspree.io/account/apikeys](https://formspree.io/account/apikeys). |
-| `FORMSPREE_FORM_ID` | não | Id do form. Padrão: `mzdorrwa`. |
+1. Crie uma planilha nova: [sheets.new](https://sheets.new)
+2. Menu **Extensões → Apps Script**. Apague o código de exemplo e cole o conteúdo de [`apps-script/Codigo.gs`](apps-script/Codigo.gs).
+3. Clique na engrenagem (**Configurações do projeto**) → **Propriedades do script** → adicione:
+   - `ADMIN_PASSWORD` = a senha que o mentor vai digitar na fila
+   - *(opcional)* `MENTOR_EMAIL` = seu e-mail, para receber um aviso a cada submissão
+4. **Implantar → Nova implantação → tipo "App da Web"**:
+   - Executar como: **Eu**
+   - Quem pode acessar: **Qualquer pessoa**
+5. Autorize as permissões quando pedir. Copie a **URL do app da Web** (termina em `/exec`).
 
-Depois de definir as variáveis, faça um **redeploy** para que a função as enxergue.
+## 2. Conectar o site ao backend
 
-## Como a segurança funciona agora
+Cole a URL do passo 1.5 na constante `APPS_SCRIPT_URL` em **dois arquivos**:
 
-- A senha do mentor e a API Key do Formspree vivem **só no servidor** (variáveis de ambiente), nunca no HTML/JS entregue ao navegador.
-- `fila.html` envia a senha digitada para `api/submissions.js`, que valida no servidor e só então busca as submissões no Formspree.
-- Sem as variáveis configuradas (ou rodando como site estático puro), a fila entra em **modo demonstração** com dados de exemplo — sem expor nada real.
+- `submit.html` (envio dos grupos)
+- `fila.html` (painel do mentor)
 
-## Rodar localmente
+Pronto. Os grupos enviam em `submit.html`, os dados caem na planilha, e o mentor
+abre `fila.html`, digita a senha e vê tudo.
 
-```
-npm i -g vercel
-vercel dev
-```
+## Como a segurança funciona
 
-`vercel dev` serve os HTML e a função em `/api/submissions`. Defina as variáveis num arquivo `.env` local (já ignorado pelo `.gitignore`) ou via `vercel env`.
+- A `ADMIN_PASSWORD` fica **só no servidor** (Script Properties), nunca no HTML/JS.
+- No login, a senha digitada é enviada ao Apps Script, que **valida no servidor**
+  e só então devolve as submissões.
+- Sem a `APPS_SCRIPT_URL` configurada, a fila abre em **modo demonstração** com
+  dados de exemplo — sem expor nada real.
+- O status "feito/aguardando" é salvo **na planilha**, compartilhado entre mentores.
 
-Abrir os arquivos com duplo-clique (file://) também funciona, mas sempre em modo demonstração, pois não há backend.
+## Atualizar o backend depois
+
+Se editar o `Codigo.gs`, publique a nova versão:
+**Implantar → Gerenciar implantações → editar (lápis) → Versão: Nova versão → Implantar.**
+A URL `/exec` continua a mesma.
+
+## Observações
+
+- **Upload de arquivo**: o pitch deck agora é por **link** (Drive/Canva com
+  acesso "qualquer pessoa com o link"). Upload de binário exigia plano pago no
+  Formspree ou gravar no Drive via script — link é o caminho gratuito e simples.
+- **Submissões antigas do Formspree** (feitas antes desta migração) continuam no
+  painel do Formspree e no e-mail; elas **não** aparecem nesta fila nova, porque
+  foram para outro destino. Da migração em diante, tudo vai para a planilha.
