@@ -316,6 +316,10 @@
           <label>Integrante responsável <span class="required">*</span></label>
           <input type="text" name="responsavel" placeholder="Nome completo" required>
         </div>
+        <div class="form-group">
+          <label>Disponibilidade do responsável <span class="required">*</span></label>
+          <input type="text" name="disponibilidade" placeholder="ex: Seg e Qua à tarde, Sex de manhã" required>
+        </div>
       </div>
 
       <!-- PROMPT -->
@@ -333,14 +337,24 @@
 
       <!-- PITCH DECK -->
       <div class="form-section">
-        <div class="form-section-title">Pitch deck <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.85rem;color:var(--text-muted)"> — opcional</span></div>
+        <div class="form-section-title">Pitch deck <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.85rem;color:var(--text-muted)"> — opcional, envie o arquivo ou o link</span></div>
+
+        <div class="form-group">
+          <label>Envie o arquivo do pitch deck <span class="optional">(PDF ou PPTX, até 15MB)</span></label>
+          <div class="file-drop" id="file-drop">
+            <input type="file" name="arquivo_pitch" accept=".pdf,.ppt,.pptx" id="file-input">
+            <div class="file-drop-icon">📎</div>
+            <div class="file-drop-label"><strong>Clique para selecionar</strong> ou arraste aqui</div>
+            <div class="file-drop-sub">PDF, PPT ou PPTX — máx. 15MB</div>
+            <div class="file-name" id="file-name"></div>
+          </div>
+        </div>
+
+        <div class="or-divider">ou</div>
 
         <div class="form-group">
           <label>Link do pitch deck <span class="optional">(Google Drive, Canva, etc.)</span></label>
           <input type="url" name="link_pitch" placeholder="https://drive.google.com/...">
-          <div class="prompt-hint" style="margin-top:8px">
-            Compartilhe o arquivo como <strong>link público</strong> (Drive: "qualquer pessoa com o link"). Assim o mentor consegue abrir direto da fila.
-          </div>
         </div>
       </div>
 
@@ -374,21 +388,54 @@
   // (termina em /exec). Passo a passo no DEPLOY.md.
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwiRsiYmuI8rUt0HjJUENiMQrgw7Qhj0VOsI1YNByC6KV2vpH-B280jaam9CiGbYQsd0w/exec';
 
+  // Mostra o nome do arquivo selecionado
+  const fileInput = document.getElementById('file-input');
+  fileInput.addEventListener('change', function() {
+    const name = this.files[0]?.name;
+    const el = document.getElementById('file-name');
+    if (name) { el.textContent = '✓ ' + name; el.style.display = 'block'; }
+  });
+
+  // Lê um arquivo como base64 (sem o prefixo "data:...;base64,")
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const btnHTML = 'Enviar para a fila <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+
   // Submit via fetch (sem recarregar a página)
   document.getElementById('mvp-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const btn = document.getElementById('btn-submit');
-    btn.disabled = true;
-    btn.innerHTML = 'Enviando... <span style="opacity:.6">⏳</span>';
-
-    const payload = Object.fromEntries(new FormData(this).entries());
 
     if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.startsWith('COLE_AQUI')) {
-      btn.disabled = false;
-      btn.innerHTML = 'Enviar para a fila <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
       alert('O envio ainda não foi configurado (APPS_SCRIPT_URL). Avise o mentor.');
       return;
     }
+
+    const payload = Object.fromEntries(new FormData(this).entries());
+    delete payload.arquivo_pitch; // o arquivo vai em base64, não como objeto File
+
+    const file = fileInput.files[0];
+    if (file) {
+      if (file.size > 15 * 1024 * 1024) {
+        alert('O arquivo passa de 15MB. Reduza o tamanho ou envie pelo link.');
+        return;
+      }
+      btn.disabled = true;
+      btn.innerHTML = 'Lendo arquivo... <span style="opacity:.6">⏳</span>';
+      payload.arquivo_base64 = await fileToBase64(file);
+      payload.arquivo_nome = file.name;
+      payload.arquivo_tipo = file.type || 'application/octet-stream';
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = 'Enviando... <span style="opacity:.6">⏳</span>';
 
     try {
       // text/plain evita o preflight de CORS do Apps Script.
@@ -406,7 +453,7 @@
       }
     } catch {
       btn.disabled = false;
-      btn.innerHTML = 'Enviar para a fila <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+      btn.innerHTML = btnHTML;
       alert('Erro ao enviar. Tente novamente ou mande o pitch direto para o mentor.');
     }
   });

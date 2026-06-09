@@ -468,6 +468,7 @@
           </div>
           <div class="queue-startup">${s.startup || 'Startup sem nome'}</div>
           ${s.responsavel ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px">${s.responsavel} · ${s.email}</div>` : ''}
+          ${s.disponibilidade ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px">🕒 ${s.disponibilidade}</div>` : ''}
         </div>
         <div class="status-pill ${s.status}">
           <span class="dot"></span>
@@ -546,7 +547,7 @@
         id: 'demo-1',
         grupo: 'Grupo 3', startup: 'PayFácil', setor: 'FinTech',
         prompt: 'Somos uma plataforma de pagamentos para MEIs. O problema: MEIs não conseguem cobrar de forma profissional sem pagar taxas absurdas. Nossa solução é um link de pagamento simples, com QR Code e transferência automática para conta bancária, cobrando apenas 1% por transação.',
-        email: 'grupo3@liga.com', responsavel: 'Pedro Alves',
+        email: 'grupo3@liga.com', responsavel: 'Pedro Alves', disponibilidade: 'Ter e Qui à tarde',
         link_pitch: '', date: new Date(Date.now() - 86400000 * 2).toISOString(),
         status: 'pending',
       },
@@ -554,7 +555,7 @@
         id: 'demo-2',
         grupo: 'Grupo 5', startup: 'AgroSense', setor: 'AgTech',
         prompt: 'App para pequenos agricultores monitorarem plantações via sensores IoT de baixo custo. O agricultor instala sensores no solo que mandam dados de umidade, temperatura e pH para o app. A IA avisa quando irrigar ou adubar. Público: agricultores familiares, 35-60 anos.',
-        email: 'grupo5@liga.com', responsavel: 'Ana Lima',
+        email: 'grupo5@liga.com', responsavel: 'Ana Lima', disponibilidade: 'Seg de manhã',
         link_pitch: 'https://drive.google.com/exemplo', date: new Date(Date.now() - 3600000 * 5).toISOString(),
         status: 'done',
       },

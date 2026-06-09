@@ -1,22 +1,12 @@
 /**
  * Backend da fila de MVPs — Google Apps Script + Google Sheets.
- *
- * Este projeto é gerenciado por linha de comando com o clasp
- * (https://github.com/google/clasp). A senha do mentor fica em config.js
- * (arquivo LOCAL, fora do GitHub — veja config.example.js) ou, se preferir,
- * numa Script Property chamada ADMIN_PASSWORD.
- *
- * Fluxo de manutenção:
- *   clasp push                 # envia o código para o Apps Script
- *   clasp deploy -i <id>       # republica o web app (mesma URL)
- *
- * A primeira vez exige autorizar as permissões do script uma vez (rodar
- * qualquer função no editor → Permitir) e a implantação deve ser do tipo
- * "App da Web" com acesso "Qualquer pessoa".
+ * Gerenciado via clasp (linha de comando). A senha fica em config.js (local,
+ * fora do GitHub) ou na Script Property ADMIN_PASSWORD.
  */
 
 var SHEET_NAME = 'Submissoes';
-var HEADERS = ['id', 'date', 'grupo', 'startup', 'setor', 'email', 'responsavel', 'link_pitch', 'prompt', 'status'];
+var HEADERS = ['id', 'date', 'grupo', 'startup', 'setor', 'email', 'responsavel', 'disponibilidade', 'link_pitch', 'prompt', 'status'];
+var STATUS_COL = 11; // coluna do 'status' (1-based) — atualize se mudar HEADERS
 
 function adminPassword_() {
   if (typeof CONFIG !== 'undefined' && CONFIG.ADMIN_PASSWORD) return CONFIG.ADMIN_PASSWORD;
@@ -48,11 +38,36 @@ function getSpreadsheet_() {
 function getSheet_() {
   var ss = getSpreadsheet_();
   var sheet = ss.getSheetByName(SHEET_NAME);
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(HEADERS);
+  if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
+  // Garante que o cabeçalho está atualizado (repara esquemas antigos).
+  var firstRow = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
+  if (firstRow.join('|') !== HEADERS.join('|')) {
+    sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
   }
   return sheet;
+}
+
+// Salva o arquivo do pitch no Drive (se enviado) e devolve a URL compartilhável.
+function getPitchFolder_() {
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('PITCH_FOLDER_ID');
+  if (id) { try { return DriveApp.getFolderById(id); } catch (e) {} }
+  var folder = DriveApp.createFolder('Pitch Decks - Liga MVPs');
+  props.setProperty('PITCH_FOLDER_ID', folder.getId());
+  return folder;
+}
+
+function saveFile_(body) {
+  if (!body.arquivo_base64) return '';
+  try {
+    var bytes = Utilities.base64Decode(body.arquivo_base64);
+    var blob = Utilities.newBlob(bytes, body.arquivo_tipo || 'application/octet-stream', body.arquivo_nome || 'pitch');
+    var file = getPitchFolder_().createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return file.getUrl();
+  } catch (e) {
+    return '';
+  }
 }
 
 function json_(obj) {
@@ -92,13 +107,15 @@ function doPost(e) {
 function addSubmission_(body) {
   var sheet = getSheet_();
   var id = Utilities.getUuid();
+  var fileUrl = saveFile_(body);
+  var link = fileUrl || body.link_pitch || '';
   sheet.appendRow([
     id, new Date().toISOString(),
     body.grupo || '', body.startup || '', body.setor || '',
-    body.email || '', body.responsavel || '', body.link_pitch || '',
-    body.prompt || '', 'pending'
+    body.email || '', body.responsavel || '', body.disponibilidade || '',
+    link, body.prompt || '', 'pending'
   ]);
-  notifyMentor_(body);
+  notifyMentor_(body, link);
   return { ok: true, id: id };
 }
 
@@ -109,8 +126,8 @@ function readAll_() {
   return values.slice(1).map(function (r) {
     return {
       id: r[0], date: r[1], grupo: r[2], startup: r[3], setor: r[4],
-      email: r[5], responsavel: r[6], link_pitch: r[7], prompt: r[8],
-      status: r[9] || 'pending'
+      email: r[5], responsavel: r[6], disponibilidade: r[7],
+      link_pitch: r[8], prompt: r[9], status: r[10] || 'pending'
     };
   }).filter(function (s) { return s.id; });
 }
@@ -120,7 +137,7 @@ function setStatus_(id, status) {
   var values = sheet.getDataRange().getValues();
   for (var i = 1; i < values.length; i++) {
     if (values[i][0] === id) {
-      sheet.getRange(i + 1, 10).setValue(status);
+      sheet.getRange(i + 1, STATUS_COL).setValue(status);
       return;
     }
   }
@@ -134,7 +151,7 @@ function deleteRow_(id) {
   }
 }
 
-function notifyMentor_(body) {
+function notifyMentor_(body, link) {
   var to = PropertiesService.getScriptProperties().getProperty('MENTOR_EMAIL');
   if (typeof CONFIG !== 'undefined' && CONFIG.MENTOR_EMAIL) to = CONFIG.MENTOR_EMAIL;
   if (!to) return;
@@ -145,11 +162,20 @@ function notifyMentor_(body) {
       '\nStartup: ' + (body.startup || '-') +
       '\nSetor: ' + (body.setor || '-') +
       '\nResponsável: ' + (body.responsavel || '-') + ' (' + (body.email || '-') + ')' +
-      '\nPitch: ' + (body.link_pitch || '-') +
+      '\nDisponibilidade: ' + (body.disponibilidade || '-') +
+      '\nPitch: ' + (link || body.link_pitch || '-') +
       '\n\n' + (body.prompt || ''));
   } catch (err) {}
 }
 
 function doGet(e) {
   return json_({ ok: true, message: 'Fila de MVPs — backend ativo' });
+}
+
+// Rode esta função no editor uma vez para autorizar TODAS as permissões
+// (Planilhas, E-mail e Drive). Necessário após adicionar o upload de arquivo.
+function autorizar() {
+  getSheet_();
+  getPitchFolder_();
+  return 'ok';
 }
