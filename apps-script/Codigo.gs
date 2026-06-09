@@ -63,11 +63,30 @@ function saveFile_(body) {
     var bytes = Utilities.base64Decode(body.arquivo_base64);
     var blob = Utilities.newBlob(bytes, body.arquivo_tipo || 'application/octet-stream', body.arquivo_nome || 'pitch');
     var file = getPitchFolder_().createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    // O arquivo já é salvo; o compartilhamento é "melhor esforço".
+    try { file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (e) {}
     return file.getUrl();
   } catch (e) {
     return '';
   }
+}
+
+// Diagnóstico do Drive — diz exatamente onde falha (autorização, criar, etc.).
+function diagDrive_() {
+  var out = {};
+  try {
+    var folder = getPitchFolder_();
+    out.folderId = folder.getId();
+    var blob = Utilities.newBlob(Utilities.base64Decode('dGVzdGU='), 'text/plain', 'diag.txt');
+    var file = folder.createFile(blob);
+    out.fileUrl = file.getUrl();
+    try { file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); out.shared = true; }
+    catch (e) { out.shareErr = String(e); }
+    file.setTrashed(true);
+  } catch (e) {
+    out.err = String(e);
+  }
+  return out;
 }
 
 function json_(obj) {
@@ -99,6 +118,11 @@ function doPost(e) {
     if (!isAuthorized_(body)) return json_({ ok: false, error: 'unauthorized' });
     deleteRow_(body.id);
     return json_({ ok: true });
+  }
+
+  if (action === 'diag') {
+    if (!isAuthorized_(body)) return json_({ ok: false, error: 'unauthorized' });
+    return json_({ ok: true, drive: diagDrive_() });
   }
 
   return json_(addSubmission_(body));
