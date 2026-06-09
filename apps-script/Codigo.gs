@@ -1,30 +1,52 @@
 /**
- * Backend GRATUITO da fila de MVPs — Google Apps Script + Google Sheets.
- * Substitui o Formspree (sem custo, sem limite de API, sem plano pago).
+ * Backend da fila de MVPs — Google Apps Script + Google Sheets.
  *
- * ── COMO INSTALAR (uma vez) ──────────────────────────────────────────────
- * 1. Crie uma planilha nova no Google Sheets (sheets.new).
- * 2. Menu Extensões → Apps Script. Apague o conteúdo e cole ESTE arquivo.
- * 3. No Apps Script: engrenagem (Configurações do projeto) →
- *    "Propriedades do script" → Adicionar propriedade:
- *        ADMIN_PASSWORD  =  a senha que o mentor vai usar
- *    (opcional)  MENTOR_EMAIL  =  seu@email.com  → recebe aviso a cada submissão
- * 4. Botão "Implantar" → "Nova implantação" → tipo "App da Web":
- *        Executar como:      Eu
- *        Quem pode acessar:  Qualquer pessoa
- *    Copie a "URL do app da Web" (termina em /exec).
- * 5. Cole essa URL em submit.html e fila.html, na constante APPS_SCRIPT_URL.
+ * Este projeto é gerenciado por linha de comando com o clasp
+ * (https://github.com/google/clasp). A senha do mentor fica em config.js
+ * (arquivo LOCAL, fora do GitHub — veja config.example.js) ou, se preferir,
+ * numa Script Property chamada ADMIN_PASSWORD.
  *
- * Sempre que editar este script, faça "Implantar → Gerenciar implantações →
- * editar → Nova versão" para publicar a mudança.
- * ─────────────────────────────────────────────────────────────────────────
+ * Fluxo de manutenção:
+ *   clasp push                 # envia o código para o Apps Script
+ *   clasp deploy -i <id>       # republica o web app (mesma URL)
+ *
+ * A primeira vez exige autorizar as permissões do script uma vez (rodar
+ * qualquer função no editor → Permitir) e a implantação deve ser do tipo
+ * "App da Web" com acesso "Qualquer pessoa".
  */
 
 var SHEET_NAME = 'Submissoes';
 var HEADERS = ['id', 'date', 'grupo', 'startup', 'setor', 'email', 'responsavel', 'link_pitch', 'prompt', 'status'];
 
+function adminPassword_() {
+  if (typeof CONFIG !== 'undefined' && CONFIG.ADMIN_PASSWORD) return CONFIG.ADMIN_PASSWORD;
+  return PropertiesService.getScriptProperties().getProperty('ADMIN_PASSWORD');
+}
+
+function isAuthorized_(body) {
+  var pass = adminPassword_();
+  return !!pass && !!body && body.password === pass;
+}
+
+// Acha a planilha de forma robusta (funciona bound, standalone ou na 1ª vez).
+function getSpreadsheet_() {
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('SHEET_ID');
+  if (id) {
+    try { return SpreadsheetApp.openById(id); } catch (e) {}
+  }
+  var active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) {
+    props.setProperty('SHEET_ID', active.getId());
+    return active;
+  }
+  var ss = SpreadsheetApp.create('Fila de MVPs — Liga de Empreendedorismo');
+  props.setProperty('SHEET_ID', ss.getId());
+  return ss;
+}
+
 function getSheet_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getSpreadsheet_();
   var sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
@@ -34,21 +56,9 @@ function getSheet_() {
 }
 
 function json_(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-function adminPassword_() {
-  return PropertiesService.getScriptProperties().getProperty('ADMIN_PASSWORD');
-}
-
-function isAuthorized_(body) {
-  var pass = adminPassword_();
-  return pass && body && body.password === pass;
-}
-
-// Apps Script recebe POST aqui (envio do form, leitura da fila, status).
 function doPost(e) {
   var body = {};
   try { body = JSON.parse(e.postData.contents); } catch (err) {}
@@ -65,7 +75,17 @@ function doPost(e) {
     return json_({ ok: true });
   }
 
-  // Padrão: nova submissão de um grupo (não precisa de senha).
+  if (action === 'info') {
+    if (!isAuthorized_(body)) return json_({ ok: false, error: 'unauthorized' });
+    return json_({ ok: true, sheetUrl: getSpreadsheet_().getUrl() });
+  }
+
+  if (action === 'delete') {
+    if (!isAuthorized_(body)) return json_({ ok: false, error: 'unauthorized' });
+    deleteRow_(body.id);
+    return json_({ ok: true });
+  }
+
   return json_(addSubmission_(body));
 }
 
@@ -73,16 +93,10 @@ function addSubmission_(body) {
   var sheet = getSheet_();
   var id = Utilities.getUuid();
   sheet.appendRow([
-    id,
-    new Date().toISOString(),
-    body.grupo || '',
-    body.startup || '',
-    body.setor || '',
-    body.email || '',
-    body.responsavel || '',
-    body.link_pitch || '',
-    body.prompt || '',
-    'pending'
+    id, new Date().toISOString(),
+    body.grupo || '', body.startup || '', body.setor || '',
+    body.email || '', body.responsavel || '', body.link_pitch || '',
+    body.prompt || '', 'pending'
   ]);
   notifyMentor_(body);
   return { ok: true, id: id };
@@ -106,30 +120,36 @@ function setStatus_(id, status) {
   var values = sheet.getDataRange().getValues();
   for (var i = 1; i < values.length; i++) {
     if (values[i][0] === id) {
-      sheet.getRange(i + 1, 10).setValue(status); // coluna 10 = status
+      sheet.getRange(i + 1, 10).setValue(status);
       return;
     }
   }
 }
 
+function deleteRow_(id) {
+  var sheet = getSheet_();
+  var values = sheet.getDataRange().getValues();
+  for (var i = values.length - 1; i >= 1; i--) {
+    if (values[i][0] === id) sheet.deleteRow(i + 1);
+  }
+}
+
 function notifyMentor_(body) {
   var to = PropertiesService.getScriptProperties().getProperty('MENTOR_EMAIL');
+  if (typeof CONFIG !== 'undefined' && CONFIG.MENTOR_EMAIL) to = CONFIG.MENTOR_EMAIL;
   if (!to) return;
   try {
-    MailApp.sendEmail(
-      to,
+    MailApp.sendEmail(to,
       'Nova submissão de MVP — ' + (body.grupo || 'Grupo'),
       'Grupo: ' + (body.grupo || '-') +
       '\nStartup: ' + (body.startup || '-') +
       '\nSetor: ' + (body.setor || '-') +
       '\nResponsável: ' + (body.responsavel || '-') + ' (' + (body.email || '-') + ')' +
       '\nPitch: ' + (body.link_pitch || '-') +
-      '\n\n' + (body.prompt || '')
-    );
+      '\n\n' + (body.prompt || ''));
   } catch (err) {}
 }
 
-// GET só serve para testar se o backend está no ar.
 function doGet(e) {
   return json_({ ok: true, message: 'Fila de MVPs — backend ativo' });
 }

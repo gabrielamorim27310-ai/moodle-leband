@@ -1,51 +1,55 @@
 # Deploy e configuração
 
-O site é estático (pode ficar no Vercel, GitHub Pages, etc.). O backend da fila
-é **gratuito**, feito com **Google Apps Script + Google Sheets** — substitui o
-Formspree (sem plano pago, sem limite de API).
+O site é estático (Vercel, GitHub Pages, etc.). O backend da fila é **gratuito**,
+feito com **Google Apps Script + Google Sheets**, e é gerenciado por linha de
+comando com o **clasp** — então o código e as publicações saem do terminal, sem
+precisar abrir o editor do Google a cada mudança.
 
-## 1. Criar o backend (Google Apps Script)
+## Estado atual
 
-1. Crie uma planilha nova: [sheets.new](https://sheets.new)
-2. Menu **Extensões → Apps Script**. Apague o código de exemplo e cole o conteúdo de [`apps-script/Codigo.gs`](apps-script/Codigo.gs).
-3. Clique na engrenagem (**Configurações do projeto**) → **Propriedades do script** → adicione:
-   - `ADMIN_PASSWORD` = a senha que o mentor vai digitar na fila
-   - *(opcional)* `MENTOR_EMAIL` = seu e-mail, para receber um aviso a cada submissão
-4. **Implantar → Nova implantação → tipo "App da Web"**:
-   - Executar como: **Eu**
-   - Quem pode acessar: **Qualquer pessoa**
-5. Autorize as permissões quando pedir. Copie a **URL do app da Web** (termina em `/exec`).
+- **Backend publicado** e conectado ao site. A constante `APPS_SCRIPT_URL` em
+  `submit.html` e `fila.html` aponta para o web app (`/exec`).
+- Os envios de `submit.html` caem numa planilha do Google; o `fila.html` lê dela
+  após o mentor digitar a senha.
+- Senha do mentor e e-mail de notificação ficam em `apps-script/config.js`
+  (LOCAL, fora do GitHub — veja `apps-script/config.example.js`).
 
-## 2. Conectar o site ao backend
+## Como mexer no backend (via clasp)
 
-Cole a URL do passo 1.5 na constante `APPS_SCRIPT_URL` em **dois arquivos**:
+Pré-requisitos: Node.js + `npm i -g @google/clasp` + `clasp login` (uma vez).
 
-- `submit.html` (envio dos grupos)
-- `fila.html` (painel do mentor)
+```
+cd <pasta local do projeto clasp>
+clasp push                                   # envia Codigo.gs + config.js
+clasp deploy -i <DEPLOYMENT_ID> -d "msg"     # republica (mantém a mesma URL)
+```
 
-Pronto. Os grupos enviam em `submit.html`, os dados caem na planilha, e o mentor
-abre `fila.html`, digita a senha e vê tudo.
+Se criar uma implantação nova (`clasp deploy` sem `-i`), a URL muda — basta
+atualizar `APPS_SCRIPT_URL` nos dois HTML e dar push no GitHub.
 
-## Como a segurança funciona
+## Setup do zero (caso precise recriar)
 
-- A `ADMIN_PASSWORD` fica **só no servidor** (Script Properties), nunca no HTML/JS.
-- No login, a senha digitada é enviada ao Apps Script, que **valida no servidor**
-  e só então devolve as submissões.
-- Sem a `APPS_SCRIPT_URL` configurada, a fila abre em **modo demonstração** com
-  dados de exemplo — sem expor nada real.
-- O status "feito/aguardando" é salvo **na planilha**, compartilhado entre mentores.
+1. Crie a planilha e o projeto Apps Script (ou um projeto standalone — o código
+   acha/cria a planilha sozinho via `getSpreadsheet_`).
+2. `clasp clone <SCRIPT_ID>` e coloque `Codigo.gs` + `config.js`.
+3. `clasp push`.
+4. **Autorize as permissões uma vez**: abra o editor, rode qualquer função
+   (ex.: `doGet`) e clique em *Permitir* (acesso a Planilhas/E-mail). Sem isso o
+   web app responde 403 "Acesso negado".
+5. Publique como **App da Web** com acesso **"Qualquer pessoa"**
+   (`appsscript.json` já traz `webapp.access: ANYONE_ANONYMOUS`).
+6. Cole a URL `/exec` em `APPS_SCRIPT_URL` (submit.html e fila.html).
 
-## Atualizar o backend depois
+## Segurança
 
-Se editar o `Codigo.gs`, publique a nova versão:
-**Implantar → Gerenciar implantações → editar (lápis) → Versão: Nova versão → Implantar.**
-A URL `/exec` continua a mesma.
+- A senha **não fica no HTML/JS** entregue ao navegador: é digitada no login e
+  validada no Apps Script. Em `config.js` ela fica só no servidor do Google.
+- Sem `APPS_SCRIPT_URL` configurada, a fila abre em **modo demonstração**.
+- Status "feito/aguardando" é salvo **na planilha**, compartilhado entre mentores.
 
 ## Observações
 
-- **Upload de arquivo**: o pitch deck agora é por **link** (Drive/Canva com
-  acesso "qualquer pessoa com o link"). Upload de binário exigia plano pago no
-  Formspree ou gravar no Drive via script — link é o caminho gratuito e simples.
-- **Submissões antigas do Formspree** (feitas antes desta migração) continuam no
-  painel do Formspree e no e-mail; elas **não** aparecem nesta fila nova, porque
-  foram para outro destino. Da migração em diante, tudo vai para a planilha.
+- **Pitch deck** é por **link** (Drive/Canva com acesso "qualquer pessoa com o
+  link"). Upload de arquivo binário não é usado.
+- **Submissões antigas do Formspree** (antes da migração) ficaram no Formspree;
+  não aparecem nesta fila. Da migração em diante, tudo vai para a planilha.
