@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23c67139'/><circle cx='50' cy='50' r='19' fill='%23e1eecc'/></svg>">
 <title>ONGoing — Porque toda doação faz a diferença</title>
+
+<!-- Mapa: Leaflet + OpenStreetMap (sem chave de API). Hashes SRI conferidos
+     contra os arquivos publicados em unpkg. Se o CDN não responder, a página
+     cai no mapa ilustrativo do protótipo — ver initMapa(). -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&display=swap');
 
@@ -190,7 +198,33 @@
   .map-me-pulse { position: absolute; left: 41.5%; top: 43.5%; width: 26px; height: 26px; border-radius: 999px; background: var(--color-accent); animation: ongPulse 2.2s ease-out infinite; }
   .map-pin { position: absolute; width: 44px; height: 44px; border-radius: 999px; border: 2px solid var(--color-bg); cursor: pointer; display: grid; place-items: center; font-size: 17px; box-shadow: var(--shadow-sm); padding: 0; transition: transform .18s, background .18s; }
   .map-pin:hover { transform: scale(1.09); }
-  .map-sheet { position: absolute; left: 14px; right: 14px; bottom: 14px; background: var(--color-bg); border-radius: 22px; padding: 12px 14px; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 10px; }
+  .map-sheet { position: absolute; left: 14px; right: 14px; bottom: 14px; z-index: 10; background: var(--color-bg); border-radius: 22px; padding: 12px 14px; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 10px; }
+
+  /* — mapa real: Leaflet + OpenStreetMap — */
+  #leaflet-map { position: absolute; inset: 0; z-index: 1; background: transparent; }
+  .leaflet-container { background: transparent; font-family: var(--font-body); }
+  /* Tiles "lavados" com a mesma receita da classe .washed do design system,
+     para o mapa assentar no fundo creme em vez de saltar sobre ele. */
+  .leaflet-tile-pane { filter: saturate(.6) contrast(.85) brightness(1.06) opacity(.94); }
+  .leaflet-control-attribution {
+    background: color-mix(in srgb, var(--color-bg) 84%, transparent) !important;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent) !important;
+    font-size: 8.5px !important; padding: 1px 6px !important;
+    border-radius: 0 0 0 10px; margin: 0 !important; line-height: 1.5;
+  }
+  .leaflet-control-attribution a { color: var(--color-accent-700) !important; }
+  .ong-marker .pin {
+    width: 44px; height: 44px; border-radius: 999px;
+    border: 2px solid var(--color-bg); display: grid; place-items: center;
+    font-size: 17px; box-shadow: var(--shadow-sm); cursor: pointer;
+    transition: transform .18s, background .18s;
+  }
+  .ong-marker:hover .pin { transform: scale(1.09); }
+  .me-marker .dot { width: 16px; height: 16px; border-radius: 999px; background: var(--color-accent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-accent) 22%, transparent); }
+  .me-marker .halo { position: absolute; left: -5px; top: -5px; width: 26px; height: 26px; border-radius: 999px; background: var(--color-accent); animation: ongPulse 2.2s ease-out infinite; }
+  /* Mapa ilustrativo do protótipo — fica por baixo e some quando o 1º tile carrega. */
+  .map-fallback { position: absolute; inset: 0; z-index: 0; transition: opacity .4s; }
+  .map-fallback .map-pin { pointer-events: none; }
   .sheet-ico { width: 38px; height: 38px; flex: none; border-radius: 999px; background: var(--color-accent-2-200); display: grid; place-items: center; font-size: 17px; }
   .sheet-name { display: block; font-family: var(--font-heading); font-size: 14.5px; }
   .sheet-sub { display: block; font-size: 11.5px; opacity: .6; }
@@ -422,7 +456,29 @@
         <button class="fs-badge" id="fs-badge" onclick="toggleFullscreen()" title="Tela cheia">⛶</button>
         <div class="phone-screen">
           <div class="status-bar"><span>9:41</span><span>📍 São Paulo · Vila Mariana</span></div>
-          <div class="panel-host" id="panel-host"></div>
+          <div class="panel-host" id="panel-host">
+            <!-- O painel do mapa é persistente: recriá-lo a cada render destruiria
+                 a instância do Leaflet. As demais abas entram em #panel-dyn. -->
+            <div class="panel enter" id="panel-mapa" style="display:none">
+              <div class="map-head">
+                <span class="panel-title">Mapa de causas</span>
+                <span class="tag tag-accent-2" id="map-count" style="margin-left:auto;font-size:10px"></span>
+              </div>
+              <div class="chips-row" id="map-chips"></div>
+              <div class="map-canvas">
+                <div class="map-fallback" id="map-fallback">
+                  <div class="map-grid"></div>
+                  <div class="map-shape-a"></div>
+                  <div class="map-shape-b"></div>
+                  <div class="map-me-pulse"></div>
+                  <div class="map-me"></div>
+                </div>
+                <div id="leaflet-map"></div>
+                <div class="map-sheet" id="map-sheet"></div>
+              </div>
+            </div>
+            <div id="panel-dyn" style="height:100%"></div>
+          </div>
           <div class="tabbar" id="tabbar"></div>
         </div>
       </div>
@@ -611,25 +667,25 @@
   var ONGS = [
     { id:'aurora', nome:'Casa Aurora', icone:'👩', causa:'Mulheres', distancia:'1,2 km', pct:'72%',
       desc:'Acolhimento e capacitação profissional para mulheres em situação de violência.',
-      precisa:'R$ 7.200 arrecadados', x:'22%', y:'26%' },
+      precisa:'R$ 7.200 arrecadados', x:'22%', y:'26%', lat:-23.57916, lng:-46.63853 },
     { id:'patas', nome:'Patas Unidas', icone:'🐾', causa:'Animais', distancia:'0,8 km', pct:'45%',
       desc:'Resgate, tratamento e adoção responsável de cães e gatos abandonados.',
-      precisa:'Precisa de ração e voluntários', x:'62%', y:'18%' },
+      precisa:'Precisa de ração e voluntários', x:'62%', y:'18%', lat:-23.58517, lng:-46.62807 },
     { id:'semear', nome:'Instituto Semear', icone:'🧒', causa:'Crianças', distancia:'2,1 km', pct:'88%',
       desc:'Reforço escolar e atividades culturais para crianças da comunidade.',
-      precisa:'Faltam 3 professores voluntários', x:'16%', y:'62%' },
+      precisa:'Faltam 3 professores voluntários', x:'16%', y:'62%', lat:-23.60642, lng:-46.64321 },
     { id:'verde', nome:'Verde Vivo', icone:'🌱', causa:'Meio ambiente', distancia:'1,5 km', pct:'31%',
       desc:'Reflorestamento urbano e educação ambiental em escolas públicas.',
-      precisa:'Mutirão de plantio no sábado', x:'68%', y:'58%' },
+      precisa:'Mutirão de plantio no sábado', x:'68%', y:'58%', lat:-23.59604, lng:-46.62175 },
     { id:'maos', nome:'Mãos que Contam', icone:'👵', causa:'Idosos', distancia:'2,6 km', pct:'54%',
       desc:'Visitas, leituras e conversas em lares de longa permanência.',
-      precisa:'Voluntários para leitura semanal', x:'40%', y:'72%' },
+      precisa:'Voluntários para leitura semanal', x:'40%', y:'72%', lat:-23.5893, lng:-46.66001 },
     { id:'panela', nome:'Panela Cheia', icone:'🍲', causa:'Combate à fome', distancia:'3,4 km', pct:'66%',
       desc:'Cozinha comunitária que serve 400 refeições por dia.',
-      precisa:'Arroz, feijão e óleo', x:'50%', y:'12%' },
+      precisa:'Arroz, feijão e óleo', x:'50%', y:'12%', lat:-23.56282, lng:-46.61782 },
     { id:'letra', nome:'Ponto de Letra', icone:'📚', causa:'Educação', distancia:'1,9 km', pct:'40%',
       desc:'Biblioteca comunitária e cursinho popular para o ENEM.',
-      precisa:'Professores de redação', x:'30%', y:'44%' }
+      precisa:'Professores de redação', x:'30%', y:'44%', lat:-23.6058, lng:-46.62967 }
   ];
 
   var CAUSAS = [
@@ -666,6 +722,9 @@
   ];
 
   var CHIPS_APP = ['Todas','Mulheres','Animais','Crianças','Educação'];
+  // O mapa lista todas as causas presentes nos dados; o filtro é o mesmo
+  // state.causa usado em Descobrir e na grade de causas do site.
+  var CHIPS_MAPA = ['Todas','Mulheres','Animais','Crianças','Meio ambiente','Idosos','Educação','Combate à fome'];
   var VALORES = [100, 500, 5000];
 
   var state = {
@@ -700,20 +759,25 @@
   /* ── AÇÕES ── */
   function irTab(t) { setState({ tab: t }); }
 
+  /* Mantém a seleção dentro do filtro: com os chips no mapa, a ficha não pode
+     continuar apontando para uma ONG que acabou de sair da tela. */
+  function ongParaCausa(c) {
+    if (c === 'Todas') return state.ongId;
+    var atual = ongAtual();
+    if (atual && atual.causa === c) return state.ongId;
+    var achou = ONGS.filter(function (o) { return o.causa === c; })[0];
+    return achou ? achou.id : state.ongId;
+  }
+
   function escolherCausa(c) {
-    var alvo = state.ongId;
-    if (c !== 'Todas') {
-      var achou = ONGS.filter(function (o) { return o.causa === c; })[0];
-      if (achou) alvo = achou.id;
-    }
-    setState({ causa: c, tab: 'descobrir', ongId: alvo });
+    setState({ causa: c, tab: 'descobrir', ongId: ongParaCausa(c) });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function comecar() { setState({ tab: 'descobrir' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   function irPainelONG() { setState({ tab: 'perfil' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   function pickPin(id) { setState({ ongId: id }); }
-  function pickChip(c) { setState({ causa: c }); }
+  function pickChip(c) { setState({ causa: c, ongId: ongParaCausa(c) }); }
   function pickForma(k) { setState({ forma: k, confirmado: false }); }
   function pickValor(n) { setState({ valor: n, confirmado: false }); }
 
@@ -733,38 +797,111 @@
     document.getElementById('sim-liquido').textContent = brl(s * 0.95);
   }
 
-  /* ── PAINÉIS DO APP ── */
-  function painelMapa() {
+  /* ══════════════════════════════════════════════════════════════════════
+     MAPA — Leaflet sobre tiles do OpenStreetMap (sem chave de API).
+     Sem o CDN, initMapa() não roda e o mapa ilustrativo do protótipo
+     permanece visível com os pinos posicionados por porcentagem.
+     ══════════════════════════════════════════════════════════════════════ */
+  var CENTRO = { lat: -23.5893, lng: -46.6345 };   // metrô Vila Mariana, São Paulo
+  var mapa = null, marcadores = {}, ultimaCausaMapa = null;
+
+  function initMapa() {
+    if (!window.L) return;   // CDN indisponível → segue o mapa ilustrativo
+    mapa = L.map(document.getElementById('leaflet-map'), {
+      zoomControl: false, scrollWheelZoom: false, attributionControl: false
+    }).setView([CENTRO.lat, CENTRO.lng], 14);
+
+    // A atribuição ao OpenStreetMap é exigida pela licença dos dados.
+    L.control.attribution({ position: 'topright', prefix: false }).addTo(mapa);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+    }).addTo(mapa).on('tileload', function () {
+      var fb = document.getElementById('map-fallback');
+      if (fb) fb.style.opacity = '0';
+    });
+
+    L.marker([CENTRO.lat, CENTRO.lng], {
+      interactive: false,
+      icon: L.divIcon({ className: 'me-marker', html: '<span class="halo"></span><span class="dot"></span>', iconSize: [16, 16], iconAnchor: [8, 8] })
+    }).addTo(mapa);
+
+    ONGS.forEach(function (o) {
+      var m = L.marker([o.lat, o.lng], {
+        title: o.nome, riseOnHover: true,
+        icon: L.divIcon({ className: 'ong-marker', html: '<span class="pin">' + o.icone + '</span>', iconSize: [44, 44], iconAnchor: [22, 22] })
+      });
+      m.on('click', function () { pickPin(o.id); });
+      marcadores[o.id] = m;
+    });
+
+    ultimaCausaMapa = null;
+    atualizarMapa();
+  }
+
+  function pinosFallback() {
+    var fb = document.getElementById('map-fallback');
+    if (!fb || mapa) return;
+    fb.querySelectorAll('.map-pin').forEach(function (p) { p.remove(); });
+    listaFiltrada().forEach(function (o) {
+      var b = document.createElement('button');
+      b.className = 'map-pin';
+      b.style.cssText = 'left:' + o.x + ';top:' + o.y + ';background:' +
+        (o.id === state.ongId ? 'var(--color-accent-300)' : 'var(--color-bg)');
+      b.title = o.nome;
+      b.textContent = o.icone;
+      b.style.pointerEvents = 'auto';
+      b.onclick = function () { pickPin(o.id); };
+      fb.appendChild(b);
+    });
+  }
+
+  function atualizarMapa() {
+    var lista = listaFiltrada();
     var ong = ongAtual();
-    var pins = ONGS.slice(0, 6).map(function (o) {
-      var bg = o.id === state.ongId ? 'var(--color-accent-300)' : 'var(--color-bg)';
-      return '<button class="map-pin" style="left:' + o.x + ';top:' + o.y + ';background:' + bg + '"' +
-             ' title="' + esc(o.nome) + '" onclick="pickPin(\'' + o.id + '\')">' + o.icone + '</button>';
+
+    document.getElementById('map-count').textContent = lista.length + ' ONGs nesta área';
+
+    document.getElementById('map-chips').innerHTML = CHIPS_MAPA.map(function (c) {
+      return '<button class="tag" style="' + chipStyle(state.causa === c) + '" onclick="pickChip(\'' + esc(c) + '\')">' + esc(c) + '</button>';
     }).join('');
 
-    return '<div class="panel">' +
-      '<div class="map-head">' +
-        '<span class="panel-title">Mapa de causas</span>' +
-        '<span class="tag tag-accent-2" style="margin-left:auto;font-size:10px">' + listaFiltrada().length + ' ONGs nesta área</span>' +
-      '</div>' +
-      '<div class="map-canvas">' +
-        '<div class="map-grid"></div>' +
-        '<div class="map-shape-a"></div>' +
-        '<div class="map-shape-b"></div>' +
-        '<div class="map-me-pulse"></div>' +
-        '<div class="map-me"></div>' +
-        pins +
-        '<div class="map-sheet">' +
-          '<span class="sheet-ico">' + ong.icone + '</span>' +
-          '<span style="display:block;flex:1;min-width:0">' +
-            '<span class="sheet-name">' + esc(ong.nome) + '</span>' +
-            '<span class="sheet-sub">' + esc(ong.causa) + ' · ' + esc(ong.distancia) + '</span>' +
-          '</span>' +
-          '<button class="btn btn-primary" style="font-size:12px;padding:7px 14px" onclick="irTab(\'doar\')">Doar</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
+    document.getElementById('map-sheet').innerHTML =
+      '<span class="sheet-ico">' + ong.icone + '</span>' +
+      '<span style="display:block;flex:1;min-width:0">' +
+        '<span class="sheet-name">' + esc(ong.nome) + '</span>' +
+        '<span class="sheet-sub">' + esc(ong.causa) + ' · ' + esc(ong.distancia) + '</span>' +
+      '</span>' +
+      '<button class="btn btn-primary" style="font-size:12px;padding:7px 14px" onclick="irTab(\'doar\')">Doar</button>';
+
+    if (!mapa) { pinosFallback(); return; }
+
+    var visiveis = {};
+    lista.forEach(function (o) { visiveis[o.id] = true; });
+
+    ONGS.forEach(function (o) {
+      var m = marcadores[o.id];
+      if (!m) return;
+      var mostrar = !!visiveis[o.id];
+      if (mostrar && !mapa.hasLayer(m)) m.addTo(mapa);
+      if (!mostrar && mapa.hasLayer(m)) mapa.removeLayer(m);
+      var el = m.getElement();
+      if (el) {
+        var pin = el.querySelector('.pin');
+        if (pin) pin.style.background = o.id === state.ongId ? 'var(--color-accent-300)' : 'var(--color-bg)';
+      }
+    });
+
+    // Reenquadra só quando o filtro muda — clicar num pino não deve mexer no mapa.
+    if (state.causa !== ultimaCausaMapa) {
+      ultimaCausaMapa = state.causa;
+      var pts = lista.map(function (o) { return [o.lat, o.lng]; });
+      pts.push([CENTRO.lat, CENTRO.lng]);
+      if (pts.length > 1) mapa.fitBounds(pts, { padding: [38, 54], maxZoom: 15, animate: true });
+    }
   }
+
+  function ajustarMapa() { if (mapa) setTimeout(function () { mapa.invalidateSize(); }, 60); }
 
   function painelDescobrir() {
     var chips = CHIPS_APP.map(function (c) {
@@ -931,17 +1068,29 @@
     '</div>';
   }
 
-  var PAINEIS = { mapa: painelMapa, descobrir: painelDescobrir, doar: painelDoar, horas: painelHoras, perfil: painelPerfil };
+  var PAINEIS = { descobrir: painelDescobrir, doar: painelDoar, horas: painelHoras, perfil: painelPerfil };
 
   /* ── RENDER ── */
   function renderPhone() {
-    var host = document.getElementById('panel-host');
-    host.innerHTML = PAINEIS[state.tab]();
-    // A entrada só anima quando a aba muda — trocar de pino não deve repetir o fade.
-    if (state.tab !== lastTab) {
-      host.firstChild.classList.add('enter');
-      lastTab = state.tab;
+    var noMapa = state.tab === 'mapa';
+    var painelMapa = document.getElementById('panel-mapa');
+    var dyn = document.getElementById('panel-dyn');
+
+    painelMapa.style.display = noMapa ? 'flex' : 'none';
+    dyn.style.display = noMapa ? 'none' : '';
+
+    if (noMapa) {
+      dyn.innerHTML = '';
+      atualizarMapa();
+      // Sair de display:none reinicia a animação de entrada e o Leaflet
+      // precisa remedir o contêiner, que estava sem dimensões.
+      if (state.tab !== lastTab) ajustarMapa();
+    } else {
+      dyn.innerHTML = PAINEIS[state.tab]();
+      // A entrada só anima quando a aba muda — trocar de pino não deve repetir o fade.
+      if (state.tab !== lastTab && dyn.firstChild) dyn.firstChild.classList.add('enter');
     }
+    lastTab = state.tab;
 
     document.getElementById('tabbar').innerHTML = TABS.map(function (t) {
       var cor = state.tab === t[0] ? 'var(--color-accent-700)' : 'color-mix(in srgb, var(--color-text) 45%, transparent)';
@@ -974,12 +1123,16 @@
     document.body.classList.toggle('fs-open', isFs);
     badge.innerHTML = isFs ? '✕' : '⛶';
     badge.title = isFs ? 'Sair da tela cheia' : 'Tela cheia';
+    ajustarMapa();   // o contêiner mudou de tamanho
   }
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && document.getElementById('phone').classList.contains('fs-mode')) toggleFullscreen();
   });
+  window.addEventListener('resize', ajustarMapa);
 
   render();
+  // O Leaflet entra com defer, então só está disponível no DOMContentLoaded.
+  document.addEventListener('DOMContentLoaded', function () { initMapa(); ajustarMapa(); });
 </script>
 </body>
 </html>
