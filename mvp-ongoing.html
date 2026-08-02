@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232B5749'/><text x='50' y='72' font-size='54' font-family='Arial,sans-serif' font-weight='bold' fill='%23FBF1E3' text-anchor='middle'>O</text></svg>">
+<title>ONGoing — Porque toda doação faz a diferença</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    /* Paleta extraída do pitch deck da ONGoing */
+    --green: #2B5749;
+    --green-dark: #1E3E33;
+    --green-mid: #4A6B57;
+    --green-pale: #E4EDE8;
+    --terra: #A24A09;
+    --terra-light: #C97B2C;
+    --terra-pale: #F6E7D8;
+    --rose: #BF3B4E;
+    --slate: #6A838F;
+    --brown: #7C5E3B;
+    --cream: #FBF1E3;
+    --cream-deep: #F4E6D2;
+    --surface: #FFFFFF;
+    --text: #1F2A26;
+    --text-muted: #6F7C77;
+    --border: #E6DCCB;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(43,87,73,0.08);
+    --shadow-lg: 0 20px 60px rgba(43,87,73,0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Poppins', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  /* ── BACK BAR ── */
+  .back-bar {
+    background: var(--cream-deep); border-bottom: 1px solid var(--border);
+    padding: 10px 24px; display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; color: var(--text-muted);
+  }
+  .back-bar a { color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+  .back-bar a:hover { color: var(--green); }
+  .liga-tag { background: var(--green-pale); color: var(--green); padding: 2px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--cream); border-bottom: 1px solid var(--border);
+    padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+    height: 68px; position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-mark { position: relative; display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
+  .logo-arrow { display: block; margin-bottom: 1px; }
+  .logo-text { font-weight: 800; font-size: 1.32rem; color: var(--green); letter-spacing: -0.02em; }
+  .logo-text .ong { font-weight: 800; }
+  .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta { background: var(--green) !important; color: var(--cream) !important; padding: 10px 22px !important; border-radius: 24px !important; font-weight: 600 !important; font-size: 0.85rem !important; }
+  .nav-cta:hover { background: var(--green-dark) !important; color: var(--cream) !important; }
+
+  /* ── DOT ROW (motivo gráfico do deck) ── */
+  .dot-row { display: flex; gap: 12px; align-items: center; }
+  .dot-row i { width: 9px; height: 9px; border-radius: 50%; background: var(--terra); display: block; }
+
+  /* ── HERO ── */
+  .hero { padding: 62px 24px 60px; max-width: 1140px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 56px; align-items: center; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-pale); color: var(--green);
+    padding: 7px 16px; border-radius: 24px; font-size: 0.76rem;
+    font-weight: 600; letter-spacing: 0.03em; margin-bottom: 22px;
+  }
+  .hero h1 { font-size: clamp(2rem, 3.6vw, 3rem); font-weight: 800; line-height: 1.12; margin-bottom: 18px; color: var(--green); letter-spacing: -0.02em; }
+  .hero h1 span { color: var(--terra); }
+  .hero p { font-size: 1.02rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 30px; max-width: 480px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary { padding: 14px 30px; background: var(--green); color: var(--cream); border: none; border-radius: 26px; font-family: 'Poppins', sans-serif; font-size: 0.92rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+  .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .btn-secondary { padding: 14px 30px; background: transparent; color: var(--terra); border: 1.5px solid var(--terra); border-radius: 26px; font-family: 'Poppins', sans-serif; font-size: 0.92rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .btn-secondary:hover { background: var(--terra-pale); }
+  .hero-badges { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 26px; }
+  .hero-badge-item { display: flex; align-items: center; gap: 7px; font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+  .hero-badge-item b { color: var(--green); font-size: 0.9rem; }
+  .hero-rule { height: 2px; background: var(--green); margin: 26px 0 0; max-width: 480px; }
+
+  /* ── PHONE MOCKUP ── */
+  .hero-mockup { display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; }
+  .phone-outer { width: 340px; background: #1F2A26; border-radius: 48px; padding: 15px; box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0,0,0,0.1); position: relative; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); }
+  .phone-outer::before { content: ''; position: absolute; top: 26px; left: 50%; transform: translateX(-50%); width: 80px; height: 22px; background: #1F2A26; border-radius: 0 0 14px 14px; z-index: 30; }
+  .phone-screen { background: var(--cream); border-radius: 36px; overflow: hidden; height: 660px; position: relative; transition: border-radius 0.35s, height 0.35s; }
+
+  .fullscreen-badge {
+    position: absolute; top: 14px; right: -12px;
+    background: var(--terra); color: #fff;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; cursor: pointer; z-index: 40;
+    box-shadow: 0 3px 10px rgba(162,74,9,0.45); border: 2px solid var(--cream);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .fullscreen-badge:hover { transform: scale(1.12); background: #8B3F07; }
+  .fullscreen-link {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.78rem; font-weight: 500; color: var(--text-muted);
+    background: var(--cream-deep); border: 1px solid var(--border);
+    padding: 7px 16px; border-radius: 20px; cursor: pointer;
+    transition: all 0.2s; user-select: none;
+  }
+  .fullscreen-link:hover { border-color: var(--green); color: var(--green); }
+
+  .phone-outer.fs-mode {
+    position: fixed !important; inset: 0 !important;
+    width: 100dvw !important; height: 100dvh !important;
+    border-radius: 0 !important; padding: 0 !important;
+    z-index: 9999 !important; box-shadow: none !important;
+  }
+  .phone-outer.fs-mode::before { display: none !important; }
+  .phone-outer.fs-mode .phone-screen { border-radius: 0 !important; height: 100dvh !important; }
+  .phone-outer.fs-mode .fullscreen-badge { top: 12px; right: 12px; background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.35); }
+  .phone-outer.fs-mode ~ .fullscreen-link { display: none; }
+  body.fs-open { overflow: hidden; }
+
+  /* ── APP SCREENS ── */
+  .app-screen { display: none; height: 100%; flex-direction: column; overflow: hidden; animation: fadeIn 0.2s ease; }
+  .app-screen.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .screen-header { background: var(--cream); padding: 44px 15px 10px; flex-shrink: 0; }
+  .screen-header-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .screen-greeting { font-size: 0.62rem; color: var(--text-muted); }
+  .screen-title { font-weight: 700; font-size: 1rem; color: var(--green); }
+  .screen-notif { width: 30px; height: 30px; border-radius: 9px; background: var(--green-pale); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; position: relative; cursor: pointer; flex-shrink: 0; }
+  .notif-dot { width: 7px; height: 7px; background: var(--rose); border-radius: 50%; position: absolute; top: 4px; right: 4px; border: 1.5px solid var(--cream); }
+  .screen-scroll { flex: 1; overflow-y: auto; padding: 12px 15px 64px; scrollbar-width: none; }
+  .screen-scroll::-webkit-scrollbar { display: none; }
+  .app-search { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 8px 14px; font-size: 0.74rem; font-family: 'Poppins', sans-serif; color: var(--text); outline: none; margin-top: 9px; }
+  .sec-label { font-size: 0.63rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin: 12px 0 8px; }
+
+  /* ── FILTRO DE CAUSAS ── */
+  .cause-bar { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 8px 15px 9px; background: var(--cream); flex-shrink: 0; }
+  .cause-bar::-webkit-scrollbar { display: none; }
+  .cause-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px; border-radius: 18px; white-space: nowrap;
+    font-size: 0.66rem; font-weight: 600; cursor: pointer;
+    border: 1.5px solid var(--border); background: var(--surface);
+    color: var(--text-muted); font-family: 'Poppins', sans-serif;
+    transition: all 0.18s; flex-shrink: 0;
+  }
+  .cause-chip:hover { border-color: currentColor; }
+  .cause-chip.active { color: #fff; border-color: transparent; }
+
+  /* ── MAPA ── */
+  .map-wrap { flex: 1; position: relative; overflow: hidden; background: #EDE3D2; }
+  .map-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .map-pin {
+    position: absolute; transform: translate(-50%, -100%);
+    cursor: pointer; z-index: 5; transition: transform 0.18s;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .map-pin:hover { transform: translate(-50%, -100%) scale(1.12); }
+  .map-pin.selected { z-index: 8; }
+  .pin-bubble {
+    width: 30px; height: 30px; border-radius: 50% 50% 50% 4px;
+    transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 8px rgba(31,42,38,0.3);
+    border: 2px solid var(--cream);
+  }
+  .pin-bubble span { transform: rotate(45deg); font-size: 0.78rem; line-height: 1; }
+  .map-pin.selected .pin-bubble { width: 38px; height: 38px; border-width: 3px; }
+  .map-pin.selected .pin-bubble span { font-size: 1rem; }
+  .pin-pulse {
+    position: absolute; top: 50%; left: 50%; width: 46px; height: 46px;
+    margin: -23px 0 0 -23px; border-radius: 50%;
+    animation: pinPulse 2s infinite; pointer-events: none;
+  }
+  @keyframes pinPulse { 0% { transform: scale(0.6); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
+
+  .map-me {
+    position: absolute; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--slate); border: 3px solid #fff; z-index: 6;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25); transform: translate(-50%, -50%);
+  }
+  .map-count {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    background: rgba(43,87,73,0.92); color: var(--cream);
+    padding: 4px 13px; border-radius: 16px; font-size: 0.64rem; font-weight: 600;
+    z-index: 9; white-space: nowrap; backdrop-filter: blur(3px);
+  }
+  .map-sheet {
+    position: absolute; left: 9px; right: 9px; bottom: 62px; z-index: 10;
+    background: var(--surface); border-radius: 16px; padding: 12px;
+    box-shadow: 0 -4px 22px rgba(31,42,38,0.16); border: 1px solid var(--border);
+  }
+  .sheet-grab { width: 34px; height: 3px; background: var(--border); border-radius: 2px; margin: 0 auto 9px; }
+  .sheet-top { display: flex; gap: 10px; align-items: flex-start; }
+  .sheet-ico { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex-shrink: 0; }
+  .sheet-body { flex: 1; min-width: 0; }
+  .sheet-name { font-size: 0.82rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 5px; }
+  .verified { display: inline-flex; align-items: center; gap: 3px; background: var(--green-pale); color: var(--green); font-size: 0.55rem; font-weight: 700; padding: 2px 6px; border-radius: 5px; flex-shrink: 0; }
+  .sheet-meta { font-size: 0.64rem; color: var(--text-muted); margin-top: 2px; }
+  .sheet-need { font-size: 0.64rem; color: var(--terra); margin-top: 5px; font-weight: 500; }
+  .sheet-actions { display: flex; gap: 6px; margin-top: 10px; }
+  .sheet-btn { flex: 1; padding: 7px; border-radius: 9px; border: none; font-family: 'Poppins', sans-serif; font-size: 0.68rem; font-weight: 600; cursor: pointer; }
+  .sheet-btn.primary { background: var(--green); color: var(--cream); }
+  .sheet-btn.ghost { background: var(--cream-deep); color: var(--text-muted); }
+
+  /* ── CARDS DE ONG (descobrir) ── */
+  .ong-card { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 11px; margin-bottom: 9px; display: flex; gap: 10px; align-items: flex-start; }
+  .ong-ico { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .ong-body { flex: 1; min-width: 0; }
+  .ong-name { font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+  .ong-desc { font-size: 0.64rem; color: var(--text-muted); line-height: 1.5; margin-top: 3px; }
+  .ong-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+  .ong-tag { font-size: 0.56rem; font-weight: 600; padding: 2px 7px; border-radius: 5px; }
+  .progress-line { margin-top: 8px; }
+  .pl-bar { height: 5px; background: var(--cream-deep); border-radius: 3px; overflow: hidden; }
+  .pl-fill { height: 5px; border-radius: 3px; background: var(--green); }
+  .pl-txt { display: flex; justify-content: space-between; font-size: 0.56rem; color: var(--text-muted); margin-top: 3px; }
+
+  /* ── DOAR ── */
+  .donate-hero { background: var(--green); border-radius: 16px; padding: 15px; color: var(--cream); margin-bottom: 12px; }
+  .dh-name { font-size: 0.92rem; font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+  .dh-verified { background: rgba(251,241,227,0.2); color: var(--cream); font-size: 0.54rem; padding: 2px 7px; border-radius: 5px; font-weight: 700; }
+  .dh-sub { font-size: 0.66rem; opacity: 0.82; line-height: 1.55; }
+  .donate-opt { background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 11px 12px; margin-bottom: 8px; display: flex; gap: 10px; align-items: center; cursor: pointer; transition: border-color 0.18s; }
+  .donate-opt:hover, .donate-opt.on { border-color: var(--green); }
+  .do-ico { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .do-title { font-size: 0.76rem; font-weight: 700; }
+  .do-desc { font-size: 0.62rem; color: var(--text-muted); margin-top: 1px; line-height: 1.45; }
+  .do-check { width: 17px; height: 17px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; color: #fff; }
+  .donate-opt.on .do-check { background: var(--green); border-color: var(--green); }
+
+  .fee-box { background: var(--terra-pale); border: 1px solid #E8D2B8; border-radius: 12px; padding: 11px 12px; margin-top: 10px; }
+  .fee-title { font-size: 0.66rem; font-weight: 700; color: var(--terra); margin-bottom: 7px; }
+  .fee-row { display: flex; justify-content: space-between; font-size: 0.64rem; color: var(--text-muted); padding: 2px 0; }
+  .fee-row.total { border-top: 1px solid #E8D2B8; margin-top: 5px; padding-top: 5px; font-weight: 700; color: var(--green); }
+
+  /* ── CERTIFICADO ── */
+  .cert-card { background: linear-gradient(150deg, var(--green), var(--green-dark)); border-radius: 16px; padding: 16px; color: var(--cream); margin-bottom: 13px; position: relative; overflow: hidden; }
+  .cert-card::after { content: ''; position: absolute; width: 120px; height: 120px; border-radius: 50%; background: rgba(251,241,227,0.06); top: -40px; right: -30px; }
+  .cert-hours { font-size: 2rem; font-weight: 800; line-height: 1; }
+  .cert-lbl { font-size: 0.66rem; opacity: 0.8; margin-bottom: 11px; }
+  .cert-bar-bg { height: 6px; background: rgba(251,241,227,0.22); border-radius: 4px; }
+  .cert-bar-fill { height: 6px; background: var(--terra-light); border-radius: 4px; width: 64%; }
+  .cert-next { font-size: 0.6rem; opacity: 0.78; margin-top: 6px; }
+  .hist-row { display: flex; gap: 9px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .hist-ico { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.82rem; flex-shrink: 0; }
+  .hist-name { font-size: 0.72rem; font-weight: 600; }
+  .hist-meta { font-size: 0.6rem; color: var(--text-muted); }
+  .hist-h { margin-left: auto; font-size: 0.66rem; font-weight: 700; color: var(--green); flex-shrink: 0; }
+
+  /* ── PERFIL ── */
+  .profile-hdr { padding: 44px 16px 16px; background: var(--cream-deep); text-align: center; flex-shrink: 0; }
+  .profile-av { width: 62px; height: 62px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: var(--cream); margin: 0 auto 9px; border: 3px solid var(--cream); }
+  .profile-name { font-weight: 700; font-size: 0.95rem; color: var(--green); }
+  .profile-role { font-size: 0.66rem; color: var(--text-muted); }
+  .profile-stats { display: flex; gap: 8px; margin: 12px 13px 0; }
+  .ps-card { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 6px; text-align: center; }
+  .ps-num { font-size: 1.05rem; font-weight: 800; color: var(--green); line-height: 1; }
+  .ps-lbl { font-size: 0.54rem; color: var(--text-muted); margin-top: 3px; }
+  .set-item { display: flex; align-items: center; gap: 11px; padding: 11px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .set-ico { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+  .set-name { font-size: 0.76rem; font-weight: 600; }
+  .set-desc { font-size: 0.6rem; color: var(--text-muted); }
+  .set-arrow { margin-left: auto; color: var(--text-muted); font-size: 0.8rem; }
+
+  /* ── BOTTOM NAV ── */
+  .app-bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; padding: 8px 0 10px; z-index: 20; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; opacity: 0.38; transition: opacity 0.2s; }
+  .nav-item.active { opacity: 1; }
+  .ni-ico { font-size: 1.02rem; }
+  .ni-lbl { font-size: 0.5rem; font-weight: 600; color: var(--text-muted); }
+  .nav-item.active .ni-lbl { color: var(--green); }
+
+  /* ── PROOF BAR ── */
+  .proof-bar { background: var(--green); padding: 26px 24px; }
+  .proof-inner { max-width: 1140px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .proof-stat { text-align: center; }
+  .proof-num { font-size: 1.55rem; font-weight: 800; color: var(--cream); }
+  .proof-label { font-size: 0.76rem; color: rgba(251,241,227,0.72); }
+
+  /* ── SECTIONS ── */
+  .section { max-width: 1140px; margin: 0 auto; padding: 74px 24px; }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-tag { display: inline-block; background: var(--green-pale); color: var(--green); padding: 5px 15px; border-radius: 20px; font-size: 0.73rem; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 14px; }
+  .section-header h2 { font-size: clamp(1.5rem, 2.9vw, 2.1rem); font-weight: 800; margin-bottom: 12px; color: var(--green); letter-spacing: -0.01em; }
+  .section-header p { color: var(--text-muted); font-size: 0.96rem; max-width: 520px; margin: 0 auto; line-height: 1.7; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; transition: box-shadow 0.25s, transform 0.25s; }
+  .feature-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+  .feature-icon { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 16px; }
+  .feature-card h3 { font-size: 0.98rem; font-weight: 700; margin-bottom: 8px; color: var(--green); }
+  .feature-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* ── CAUSAS ── */
+  .causes { background: var(--cream-deep); }
+  .causes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+  .cause-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 16px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+  .cause-card:hover { transform: translateY(-3px); }
+  .cause-ico { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; margin: 0 auto 11px; }
+  .cause-name { font-size: 0.88rem; font-weight: 700; margin-bottom: 3px; }
+  .cause-n { font-size: 0.72rem; color: var(--text-muted); }
+
+  /* ── COMO FUNCIONA ── */
+  .how { background: var(--green); color: var(--cream); padding: 74px 24px; }
+  .how-inner { max-width: 1140px; margin: 0 auto; }
+  .how h2 { font-size: clamp(1.5rem, 2.9vw, 2.1rem); font-weight: 800; text-align: center; margin-bottom: 46px; }
+  .how-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; }
+  .how-step { text-align: center; }
+  .how-step-num { width: 52px; height: 52px; border-radius: 50%; background: rgba(251,241,227,0.1); border: 1.5px solid rgba(251,241,227,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; font-weight: 800; margin: 0 auto 15px; color: var(--terra-light); }
+  .how-step h3 { font-weight: 700; font-size: 0.94rem; margin-bottom: 7px; }
+  .how-step p { font-size: 0.82rem; opacity: 0.75; line-height: 1.6; }
+
+  /* ── DIFERENCIAL ── */
+  .trust-inner { background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 48px 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; }
+  .trust-text h2 { font-size: clamp(1.4rem, 2.5vw, 1.95rem); font-weight: 800; margin-bottom: 14px; line-height: 1.2; color: var(--green); }
+  .trust-text h2 span { color: var(--terra); }
+  .trust-text > p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.75; margin-bottom: 26px; }
+  .trust-list { display: flex; flex-direction: column; gap: 15px; }
+  .trust-item { display: flex; gap: 12px; align-items: flex-start; }
+  .trust-check { width: 26px; height: 26px; border-radius: 50%; background: var(--green); color: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; flex-shrink: 0; }
+  .trust-item strong { display: block; font-size: 0.86rem; font-weight: 600; margin-bottom: 2px; }
+  .trust-item span { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
+
+  .fee-demo { background: var(--cream); border: 1px solid var(--border); border-radius: 18px; padding: 24px; }
+  .fee-demo-title { font-size: 0.8rem; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+  .fee-demo-sub { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 18px; }
+  .fee-visual { display: flex; align-items: flex-end; gap: 10px; height: 130px; margin-bottom: 16px; }
+  .fee-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; }
+  .fee-bar { width: 100%; border-radius: 8px 8px 0 0; }
+  .fee-val { font-size: 0.82rem; font-weight: 800; }
+  .fee-cap { font-size: 0.64rem; color: var(--text-muted); text-align: center; line-height: 1.35; }
+  .fee-note { background: var(--green-pale); border-radius: 10px; padding: 11px 13px; font-size: 0.76rem; color: var(--green); line-height: 1.55; }
+
+  /* ── PERSONAS ── */
+  .personas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(238px, 1fr)); gap: 20px; }
+  .persona-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; text-align: center; }
+  .persona-icon { font-size: 2.2rem; margin-bottom: 12px; }
+  .persona-title { font-size: 0.96rem; font-weight: 700; margin-bottom: 8px; color: var(--green); }
+  .persona-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── CTA ── */
+  .cta { max-width: 1140px; margin: 0 auto; padding: 74px 24px; text-align: center; }
+  .cta h2 { font-size: clamp(1.7rem, 3.3vw, 2.4rem); font-weight: 800; margin-bottom: 15px; color: var(--green); }
+  .cta p { color: var(--text-muted); font-size: 0.96rem; margin: 0 auto 30px; max-width: 460px; line-height: 1.7; }
+  .cta-dots { display: flex; gap: 12px; justify-content: center; margin-top: 34px; }
+  .cta-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--terra); display: block; }
+
+  footer { background: var(--green-dark); color: rgba(251,241,227,0.55); text-align: center; padding: 28px 24px; font-size: 0.8rem; }
+  footer strong { color: rgba(251,241,227,0.85); }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; gap: 40px; justify-items: center; text-align: center; }
+    .hero p, .hero-rule { margin-left: auto; margin-right: auto; }
+    .hero-actions, .hero-badges { justify-content: center; }
+    .hero-mockup { order: -1; }
+    nav .nav-links { display: none; }
+    .trust-inner { grid-template-columns: 1fr; gap: 34px; padding: 32px 24px; }
+    .phone-outer { width: min(340px, 90vw); }
+    .phone-screen { height: min(660px, 80vh); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── BACK BAR ── -->
+<div class="back-bar">
+  <a href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar ao Repositório de MVPs
+  </a>
+  <span>·</span>
+  <span class="liga-tag">Liga de Empreendedorismo · Grupo 5</span>
+</div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="logo-mark">
+      <svg class="logo-arrow" width="66" height="9" viewBox="0 0 66 9" fill="none">
+        <path d="M0 6.5C22 3 44 2.2 62 2.2" stroke="#2B5749" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M56 0.5L63.5 2.4L56.5 5.5" stroke="#2B5749" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-text"><span class="ong">ONG</span>oing</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#causas">Causas</a></li>
+    <li><a href="#como">Como funciona</a></li>
+    <li><a href="#confianca">Confiança</a></li>
+    <li><a class="nav-cta" href="#">Começar agora</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">🤝 Voluntários · Doadores · ONGs</div>
+    <h1>Encontre ONGs de<br><span>confiança</span> perto de você</h1>
+    <p>Um mapa com todas as causas na palma da mão. Filtre por aquilo que move você — mulheres, animais, crianças, meio ambiente — e doe tempo, serviços ou dinheiro para instituições verificadas.</p>
+    <div class="hero-actions">
+      <button class="btn-primary">Quero ajudar</button>
+      <button class="btn-secondary">Cadastrar minha ONG</button>
+    </div>
+    <div class="hero-rule"></div>
+    <div class="hero-badges">
+      <div class="hero-badge-item"><b>✓</b> ONGs verificadas em órgãos públicos</div>
+      <div class="hero-badge-item"><b>✓</b> Taxa justa de 5%</div>
+      <div class="hero-badge-item"><b>✓</b> Certificado de voluntariado</div>
+    </div>
+  </div>
+
+  <!-- ── CELULAR ── -->
+  <div class="hero-mockup">
+    <div class="phone-outer" id="phone-outer">
+      <div class="fullscreen-badge" id="fs-badge" onclick="toggleFullscreen()" title="Tela cheia">⛶</div>
+      <div class="phone-screen">
+
+        <!-- SCREEN 0: MAPA -->
+        <div class="app-screen active" id="screen-0">
+          <div class="screen-header">
+            <div class="screen-header-row">
+              <div>
+                <div class="screen-greeting">📍 São Paulo · Vila Mariana</div>
+                <div class="screen-title">Mapa de causas</div>
+              </div>
+              <div class="screen-notif">🔔<span class="notif-dot"></span></div>
+            </div>
+          </div>
+          <div class="cause-bar" id="cause-bar"></div>
+          <div class="map-wrap" id="map-wrap">
+            <svg class="map-svg" viewBox="0 0 300 420" preserveAspectRatio="xMidYMid slice">
+              <rect width="300" height="420" fill="#EDE3D2"/>
+              <!-- quarteirões -->
+              <g fill="#E5D9C4">
+                <rect x="12" y="16" width="76" height="60" rx="4"/>
+                <rect x="104" y="16" width="82" height="60" rx="4"/>
+                <rect x="202" y="16" width="86" height="60" rx="4"/>
+                <rect x="12" y="96" width="76" height="72" rx="4"/>
+                <rect x="202" y="96" width="86" height="72" rx="4"/>
+                <rect x="12" y="188" width="76" height="66" rx="4"/>
+                <rect x="104" y="188" width="82" height="66" rx="4"/>
+                <rect x="202" y="188" width="86" height="66" rx="4"/>
+                <rect x="12" y="274" width="76" height="62" rx="4"/>
+                <rect x="104" y="274" width="82" height="62" rx="4"/>
+                <rect x="202" y="274" width="86" height="62" rx="4"/>
+                <rect x="12" y="356" width="120" height="52" rx="4"/>
+                <rect x="150" y="356" width="138" height="52" rx="4"/>
+              </g>
+              <!-- parque -->
+              <path d="M104 96 h82 v72 h-82 z" fill="#CBDCCB"/>
+              <circle cx="128" cy="120" r="12" fill="#B7CDB7"/>
+              <circle cx="158" cy="140" r="15" fill="#B7CDB7"/>
+              <!-- rio -->
+              <path d="M-4 246 C60 236, 110 268, 170 258 C230 248, 268 272, 306 262 L306 274 C268 284, 230 260, 170 270 C110 280, 60 248, -4 258 Z" fill="#CBD8DD"/>
+              <!-- avenida diagonal -->
+              <path d="M-6 330 L306 60" stroke="#F2E9DA" stroke-width="9"/>
+              <path d="M-6 330 L306 60" stroke="#E0D3BC" stroke-width="1" stroke-dasharray="7 7"/>
+            </svg>
+            <div class="map-count" id="map-count">12 ONGs nesta área</div>
+            <div class="map-me" style="left:50%;top:57%"></div>
+            <div class="map-sheet" id="map-sheet"></div>
+          </div>
+        </div>
+
+        <!-- SCREEN 1: DESCOBRIR -->
+        <div class="app-screen" id="screen-1">
+          <div class="screen-header">
+            <div class="screen-header-row">
+              <div>
+                <div class="screen-greeting">Olá, Beatriz 👋</div>
+                <div class="screen-title">Descubra ONGs</div>
+              </div>
+              <div class="screen-notif">🔔<span class="notif-dot"></span></div>
+            </div>
+            <input class="app-search" placeholder="🔍  Buscar por nome ou causa..." readonly>
+          </div>
+          <div class="screen-scroll">
+            <div class="sec-label">Campanhas urgentes</div>
+
+            <div class="ong-card">
+              <div class="ong-ico" style="background:rgba(191,59,78,0.12)">👩</div>
+              <div class="ong-body">
+                <div class="ong-name">Casa Aurora <span class="verified">✓ Verificada</span></div>
+                <div class="ong-desc">Acolhimento e capacitação profissional para mulheres em situação de violência.</div>
+                <div class="ong-tags">
+                  <span class="ong-tag" style="background:rgba(191,59,78,0.1);color:#BF3B4E">Mulheres</span>
+                  <span class="ong-tag" style="background:var(--cream-deep);color:var(--text-muted)">1,2 km</span>
+                </div>
+                <div class="progress-line">
+                  <div class="pl-bar"><div class="pl-fill" style="width:72%"></div></div>
+                  <div class="pl-txt"><span>R$ 7.200 arrecadados</span><span>72%</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ong-card">
+              <div class="ong-ico" style="background:rgba(162,74,9,0.12)">🐾</div>
+              <div class="ong-body">
+                <div class="ong-name">Patas Unidas <span class="verified">✓ Verificada</span></div>
+                <div class="ong-desc">Resgate, tratamento e adoção responsável de cães e gatos abandonados.</div>
+                <div class="ong-tags">
+                  <span class="ong-tag" style="background:rgba(162,74,9,0.1);color:#A24A09">Animais</span>
+                  <span class="ong-tag" style="background:var(--cream-deep);color:var(--text-muted)">0,8 km</span>
+                </div>
+                <div class="progress-line">
+                  <div class="pl-bar"><div class="pl-fill" style="width:45%"></div></div>
+                  <div class="pl-txt"><span>Precisa de ração e voluntários</span><span>45%</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ong-card">
+              <div class="ong-ico" style="background:rgba(106,131,143,0.14)">🧒</div>
+              <div class="ong-body">
+                <div class="ong-name">Instituto Semear <span class="verified">✓ Verificada</span></div>
+                <div class="ong-desc">Reforço escolar e atividades culturais para crianças da comunidade.</div>
+                <div class="ong-tags">
+                  <span class="ong-tag" style="background:rgba(106,131,143,0.12);color:#6A838F">Crianças</span>
+                  <span class="ong-tag" style="background:var(--cream-deep);color:var(--text-muted)">2,1 km</span>
+                </div>
+                <div class="progress-line">
+                  <div class="pl-bar"><div class="pl-fill" style="width:88%"></div></div>
+                  <div class="pl-txt"><span>Faltam 3 professores voluntários</span><span>88%</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ong-card">
+              <div class="ong-ico" style="background:rgba(43,87,73,0.12)">🌱</div>
+              <div class="ong-body">
+                <div class="ong-name">Verde Vivo <span class="verified">✓ Verificada</span></div>
+                <div class="ong-desc">Reflorestamento urbano e educação ambiental em escolas públicas.</div>
+                <div class="ong-tags">
+                  <span class="ong-tag" style="background:rgba(43,87,73,0.1);color:#2B5749">Meio ambiente</span>
+                  <span class="ong-tag" style="background:var(--cream-deep);color:var(--text-muted)">1,5 km</span>
+                </div>
+                <div class="progress-line">
+                  <div class="pl-bar"><div class="pl-fill" style="width:31%"></div></div>
+                  <div class="pl-txt"><span>Mutirão de plantio no sábado</span><span>31%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN 2: DOAR -->
+        <div class="app-screen" id="screen-2">
+          <div class="screen-header">
+            <div class="screen-header-row">
+              <div class="screen-title">Como você quer ajudar?</div>
+            </div>
+          </div>
+          <div class="screen-scroll">
+            <div class="donate-hero">
+              <div class="dh-name">Casa Aurora <span class="dh-verified">✓ VERIFICADA</span></div>
+              <div class="dh-sub">Acolhimento de mulheres · CNPJ e inscrição em órgãos públicos conferidos pela ONGoing.</div>
+            </div>
+
+            <div class="sec-label">Formas de doação</div>
+
+            <div class="donate-opt on" id="opt-0" onclick="pickDonate(0)">
+              <div class="do-ico" style="background:rgba(162,74,9,0.12)">📦</div>
+              <div style="flex:1">
+                <div class="do-title">Doação material</div>
+                <div class="do-desc">Roupas, alimentos, higiene e itens da lista de necessidades.</div>
+              </div>
+              <div class="do-check">✓</div>
+            </div>
+
+            <div class="donate-opt" id="opt-1" onclick="pickDonate(1)">
+              <div class="do-ico" style="background:rgba(106,131,143,0.14)">🧑‍🏫</div>
+              <div style="flex:1">
+                <div class="do-title">Doação de serviço</div>
+                <div class="do-desc">Aulas, leituras, conversas, consultoria e habilidades profissionais.</div>
+              </div>
+              <div class="do-check">✓</div>
+            </div>
+
+            <div class="donate-opt" id="opt-2" onclick="pickDonate(2)">
+              <div class="do-ico" style="background:rgba(43,87,73,0.12)">💚</div>
+              <div style="flex:1">
+                <div class="do-title">Auxílio financeiro</div>
+                <div class="do-desc">Doação única ou recorrente, com repasse transparente.</div>
+              </div>
+              <div class="do-check">✓</div>
+            </div>
+
+            <div class="fee-box">
+              <div class="fee-title">Transparência da taxa justa</div>
+              <div class="fee-row"><span>Sua doação</span><span>R$ 5.000,00</span></div>
+              <div class="fee-row"><span>Taxa ONGoing (5%)</span><span>− R$ 250,00</span></div>
+              <div class="fee-row total"><span>Vai para a ONG</span><span>R$ 4.750,00</span></div>
+            </div>
+
+            <button class="btn-primary" style="width:100%;margin-top:12px;padding:11px;font-size:0.8rem;border-radius:11px">Continuar doação</button>
+          </div>
+        </div>
+
+        <!-- SCREEN 3: CERTIFICADO -->
+        <div class="app-screen" id="screen-3">
+          <div class="screen-header">
+            <div class="screen-header-row">
+              <div class="screen-title">Meu voluntariado</div>
+            </div>
+          </div>
+          <div class="screen-scroll">
+            <div class="cert-card">
+              <div class="cert-hours">32h</div>
+              <div class="cert-lbl">de voluntariado registradas</div>
+              <div class="cert-bar-bg"><div class="cert-bar-fill"></div></div>
+              <div class="cert-next">Faltam 18h para o certificado de 50 horas 🏅</div>
+            </div>
+
+            <div class="sec-label">Histórico de participação</div>
+            <div class="hist-row">
+              <div class="hist-ico" style="background:rgba(191,59,78,0.12)">👩</div>
+              <div>
+                <div class="hist-name">Casa Aurora</div>
+                <div class="hist-meta">Oficina de currículo · 12 mai</div>
+              </div>
+              <div class="hist-h">6h</div>
+            </div>
+            <div class="hist-row">
+              <div class="hist-ico" style="background:rgba(106,131,143,0.14)">🧒</div>
+              <div>
+                <div class="hist-name">Instituto Semear</div>
+                <div class="hist-meta">Reforço de matemática · 05 mai</div>
+              </div>
+              <div class="hist-h">10h</div>
+            </div>
+            <div class="hist-row">
+              <div class="hist-ico" style="background:rgba(162,74,9,0.12)">🐾</div>
+              <div>
+                <div class="hist-name">Patas Unidas</div>
+                <div class="hist-meta">Feira de adoção · 27 abr</div>
+              </div>
+              <div class="hist-h">8h</div>
+            </div>
+            <div class="hist-row">
+              <div class="hist-ico" style="background:rgba(43,87,73,0.12)">🌱</div>
+              <div>
+                <div class="hist-name">Verde Vivo</div>
+                <div class="hist-meta">Mutirão de plantio · 19 abr</div>
+              </div>
+              <div class="hist-h">8h</div>
+            </div>
+
+            <div class="fee-box" style="background:var(--green-pale);border-color:#CFE0D6;margin-top:14px">
+              <div class="fee-title" style="color:var(--green)">🏅 Certificado digital</div>
+              <div style="font-size:0.66rem;color:var(--text-muted);line-height:1.55">
+                Ao atingir 50 horas você emite um certificado válido para currículo e atividades complementares da faculdade.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN 4: PERFIL -->
+        <div class="app-screen" id="screen-4">
+          <div class="profile-hdr">
+            <div class="profile-av">B</div>
+            <div class="profile-name">Beatriz Ihara</div>
+            <div class="profile-role">Voluntária desde março de 2026</div>
+          </div>
+          <div class="profile-stats">
+            <div class="ps-card"><div class="ps-num">32h</div><div class="ps-lbl">Voluntariado</div></div>
+            <div class="ps-card"><div class="ps-num">4</div><div class="ps-lbl">ONGs apoiadas</div></div>
+            <div class="ps-card"><div class="ps-num">R$ 340</div><div class="ps-lbl">Doado</div></div>
+          </div>
+          <div class="screen-scroll" style="padding-top:6px">
+            <div class="set-item">
+              <div class="set-ico" style="background:rgba(43,87,73,0.1)">❤️</div>
+              <div><div class="set-name">Minhas causas</div><div class="set-desc">Mulheres, animais e educação</div></div>
+              <span class="set-arrow">›</span>
+            </div>
+            <div class="set-item">
+              <div class="set-ico" style="background:rgba(162,74,9,0.1)">🏅</div>
+              <div><div class="set-name">Certificados</div><div class="set-desc">Emitir e baixar comprovantes</div></div>
+              <span class="set-arrow">›</span>
+            </div>
+            <div class="set-item">
+              <div class="set-ico" style="background:rgba(106,131,143,0.12)">🧾</div>
+              <div><div class="set-name">Histórico de doações</div><div class="set-desc">Recibos e repasses às ONGs</div></div>
+              <span class="set-arrow">›</span>
+            </div>
+            <div class="set-item">
+              <div class="set-ico" style="background:rgba(43,87,73,0.1)">🔔</div>
+              <div><div class="set-name">Notificações</div><div class="set-desc">Campanhas urgentes perto de você</div></div>
+              <span class="set-arrow">›</span>
+            </div>
+            <div class="set-item">
+              <div class="set-ico" style="background:rgba(191,59,78,0.1)">🚪</div>
+              <div><div class="set-name">Sair da conta</div><div class="set-desc"></div></div>
+              <span class="set-arrow">›</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── BOTTOM NAV ── -->
+        <div class="app-bottom-nav">
+          <div class="nav-item active" id="nav-0" onclick="switchScreen(0)"><span class="ni-ico">🗺️</span><span class="ni-lbl">Mapa</span></div>
+          <div class="nav-item" id="nav-1" onclick="switchScreen(1)"><span class="ni-ico">🔍</span><span class="ni-lbl">Descobrir</span></div>
+          <div class="nav-item" id="nav-2" onclick="switchScreen(2)"><span class="ni-ico">💚</span><span class="ni-lbl">Doar</span></div>
+          <div class="nav-item" id="nav-3" onclick="switchScreen(3)"><span class="ni-ico">🏅</span><span class="ni-lbl">Horas</span></div>
+          <div class="nav-item" id="nav-4" onclick="switchScreen(4)"><span class="ni-ico">👤</span><span class="ni-lbl">Perfil</span></div>
+        </div>
+
+      </div><!-- /phone-screen -->
+    </div><!-- /phone-outer -->
+    <div class="fullscreen-link" onclick="toggleFullscreen()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      Ver em tela cheia
+    </div>
+  </div>
+</section>
+
+<!-- ── PROOF BAR ── -->
+<div class="proof-bar">
+  <div class="proof-inner">
+    <div class="proof-stat"><div class="proof-num">1.200+</div><div class="proof-label">ONGs verificadas</div></div>
+    <div class="proof-stat"><div class="proof-num">100%</div><div class="proof-label">checadas em órgãos públicos</div></div>
+    <div class="proof-stat"><div class="proof-num">5%</div><div class="proof-label">taxa de serviço justa</div></div>
+    <div class="proof-stat"><div class="proof-num">R$ 0</div><div class="proof-label">para doar ou se voluntariar</div></div>
+  </div>
+</div>
+
+<!-- ── CAUSAS ── -->
+<section class="causes" id="causas">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">Filtre por causa</div>
+      <h2>Escolha o que move você</h2>
+      <p>No mapa da ONGoing, cada causa tem sua cor. Toque no filtro e veja só as instituições que combinam com o que você quer apoiar.</p>
+    </div>
+    <div class="causes-grid">
+      <div class="cause-card">
+        <div class="cause-ico" style="background:rgba(191,59,78,0.12)">👩</div>
+        <div class="cause-name">Mulheres</div>
+        <div class="cause-n">214 ONGs</div>
+      </div>
+      <div class="cause-card">
+        <div class="cause-ico" style="background:rgba(162,74,9,0.12)">🐾</div>
+        <div class="cause-name">Animais</div>
+        <div class="cause-n">327 ONGs</div>
+      </div>
+      <div class="cause-card">
+        <div class="cause-ico" style="background:rgba(106,131,143,0.14)">🧒</div>
+        <div class="cause-name">Crianças</div>
+        <div class="cause-n">289 ONGs</div>
+      </div>
+      <div class="cause-card">
+        <div class="cause-ico" style="background:rgba(43,87,73,0.12)">🌱</div>
+        <div class="cause-name">Meio ambiente</div>
+        <div class="cause-n">168 ONGs</div>
+      </div>
+      <div class="cause-card">
+        <div class="cause-ico" style="background:rgba(124,94,59,0.14)">👵</div>
+        <div class="cause-name">Idosos</div>
+        <div class="cause-n">96 ONGs</div>
+      </div>
+      <div class="cause-card">
+        <div class="cause-ico" style="background:rgba(74,107,87,0.14)">📚</div>
+        <div class="cause-name">Educação</div>
+        <div class="cause-n">203 ONGs</div>
+      </div>
+      <div class="cause-card">
+        <div class="cause-ico" style="background:rgba(201,123,44,0.14)">🍲</div>
+        <div class="cause-name">Combate à fome</div>
+        <div class="cause-n">141 ONGs</div>
+      </div>
+      <div class="cause-card">
+        <div class="cause-ico" style="background:rgba(43,87,73,0.08)">➕</div>
+        <div class="cause-name">Outras causas</div>
+        <div class="cause-n">Saúde, cultura, moradia…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FUNCIONALIDADES ── -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-tag">Funcionalidades</div>
+    <h2>Tudo o que a plataforma resolve</h2>
+    <p>Da busca confiável ao certificado no fim — o caminho inteiro do voluntário e do doador.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(43,87,73,0.1)">🗺️</div>
+      <h3>Mapa com filtro por causa</h3>
+      <p>Veja no mapa as ONGs perto de você e filtre por mulheres, animais, crianças, meio ambiente e outras causas em um toque.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(162,74,9,0.12)">🛡️</div>
+      <h3>Verificação em órgãos públicos</h3>
+      <p>Toda ONG passa por conferência de CNPJ e inscrição em órgãos oficiais antes de aparecer. Fim do medo de golpe.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(106,131,143,0.14)">🎁</div>
+      <h3>Três formas de doar</h3>
+      <p>Doe materiais, ofereça serviços e habilidades — aulas, leituras, conversas — ou contribua financeiramente.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(191,59,78,0.1)">🏅</div>
+      <h3>Certificado de voluntariado</h3>
+      <p>As horas ficam registradas automaticamente e viram certificado digital, válido para currículo e horas complementares.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(74,107,87,0.14)">📣</div>
+      <h3>Visibilidade para a ONG</h3>
+      <p>Instituições pequenas ganham alcance, publicam necessidades urgentes e recebem doações de forma contínua.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(201,123,44,0.14)">🧾</div>
+      <h3>Repasse transparente</h3>
+      <p>Cada doação mostra exatamente quanto vai para a ONG e quanto fica de taxa. Sem letra miúda.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMO FUNCIONA ── -->
+<section class="how" id="como">
+  <div class="how-inner">
+    <h2>Da vontade de ajudar ao certificado</h2>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step-num">1</div>
+        <h3>Escolha a causa</h3>
+        <p>Selecione no filtro o que move você: mulheres, animais, crianças, meio ambiente e mais.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">2</div>
+        <h3>Encontre no mapa</h3>
+        <p>O mapa mostra as ONGs verificadas mais próximas, com o que cada uma precisa agora.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">3</div>
+        <h3>Doe do seu jeito</h3>
+        <p>Materiais, serviços ou dinheiro — com repasse transparente e taxa justa de 5%.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">4</div>
+        <h3>Receba o certificado</h3>
+        <p>Suas horas ficam registradas e viram um certificado digital para o seu currículo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DIFERENCIAL / CONFIANÇA ── -->
+<section class="section" id="confianca">
+  <div class="trust-inner">
+    <div class="trust-text">
+      <div class="section-tag">Nosso diferencial</div>
+      <h2>Confiança que se<br><span>comprova</span>, não que se promete</h2>
+      <p>O maior obstáculo de quem quer doar é o medo de cair em golpe. Por isso nenhuma instituição entra na ONGoing sem passar pela nossa verificação — e cada centavo tem destino rastreável.</p>
+      <div class="trust-list">
+        <div class="trust-item">
+          <div class="trust-check">✓</div>
+          <div>
+            <strong>Conferência de CNPJ e inscrição</strong>
+            <span>Checagem em órgãos públicos antes da ONG ser publicada na plataforma.</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-check">✓</div>
+          <div>
+            <strong>Selo de verificação visível</strong>
+            <span>O doador vê o selo antes de decidir — no mapa, na busca e na página da ONG.</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-check">✓</div>
+          <div>
+            <strong>Prestação de contas aberta</strong>
+            <span>Cada campanha mostra quanto foi arrecadado e como o recurso está sendo usado.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fee-demo">
+      <div class="fee-demo-title">O que é uma “taxa justa”?</div>
+      <div class="fee-demo-sub">Exemplo de uma doação de R$ 5.000</div>
+      <div class="fee-visual">
+        <div class="fee-col">
+          <div class="fee-val" style="color:var(--slate)">R$ 5.000</div>
+          <div class="fee-bar" style="height:100px;background:var(--slate);opacity:0.35"></div>
+          <div class="fee-cap">Doação<br>recebida</div>
+        </div>
+        <div class="fee-col">
+          <div class="fee-val" style="color:var(--terra)">R$ 250</div>
+          <div class="fee-bar" style="height:14px;background:var(--terra)"></div>
+          <div class="fee-cap">Taxa ONGoing<br>(5%)</div>
+        </div>
+        <div class="fee-col">
+          <div class="fee-val" style="color:var(--green)">R$ 4.750</div>
+          <div class="fee-bar" style="height:95px;background:var(--green)"></div>
+          <div class="fee-cap">Vai direto<br>para a ONG</div>
+        </div>
+      </div>
+      <div class="fee-note">A taxa cobre apenas a manutenção da plataforma — sem tarifas escondidas para o doador nem para a instituição.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PÚBLICO-ALVO ── -->
+<section class="causes">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">Para quem</div>
+      <h2>Quem encontra o seu lugar aqui</h2>
+      <p>A ONGoing conecta os dois lados: quem quer ajudar e quem precisa de ajuda.</p>
+    </div>
+    <div class="personas-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🎓</div>
+        <div class="persona-title">Jovens e universitários</div>
+        <div class="persona-desc">Ampliam o currículo com experiências voluntárias reais e recebem certificado de horas complementares.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🏛️</div>
+        <div class="persona-title">ONGs e instituições</div>
+        <div class="persona-desc">Ganham visibilidade, divulgam necessidades urgentes e recebem apoio voluntário de forma constante.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">💚</div>
+        <div class="persona-title">Quem quer ajudar</div>
+        <div class="persona-desc">Pessoas dispostas a doar, mas que não sabiam onde encontrar oportunidades confiáveis e próximas.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🧑‍💼</div>
+        <div class="persona-title">Profissionais</div>
+        <div class="persona-desc">Doam habilidades e serviços específicos — aulas, consultorias, atendimentos e mentorias.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta">
+  <div class="section-tag">Comece agora</div>
+  <h2>Porque toda doação faz a diferença</h2>
+  <p>Encontre uma causa perto de você e transforme vontade de ajudar em impacto real — hoje.</p>
+  <button class="btn-primary" style="font-size:0.98rem;padding:16px 42px">Venha participar dessa causa</button>
+  <div class="cta-dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</section>
+
+<footer>
+  <strong>ONGoing</strong> · MVP gerado por Claude Code (Anthropic) para a Liga de Empreendedorismo · Grupo 5<br>
+  Beatriz Ihara · Giovanna Saraiva · Laura Mariz · Manuela Miura · Rafaella Lasanha
+</footer>
+
+<script>
+  /* ── Causas e ONGs do mapa ── */
+  var CAUSES = [
+    { id: 'todas',    label: 'Todas',         ico: '📍', color: '#2B5749' },
+    { id: 'mulheres', label: 'Mulheres',      ico: '👩', color: '#BF3B4E' },
+    { id: 'animais',  label: 'Animais',       ico: '🐾', color: '#A24A09' },
+    { id: 'criancas', label: 'Crianças',      ico: '🧒', color: '#6A838F' },
+    { id: 'ambiente', label: 'Meio ambiente', ico: '🌱', color: '#2B5749' },
+    { id: 'idosos',   label: 'Idosos',        ico: '👵', color: '#7C5E3B' },
+    { id: 'educacao', label: 'Educação',      ico: '📚', color: '#4A6B57' },
+    { id: 'fome',     label: 'Fome',          ico: '🍲', color: '#C97B2C' }
+  ];
+
+  var ONGS = [
+    { nome: 'Casa Aurora',       causa: 'mulheres', dist: '1,2 km', need: 'Precisa de roupas e oficinas de currículo', x: 30, y: 26 },
+    { nome: 'Patas Unidas',      causa: 'animais',  dist: '0,8 km', need: 'Precisa de ração e voluntários no fim de semana', x: 66, y: 20 },
+    { nome: 'Instituto Semear',  causa: 'criancas', dist: '2,1 km', need: 'Faltam 3 professores voluntários', x: 20, y: 46 },
+    { nome: 'Verde Vivo',        causa: 'ambiente', dist: '1,5 km', need: 'Mutirão de plantio neste sábado', x: 49, y: 33 },
+    { nome: 'Lar São Vicente',   causa: 'idosos',   dist: '3,0 km', need: 'Precisa de visitas e leitura em voz alta', x: 78, y: 44 },
+    { nome: 'Ler é Poder',       causa: 'educacao', dist: '0,6 km', need: 'Doação de livros infantojuvenis', x: 40, y: 62 },
+    { nome: 'Mãos que Acolhem',  causa: 'mulheres', dist: '2,4 km', need: 'Capacitação profissional para mães solo', x: 72, y: 68 },
+    { nome: 'Abrigo Focinhos',   causa: 'animais',  dist: '1,9 km', need: 'Castração e adoção responsável', x: 24, y: 76 },
+    { nome: 'Prato Cheio',       causa: 'fome',     dist: '1,1 km', need: 'Cestas básicas para 40 famílias', x: 57, y: 84 },
+    { nome: 'Recomeço',          causa: 'mulheres', dist: '2,8 km', need: 'Apoio jurídico voluntário', x: 86, y: 27 },
+    { nome: 'Brincar e Crescer', causa: 'criancas', dist: '1,7 km', need: 'Brinquedos e material escolar', x: 14, y: 60 },
+    { nome: 'Horta Comunitária', causa: 'ambiente', dist: '2,2 km', need: 'Mudas e ferramentas de jardinagem', x: 62, y: 51 }
+  ];
+
+  var causeFilter = 'todas';
+  var selectedOng = 0;
+
+  function causeById(id) {
+    for (var i = 0; i < CAUSES.length; i++) if (CAUSES[i].id === id) return CAUSES[i];
+    return CAUSES[0];
+  }
+
+  function buildCauseBar() {
+    document.getElementById('cause-bar').innerHTML = CAUSES.map(function (c) {
+      var on = c.id === causeFilter;
+      var style = on ? 'background:' + c.color + ';border-color:' + c.color : 'color:' + c.color;
+      return '<button class="cause-chip' + (on ? ' active' : '') + '" style="' + style + '" onclick="setCause(\'' + c.id + '\')">' +
+             c.ico + ' ' + c.label + '</button>';
+    }).join('');
+  }
+
+  function buildPins() {
+    var wrap = document.getElementById('map-wrap');
+    // remove os pinos anteriores, preservando mapa, sheet e marcadores fixos
+    wrap.querySelectorAll('.map-pin').forEach(function (p) { p.remove(); });
+
+    var visible = 0;
+    ONGS.forEach(function (o, i) {
+      if (causeFilter !== 'todas' && o.causa !== causeFilter) return;
+      visible++;
+      var c = causeById(o.causa);
+      var el = document.createElement('div');
+      el.className = 'map-pin' + (i === selectedOng ? ' selected' : '');
+      el.style.left = o.x + '%';
+      el.style.top = o.y + '%';
+      el.onclick = function () { selectedOng = i; buildPins(); buildSheet(); };
+      el.innerHTML =
+        (i === selectedOng ? '<div class="pin-pulse" style="background:' + c.color + '"></div>' : '') +
+        '<div class="pin-bubble" style="background:' + c.color + '"><span>' + c.ico + '</span></div>';
+      wrap.appendChild(el);
+    });
+
+    var lbl = causeFilter === 'todas' ? 'ONGs nesta área' : 'ONGs · ' + causeById(causeFilter).label;
+    document.getElementById('map-count').textContent = visible + ' ' + lbl;
+  }
+
+  function buildSheet() {
+    var o = ONGS[selectedOng];
+    var c = causeById(o.causa);
+    document.getElementById('map-sheet').innerHTML =
+      '<div class="sheet-grab"></div>' +
+      '<div class="sheet-top">' +
+        '<div class="sheet-ico" style="background:' + c.color + '22">' + c.ico + '</div>' +
+        '<div class="sheet-body">' +
+          '<div class="sheet-name">' + o.nome + ' <span class="verified">✓ Verificada</span></div>' +
+          '<div class="sheet-meta">' + c.label + ' · ' + o.dist + ' de você</div>' +
+          '<div class="sheet-need">' + o.need + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sheet-actions">' +
+        '<button class="sheet-btn primary">Quero ajudar</button>' +
+        '<button class="sheet-btn ghost">Ver perfil</button>' +
+      '</div>';
+  }
+
+  function setCause(id) {
+    causeFilter = id;
+    // se a ONG selecionada sair do filtro, seleciona a primeira visível
+    if (id !== 'todas' && ONGS[selectedOng].causa !== id) {
+      for (var i = 0; i < ONGS.length; i++) if (ONGS[i].causa === id) { selectedOng = i; break; }
+    }
+    buildCauseBar();
+    buildPins();
+    buildSheet();
+  }
+
+  /* ── Navegação entre telas ── */
+  function switchScreen(n) {
+    for (var i = 0; i < 5; i++) {
+      var s = document.getElementById('screen-' + i);
+      var nav = document.getElementById('nav-' + i);
+      if (s) s.classList.toggle('active', i === n);
+      if (nav) nav.classList.toggle('active', i === n);
+    }
+  }
+
+  function pickDonate(n) {
+    for (var i = 0; i < 3; i++) document.getElementById('opt-' + i).classList.toggle('on', i === n);
+  }
+
+  /* ── Tela cheia ── */
+  function toggleFullscreen() {
+    var phone = document.getElementById('phone-outer');
+    var badge = document.getElementById('fs-badge');
+    var isFs = phone.classList.toggle('fs-mode');
+    document.body.classList.toggle('fs-open', isFs);
+    badge.innerHTML = isFs
+      ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/></svg>'
+      : '⛶';
+    badge.title = isFs ? 'Sair da tela cheia' : 'Tela cheia';
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.getElementById('phone-outer').classList.contains('fs-mode')) toggleFullscreen();
+  });
+
+  buildCauseBar();
+  buildPins();
+  buildSheet();
+</script>
+</body>
+</html>
