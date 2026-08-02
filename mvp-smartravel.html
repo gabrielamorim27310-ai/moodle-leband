@@ -6,7 +6,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f3f2f2'/><rect x='14' y='14' width='72' height='72' fill='%230088b0'/><rect x='30' y='30' width='40' height='40' fill='%23d6006c'/></svg>">
 <title>SmarTravel — Menos tempo planejando, mais tempo viajando</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
 
   /* ══════════════════════════════════════════════════════════════════════
      Design system "Broadsheet" — tokens e classes do handoff do Claude
@@ -144,27 +144,25 @@
   .tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
   .tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
 
-  /* Foto tratada como impressão de jornal: a classe .halftone do design system
-     (dessaturação + contraste) somada à retícula de pontos que o protótipo já
-     usava no lugar do placeholder. */
+  /* Foto limpa. A retícula de pontos do protótipo existia para simular um
+     placeholder; sobre foto real ela vira moiré e suja a imagem. Fica só uma
+     leve dessaturação, para a foto assentar na paleta sem parecer impressa. */
   .foto { position: relative; background: var(--color-surface); overflow: hidden; }
-  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(0.35) contrast(1.15); }
-  .foto i { position: absolute; inset: 0; mix-blend-mode: multiply; display: block; pointer-events: none; }
-  .foto .h1 { background-image: radial-gradient(circle, var(--color-accent) 30%, transparent 32%); background-size: 5px 5px; opacity: .34; transform: translate(1.5px, 1px); }
-  .foto .h2 { background-image: radial-gradient(circle, var(--color-accent-2) 30%, transparent 32%); background-size: 5px 5px; opacity: .24; transform: translate(-2px, -1.5px); }
-  .foto .h3 { background-image: radial-gradient(circle, var(--color-text) 26%, transparent 28%); background-size: 3px 3px; opacity: .3; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.88) contrast(1.03); }
+  .foto .veu {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to top, rgba(20,20,20,.42) 0%, rgba(20,20,20,.12) 26%, transparent 55%);
+  }
   .foto span.legenda {
-    position: absolute; left: 14px; bottom: 11px; font-size: 10.5px;
-    letter-spacing: .16em; text-transform: uppercase; color: #fff;
-    text-shadow: 0 1px 4px rgba(0,0,0,.65);
+    position: absolute; left: 16px; bottom: 12px; font-size: 11px;
+    letter-spacing: .14em; text-transform: uppercase; color: #fff; font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0,0,0,.5);
   }
 
   /* Marca — quadro do mapa, a rota na diagonal e o destino em magenta. */
   .logo { display: block; flex: none; }
-  .logo .frame, .logo .rota { stroke: var(--color-accent); fill: none; stroke-width: 2.6; }
-  .logo .destino { fill: var(--color-accent-2); }
   .lockup { display: inline-flex; align-items: center; gap: 9px; }
-  .lockup .nome { font-family: var(--font-heading); font-weight: var(--font-heading-weight); letter-spacing: -.01em; }
+  .lockup .nome { font-family: 'Poppins', system-ui, sans-serif; font-weight: 700; letter-spacing: -.02em; color: #123A5E; }
 
   .kicker { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-neutral-700); }
 
@@ -182,7 +180,7 @@
   /* ── CABEÇALHO ── */
   .site-header { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--color-bg) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--color-divider); }
   .header-inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 26px; padding: 13px 32px; }
-  .brand { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 21px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+  .brand { font-family: 'Poppins', system-ui, sans-serif; font-weight: 700; color: #123A5E; font-size: 21px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
   .header-nav { display: flex; align-items: center; gap: 4px; margin-left: 8px; }
   .header-nav a { color: var(--color-text); font-size: 14px; padding: 6px 11px; }
   .header-nav a:hover { background: color-mix(in srgb, var(--color-text) 6%, transparent); color: var(--color-text); }
@@ -225,7 +223,8 @@
   .app-tabs button span:first-child { font-size: 13px; }
   .app-tabs button i { width: 14px; height: 2px; display: block; }
 
-  .pane { display: flex; flex-direction: column; animation: stFade .22s ease both; }
+  .pane { display: flex; flex-direction: column; }
+  .pane.enter { animation: stFade .22s ease both; }
   @keyframes stFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   .step-label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-neutral-700); }
   .big-q { font-size: 30px; line-height: 1.1; letter-spacing: -.015em; }
@@ -341,11 +340,7 @@
 <header class="site-header">
   <div class="header-inner">
     <span class="brand">
-      <svg class="logo" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
-        <rect class="frame" x="2.6" y="2.6" width="26.8" height="26.8"/>
-        <path class="rota" d="M7 25 L22 10"/>
-        <rect class="destino" x="19" y="3" width="10" height="10"/>
-      </svg>
+      <svg class="logo" width="30" height="30" viewBox="0 0 120 120" aria-hidden="true"><circle cx="79" cy="41" r="27" fill="#F0A860"/><circle cx="77" cy="77" r="25" fill="#7FB4DA"/><path d="M57 9 C82 9 97 26 97 50 C97 66 92 78 82 89 C72 100 60 108 47 108 C25 108 9 90 9 65 C9 34 31 9 57 9 Z" fill="#123A5E"/><path d="M55 26 C58 26 60 31 60 40 L60 53 L88 71 L88 79 L60 71 L60 88 L70 96 L70 102 L55 98 L40 102 L40 96 L50 88 L50 71 L22 79 L22 71 L50 53 L50 40 C50 31 52 26 55 26 Z" fill="#fff"/><path d="M107 12 l2.6 6.4 6.4 2.6 -6.4 2.6 -2.6 6.4 -2.6-6.4 -6.4-2.6 6.4-2.6 z" fill="#F0A860"/></svg>
       SmarTravel
     </span>
     <nav class="header-nav">
@@ -390,11 +385,7 @@
         <div class="screen">
           <div class="app-top">
             <button class="app-back" id="app-back" onclick="voltar()" aria-label="Voltar" style="display:none">←</button>
-            <svg class="logo" id="app-logo" width="19" height="19" viewBox="0 0 32 32" aria-hidden="true">
-              <rect class="frame" x="2.6" y="2.6" width="26.8" height="26.8"/>
-              <path class="rota" d="M7 25 L22 10"/>
-              <rect class="destino" x="19" y="3" width="10" height="10"/>
-            </svg>
+            <svg class="logo" id="app-logo" width="21" height="21" viewBox="0 0 120 120" aria-hidden="true"><circle cx="79" cy="41" r="27" fill="#F0A860"/><circle cx="77" cy="77" r="25" fill="#7FB4DA"/><path d="M57 9 C82 9 97 26 97 50 C97 66 92 78 82 89 C72 100 60 108 47 108 C25 108 9 90 9 65 C9 34 31 9 57 9 Z" fill="#123A5E"/><path d="M55 26 C58 26 60 31 60 40 L60 53 L88 71 L88 79 L60 71 L60 88 L70 96 L70 102 L55 98 L40 102 L40 96 L50 88 L50 71 L22 79 L22 71 L50 53 L50 40 C50 31 52 26 55 26 Z" fill="#fff"/><path d="M107 12 l2.6 6.4 6.4 2.6 -6.4 2.6 -2.6 6.4 -2.6-6.4 -6.4-2.6 6.4-2.6 z" fill="#F0A860"/></svg>
             <div class="app-title" id="app-title">SmarTravel</div>
             <div class="app-usos" id="app-usos"></div>
           </div>
@@ -532,7 +523,7 @@
     </div>
     <div class="grid-3" style="gap:40px">
       <div class="persona">
-        <div class="foto persona-foto"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+        <div class="persona-foto"></div>
         <div>
           <b>Ana, 36 anos</b>
           <div class="cargo">Mãe de dois, trabalha em tempo integral</div>
@@ -540,7 +531,7 @@
         </div>
       </div>
       <div class="persona">
-        <div class="foto persona-foto"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+        <div class="persona-foto"></div>
         <div>
           <b>Denis, 24 anos</b>
           <div class="cargo">Estudante universitário</div>
@@ -572,7 +563,7 @@
   <strong>SmarTravel</strong> · Liga de Empreendedorismo · Grupo 4<br>
   Melissa · Julia · Isabelly · Henrique · Rafael<br>
   MVP implementado por Claude Code a partir do design do grupo<br>
-  <span style="font-size:11.5px;opacity:.85">Fotos do Wikimedia Commons — Abertura: alexandar · CC BY-SA 3.0 · Buenos Aires: K-chorro · CC BY-SA 3.0 · Lisboa: Susanne Nilsson · CC BY-SA 2.0 · Madri: Marek Ślusarczyk (Tupungato) Photo portfolio · CC BY 3.0 · Nova York: Superbass · CC BY-SA 4.0 · Paris: Maksim Sokolov (maxergon.com) · CC BY-SA 4.0 · Rio de Janeiro: Matthias Bethke · CC BY-SA 4.0 · Roma: Sam valadi · CC BY 2.0 · Salvador: Matti Blume · CC BY-SA 4.0</span>
+  <span style="font-size:11.5px;opacity:.85">Fotos do Wikimedia Commons — Abertura: alexandar · CC BY-SA 3.0 · Buenos Aires: K-chorro · CC BY-SA 3.0 · Lisboa: Bernt Rostad from Oslo, Norway · CC BY 2.0 · Madri: Marek Ślusarczyk (Tupungato) Photo portfolio · CC BY 3.0 · Nova York: Superbass · CC BY-SA 4.0 · Paris: Maksim Sokolov (maxergon.com) · CC BY-SA 4.0 · Rio de Janeiro: Matthias Bethke · CC BY-SA 4.0 · Roma: Sam valadi · CC BY 2.0 · Salvador: Matti Blume · CC BY-SA 4.0</span>
 </footer>
 
 <script>
@@ -598,7 +589,13 @@
         { hora: '07:45', titulo: 'Trem para Sintra', meta: 'Transporte · 40 min', preco: '€5', desc: 'Saída do Rossio. Compre ida e volta na hora — o bilhete solto sai mais caro.' },
         { hora: '09:30', titulo: 'Palácio da Pena', meta: 'Cultura · 2h30 · horário marcado', preco: '€14', desc: 'A entrada tem hora marcada. Vá direto ao palácio e deixe o parque para a saída.', desconto: '10%' },
         { hora: '13:00', titulo: 'Almoço no centro de Sintra', meta: 'Gastronomia · 1h', preco: '€16', desc: 'Travesseiro de Sintra na sobremesa, sem discussão.' },
-        { hora: '16:00', titulo: 'Cabo da Roca', meta: 'Natureza · 1h30 · ônibus 403', preco: '€6', desc: 'O ponto mais ocidental da Europa continental. Volte pelo 403 até Cascais e pegue o trem de lá.' } ] }
+        { hora: '16:00', titulo: 'Cabo da Roca', meta: 'Natureza · 1h30 · ônibus 403', preco: '€6', desc: 'O ponto mais ocidental da Europa continental. Volte pelo 403 até Cascais e pegue o trem de lá.' } ] },
+      { titulo: 'Cascais e a costa', itens: [
+        { hora: '08:40', titulo: 'Trem para Cascais', meta: 'Transporte · 40 min', preco: '€2,40', desc: 'Sai do Cais do Sodré e faz o trajeto inteiro à beira do Tejo. Sente do lado direito.' },
+        { hora: '10:00', titulo: 'Centro histórico de Cascais', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Vila de pescadores que virou balneário. A baía do centro é pequena e dá para nadar.' },
+        { hora: '12:30', titulo: 'Almoço de peixe na marina', meta: 'Gastronomia · 1h30', preco: '€22', desc: 'Peixe do dia grelhado, vendido ao quilo. Confirme o preço antes de pedir.' },
+        { hora: '15:00', titulo: 'Boca do Inferno', meta: 'Natureza · 1h', preco: 'Grátis', desc: 'Falésia onde o mar entra por uma gruta. Vinte minutos a pé pela marginal.' },
+        { hora: '17:30', titulo: 'Praia do Guincho', meta: 'Praia · 2h', preco: 'Grátis', desc: 'Vento forte e onda grande: ótimo para ver, difícil para banho. Ônibus 405.', desconto: '10%' } ] }
     ],
     'Buenos Aires': [
       { titulo: 'San Telmo e Centro', itens: [
@@ -611,7 +608,17 @@
         { hora: '09:30', titulo: 'Cemitério da Recoleta', meta: 'Cultura · 1h30', preco: '$6', desc: 'Pegue o mapa na entrada e procure o mausoléu dos Duarte.' },
         { hora: '12:00', titulo: 'MALBA', meta: 'Arte · 2h', preco: '$10', desc: 'Arte latino-americana do século 20. Quarta é meia-entrada.' },
         { hora: '15:00', titulo: 'Bosques de Palermo', meta: 'Natureza · 1h30', preco: 'Grátis', desc: 'Roseiral e pedalinho no lago. Bom para as crianças gastarem energia.' },
-        { hora: '20:00', titulo: 'Jantar em Palermo Soho', meta: 'Gastronomia · 2h', preco: '$22', desc: 'Cozinha de autor em casa reformada, mesa na calçada se estiver quente.', desconto: '10%' } ] }
+        { hora: '20:00', titulo: 'Jantar em Palermo Soho', meta: 'Gastronomia · 2h', preco: '$22', desc: 'Cozinha de autor em casa reformada, mesa na calçada se estiver quente.', desconto: '10%' } ] },
+      { titulo: 'Tigre e o delta', itens: [
+        { hora: '08:30', titulo: 'Tren de la Costa até Tigre', meta: 'Transporte · 1h', preco: '$4', desc: 'Saída de Retiro. O trajeto passa pelos bairros ribeirinhos e já vale o passeio.' },
+        { hora: '10:00', titulo: 'Passeio de lancha pelo delta', meta: 'Natureza · 2h', preco: '$18', desc: 'Casas sobre palafitas e canais estreitos. Sente na proa para ver melhor.', desconto: '15%' },
+        { hora: '13:00', titulo: 'Almoço à beira do rio', meta: 'Gastronomia · 1h30', preco: '$20', desc: 'Parrilla com mesa na água. Fora de fim de semana não precisa reservar.' },
+        { hora: '16:00', titulo: 'Puerto de Frutos', meta: 'Compras · 1h30', preco: 'Grátis', desc: 'Feira de artesanato e móveis de vime. Bom lugar para lembrança que não é ímã.' } ] },
+      { titulo: 'Puerto Madero e livrarias', itens: [
+        { hora: '10:00', titulo: 'Reserva Ecológica Costanera Sur', meta: 'Natureza · 2h', preco: 'Grátis', desc: 'Trezentos hectares de mata dentro da cidade. Alugue bicicleta na entrada.' },
+        { hora: '12:30', titulo: 'Almoço em Puerto Madero', meta: 'Gastronomia · 1h30', preco: '$26', desc: 'Docas reformadas com vista para a Ponte da Mulher. Mais caro, mas resolve com criança.' },
+        { hora: '15:00', titulo: 'El Ateneo Grand Splendid', meta: 'Cultura · 1h', preco: 'Grátis', desc: 'Teatro de 1919 virado livraria, com camarotes preservados. O café fica no palco.' },
+        { hora: '18:00', titulo: 'Café na Avenida de Mayo', meta: 'Café · 1h', preco: '$7', desc: 'Confeitarias antigas em fila. Peça submarino: a barra de chocolate derrete no leite quente.' } ] }
     ],
     'Roma': [
       { titulo: 'Roma antiga', itens: [
@@ -623,7 +630,17 @@
         { hora: '08:00', titulo: 'Museus do Vaticano', meta: 'Arte · 3h · fila menor cedo', preco: '€20', desc: 'Reserve o primeiro horário. Da Capela Sistina, use a saída lateral para chegar direto à Basílica.', desconto: '10%' },
         { hora: '12:30', titulo: 'Basílica de São Pedro', meta: 'Cultura · 1h30', preco: 'Grátis', desc: 'A cúpula cobra à parte e são 551 degraus — vale se as pernas ainda estiverem inteiras.' },
         { hora: '16:00', titulo: 'Trastevere a pé', meta: 'Passeio · 2h', preco: 'Grátis', desc: 'Atravesse a Ponte Sisto no fim da tarde, quando as ruas de pedra enchem sem ficar impossíveis.' },
-        { hora: '20:00', titulo: 'Jantar em Trastevere', meta: 'Gastronomia · 2h', preco: '€26', desc: 'Cacio e pepe feita na roda de queijo. Reserve: as casas boas lotam antes das 21h.', desconto: '15%' } ] }
+        { hora: '20:00', titulo: 'Jantar em Trastevere', meta: 'Gastronomia · 2h', preco: '€26', desc: 'Cacio e pepe feita na roda de queijo. Reserve: as casas boas lotam antes das 21h.', desconto: '15%' } ] },
+      { titulo: 'Villa Borghese e o norte', itens: [
+        { hora: '09:00', titulo: 'Galeria Borghese', meta: 'Arte · 2h · horário marcado', preco: '€15', desc: 'Entrada por janelas de duas horas e reserva obrigatória. As esculturas de Bernini estão no térreo.', desconto: '10%' },
+        { hora: '11:30', titulo: 'Parque de Villa Borghese', meta: 'Natureza · 1h30', preco: 'Grátis', desc: 'Alugue um riquixá ou um barco no laguinho. Sombra farta para o meio do dia.' },
+        { hora: '14:00', titulo: 'Piazza del Popolo e Pincio', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'Suba ao terraço do Pincio: é de onde se vê a cúpula de São Pedro alinhada com a praça.' },
+        { hora: '17:00', titulo: 'Fontana di Trevi e Escadaria Espanhola', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Vá no fim da tarde. De manhã cedo também esvazia; no meio do dia é impraticável.' } ] },
+      { titulo: 'Ostia Antica, bate e volta', itens: [
+        { hora: '08:30', titulo: 'Trem para Ostia Antica', meta: 'Transporte · 40 min', preco: '€1,50', desc: 'Sai de Piramide e usa o mesmo bilhete do metrô. Desça na estação de mesmo nome.' },
+        { hora: '09:30', titulo: 'Sítio arqueológico de Ostia', meta: 'Cultura · 3h', preco: '€18', desc: 'O porto de Roma, com ruas e mosaicos inteiros. Menos famoso que Pompeia e bem mais vazio.', desconto: '15%' },
+        { hora: '13:30', titulo: 'Almoço em Ostia', meta: 'Gastronomia · 1h15', preco: '€17', desc: 'Trattoria a dez minutos da entrada. Leve água: dentro do sítio não há onde comprar.' },
+        { hora: '16:30', titulo: 'Volta e aperitivo em Testaccio', meta: 'Gastronomia · 2h', preco: '€14', desc: 'Bairro de mercado e cozinha romana de verdade, sem cardápio traduzido.' } ] }
     ],
     'Paris': [
       { titulo: 'Margem direita', itens: [
@@ -635,7 +652,17 @@
         { hora: '09:00', titulo: 'Musée d’Orsay', meta: 'Arte · 2h30', preco: '€16', desc: 'Antiga estação de trem virada museu. Comece pelo quinto andar, onde estão os impressionistas.' },
         { hora: '12:30', titulo: 'Almoço em Saint-Germain', meta: 'Gastronomia · 1h30', preco: '€26', desc: 'Menu do dia sai bem mais barato que o cardápio à noite, e é a mesma cozinha.' },
         { hora: '15:00', titulo: 'Jardim de Luxemburgo', meta: 'Natureza · 1h30', preco: 'Grátis', desc: 'Barquinhos no tanque octogonal e sombra de castanheiras. As crianças ficam horas.' },
-        { hora: '18:30', titulo: 'Passeio de barco no Sena', meta: 'Passeio · 1h', preco: '€17', desc: 'Saída perto da Pont Neuf. Pegue o do fim da tarde: a cidade acende durante o trajeto.', desconto: '20%' } ] }
+        { hora: '18:30', titulo: 'Passeio de barco no Sena', meta: 'Passeio · 1h', preco: '€17', desc: 'Saída perto da Pont Neuf. Pegue o do fim da tarde: a cidade acende durante o trajeto.', desconto: '20%' } ] },
+      { titulo: 'Montmartre e o norte', itens: [
+        { hora: '09:30', titulo: 'Sacré-Cœur e escadaria', meta: 'Cultura · 1h30', preco: 'Grátis', desc: 'Suba pelo funicular se as pernas estiverem cansadas — aceita o bilhete de metrô.' },
+        { hora: '11:30', titulo: 'Place du Tertre e ruas de Montmartre', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Saia da praça dos retratistas e desça pelas ruas laterais: é onde o bairro ainda é bairro.' },
+        { hora: '14:00', titulo: 'Almoço em Pigalle', meta: 'Gastronomia · 1h30', preco: '€23', desc: 'Bistrôs jovens no sul do bairro. Menu do meio-dia é metade do preço do jantar.' },
+        { hora: '16:30', titulo: 'Canal Saint-Martin', meta: 'Passeio · 2h', preco: 'Grátis', desc: 'Pontes de ferro e comportas em funcionamento. No fim da tarde os parisienses sentam na margem.', desconto: '10%' } ] },
+      { titulo: 'Versalhes, bate e volta', itens: [
+        { hora: '08:00', titulo: 'RER C até Versalhes', meta: 'Transporte · 50 min', preco: '€4,50', desc: 'Compre o bilhete até a zona 4. Vá no primeiro trem: a fila do palácio dobra depois das 10h.' },
+        { hora: '09:30', titulo: 'Palácio de Versalhes', meta: 'Cultura · 3h · horário marcado', preco: '€21', desc: 'Reserve a entrada com hora. A Galeria dos Espelhos fica impossível depois do meio-dia.', desconto: '15%' },
+        { hora: '13:00', titulo: 'Jardins e Grande Canal', meta: 'Natureza · 2h30', preco: '€10', desc: 'Alugue bicicleta ou barco no canal. Nos fins de semana as fontes funcionam com música.' },
+        { hora: '17:00', titulo: 'Volta e jantar no Quartier Latin', meta: 'Gastronomia · 2h', preco: '€27', desc: 'Ruas estreitas atrás do Panteão, com casas pequenas e menu fixo honesto.' } ] }
     ],
     'Rio de Janeiro': [
       { titulo: 'Zona Sul e morros', itens: [
@@ -647,7 +674,17 @@
         { hora: '08:30', titulo: 'Cristo Redentor', meta: 'Cultura · 3h · trem do Corcovado', preco: 'R$ 118', desc: 'O trem sai do Cosme Velho e tem horário marcado. Dia limpo é regra: com nuvem baixa, não se vê nada.', desconto: '10%' },
         { hora: '13:00', titulo: 'Centro histórico a pé', meta: 'Cultura · 2h', preco: 'Grátis', desc: 'Confeitaria Colombo, Theatro Municipal e a Cinelândia em um raio de dez minutos.' },
         { hora: '16:00', titulo: 'Escadaria Selarón', meta: 'Arte · 45 min', preco: 'Grátis', desc: 'Azulejos de mais de sessenta países. Vá de dia e desça pela Lapa.' },
-        { hora: '20:00', titulo: 'Roda de samba na Lapa', meta: 'Música · 3h', preco: 'R$ 50', desc: 'Casa com música ao vivo e sem palco: a roda fica no meio do salão.', desconto: '15%' } ] }
+        { hora: '20:00', titulo: 'Roda de samba na Lapa', meta: 'Música · 3h', preco: 'R$ 50', desc: 'Casa com música ao vivo e sem palco: a roda fica no meio do salão.', desconto: '15%' } ] },
+      { titulo: 'Jardim Botânico e Lagoa', itens: [
+        { hora: '09:00', titulo: 'Jardim Botânico', meta: 'Natureza · 2h30', preco: 'R$ 32', desc: 'Aleia de palmeiras imperiais, orquidário e o lago das vitórias-régias. Vá cedo pela sombra.' },
+        { hora: '12:00', titulo: 'Parque Lage', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Palacete com piscina no pátio e o Corcovado emoldurado ao fundo. O café da casa é bom.' },
+        { hora: '14:30', titulo: 'Volta na Lagoa Rodrigo de Freitas', meta: 'Natureza · 2h', preco: 'R$ 30', desc: 'Sete quilômetros de ciclovia plana. Alugue bicicleta em qualquer quiosque da orla.', desconto: '10%' },
+        { hora: '18:00', titulo: 'Quiosque na Lagoa', meta: 'Gastronomia · 2h', preco: 'R$ 60', desc: 'Música ao vivo no fim da tarde, com o Cristo iluminado do outro lado da água.' } ] },
+      { titulo: 'Niterói e a vista de fora', itens: [
+        { hora: '09:00', titulo: 'Barca para Niterói', meta: 'Transporte · 20 min', preco: 'R$ 8', desc: 'Sai da Praça XV. A travessia entrega a melhor vista do Rio sem pagar passeio de barco.' },
+        { hora: '09:40', titulo: 'MAC Niterói', meta: 'Arte e arquitetura · 1h30', preco: 'R$ 24', desc: 'O prédio de Niemeyer sobre o penhasco. A rampa curva é a foto; a vista da varanda é o resto.' },
+        { hora: '12:00', titulo: 'Almoço em Icaraí', meta: 'Gastronomia · 1h30', preco: 'R$ 58', desc: 'Orla tranquila com restaurantes de bairro, bem mais baratos que a Zona Sul.' },
+        { hora: '15:00', titulo: 'Parque da Cidade', meta: 'Passeio · 2h', preco: 'Grátis', desc: 'Mirante a 270 metros com a baía inteira e as praias de Niterói. Rampa de voo livre no topo.' } ] }
     ],
     'Nova York': [
       { titulo: 'Midtown', itens: [
@@ -659,7 +696,17 @@
         { hora: '09:00', titulo: 'Travessia da Ponte do Brooklyn', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Comece pelo lado de Manhattan e atravesse cedo: depois das 11h a passarela vira fila.' },
         { hora: '11:30', titulo: 'Dumbo e Brooklyn Bridge Park', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'A vista clássica da ponte entre os prédios fica na esquina da Washington com a Water.' },
         { hora: '14:00', titulo: 'Memorial do 11 de Setembro', meta: 'Cultura · 2h', preco: 'US$ 29', desc: 'As duas fontes são abertas e gratuitas; o museu é à parte e pede tempo.' },
-        { hora: '18:00', titulo: 'Jantar no West Village', meta: 'Gastronomia · 2h', preco: 'US$ 55', desc: 'Ruas fora do quadriculado, casas pequenas. Reserve ou aceite esperar no balcão.', desconto: '10%' } ] }
+        { hora: '18:00', titulo: 'Jantar no West Village', meta: 'Gastronomia · 2h', preco: 'US$ 55', desc: 'Ruas fora do quadriculado, casas pequenas. Reserve ou aceite esperar no balcão.', desconto: '10%' } ] },
+      { titulo: 'Museus e Upper East Side', itens: [
+        { hora: '09:30', titulo: 'Metropolitan Museum', meta: 'Arte · 3h', preco: 'US$ 30', desc: 'Grande demais para um dia. Escolha o Egito e a pintura europeia e pare quando cansar.' },
+        { hora: '13:00', titulo: 'Almoço na Lexington Avenue', meta: 'Gastronomia · 1h', preco: 'US$ 22', desc: 'Delis de bairro fora do circuito turístico. Sanduíche de pastrami serve dois.' },
+        { hora: '14:30', titulo: 'Guggenheim', meta: 'Arte e arquitetura · 1h30', preco: 'US$ 30', desc: 'Suba de elevador e desça a espiral a pé — é o percurso que Wright projetou.', desconto: '10%' },
+        { hora: '17:00', titulo: 'Reservoir no Central Park', meta: 'Natureza · 1h', preco: 'Grátis', desc: 'Volta de 2,5 km em torno da água, com os prédios refletidos no fim da tarde.' } ] },
+      { titulo: 'High Line e Chelsea', itens: [
+        { hora: '10:00', titulo: 'High Line', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Linha férrea elevada virada parque. Comece na Gansevoort e caminhe para o norte.' },
+        { hora: '11:45', titulo: 'Chelsea Market', meta: 'Gastronomia · 1h30', preco: 'US$ 25', desc: 'Antiga fábrica de biscoitos virada galpão de comida. Evite o horário de almoço da vizinhança.' },
+        { hora: '14:00', titulo: 'Galerias de Chelsea', meta: 'Arte · 2h', preco: 'Grátis', desc: 'Dezenas de galerias entre a 20th e a 26th, todas de entrada franca. Fecham segunda.' },
+        { hora: '17:30', titulo: 'Balsa de Staten Island', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'Passa ao lado da Estátua da Liberdade e não custa nada. Fique a bombordo na ida.', desconto: '10%' } ] }
     ],
     'Madri': [
       { titulo: 'Centro e museus', itens: [
@@ -671,7 +718,17 @@
         { hora: '10:00', titulo: 'Palácio Real', meta: 'Cultura · 2h', preco: '€14', desc: 'Vá na abertura. A troca da guarda acontece nas primeiras quartas do mês.' },
         { hora: '13:00', titulo: 'Plaza Mayor e arredores', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'Praça fechada do século 17. Entre pelo Arco de Cuchilleros para o efeito completo.' },
         { hora: '16:00', titulo: 'Templo de Debod ao pôr do sol', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Templo egípcio remontado num parque alto. É o melhor pôr do sol gratuito da cidade.' },
-        { hora: '19:00', titulo: 'Bairro de Malasaña', meta: 'Compras · 2h', preco: 'Grátis', desc: 'Lojas independentes e sebos. Vira noite sem transição.' } ] }
+        { hora: '19:00', titulo: 'Bairro de Malasaña', meta: 'Compras · 2h', preco: 'Grátis', desc: 'Lojas independentes e sebos. Vira noite sem transição.' } ] },
+      { titulo: 'Toledo, bate e volta', itens: [
+        { hora: '08:30', titulo: 'Trem para Toledo', meta: 'Transporte · 35 min', preco: '€14', desc: 'Saída de Atocha. Compre ida e volta com antecedência: os horários lotam no fim de semana.' },
+        { hora: '09:30', titulo: 'Catedral de Toledo', meta: 'Cultura · 1h30', preco: '€12', desc: 'Gótica, com sacristia cheia de El Greco. O bilhete inclui a subida à torre.', desconto: '10%' },
+        { hora: '12:00', titulo: 'Judiaria e Sinagoga do Trânsito', meta: 'Cultura · 2h', preco: '€3', desc: 'Ruas estreitas na parte alta. Vá descendo: a cidade inteira é ladeira.' },
+        { hora: '15:30', titulo: 'Mirador del Valle', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'Do outro lado do rio, a vista de cartão-postal da cidade murada. Táxi curto da estação.' } ] },
+      { titulo: 'Rastro e Lavapiés', itens: [
+        { hora: '10:00', titulo: 'Feira do Rastro', meta: 'Compras · 2h · só domingo', preco: 'Grátis', desc: 'Mil bancas descendo a Ribera de Curtidores. Vá cedo e cuide da carteira.' },
+        { hora: '12:30', titulo: 'Vermute em La Latina', meta: 'Gastronomia · 1h30', preco: '€16', desc: 'Depois da feira, o bairro inteiro toma vermute na rua. É um costume, não um roteiro.' },
+        { hora: '15:00', titulo: 'Museu Reina Sofía', meta: 'Arte · 2h', preco: '€12', desc: 'A Guernica está na sala 205. A partir das 19h a entrada é gratuita.', desconto: '15%' },
+        { hora: '18:00', titulo: 'Lavapiés a pé', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Bairro mais mestiço da cidade, com pátios de vizinhos e restaurantes de todo canto.' } ] }
     ],
     'Salvador': [
       { titulo: 'Pelourinho e Centro', itens: [
@@ -683,7 +740,17 @@
         { hora: '08:30', titulo: 'Farol da Barra', meta: 'Passeio · 1h', preco: 'R$ 18', desc: 'Museu Náutico dentro do forte. Vá cedo: depois das 10h o sol na ponta não perdoa.' },
         { hora: '11:00', titulo: 'Praia do Porto da Barra', meta: 'Praia · 3h', preco: 'Grátis', desc: 'Água calma, uma das poucas praias urbanas boas para crianças. Barracas com cadeira e guarda-sol.' },
         { hora: '16:00', titulo: 'Passeio de escuna pela baía', meta: 'Natureza · 3h', preco: 'R$ 120', desc: 'Saída da Marina. Parada para banho na Ilha dos Frades — leve protetor e dinheiro trocado.', desconto: '20%' },
-        { hora: '20:30', titulo: 'Show de música ao vivo', meta: 'Música · 2h', preco: 'R$ 40', desc: 'Casa pequena no Rio Vermelho, samba de roda e MPB. A noite do bairro começa tarde.' } ] }
+        { hora: '20:30', titulo: 'Show de música ao vivo', meta: 'Música · 2h', preco: 'R$ 40', desc: 'Casa pequena no Rio Vermelho, samba de roda e MPB. A noite do bairro começa tarde.' } ] },
+      { titulo: 'Itapuã e a orla norte', itens: [
+        { hora: '09:00', titulo: 'Lagoa do Abaeté', meta: 'Natureza · 1h30', preco: 'Grátis', desc: 'Água escura entre dunas brancas. Vá de manhã, quando o sol ainda não bate forte na areia.' },
+        { hora: '11:00', titulo: 'Praia de Itapuã', meta: 'Praia · 2h30', preco: 'Grátis', desc: 'Piscinas naturais na maré baixa e barracas com música. Confira a tábua de marés.' },
+        { hora: '14:00', titulo: 'Almoço de frutos do mar', meta: 'Gastronomia · 1h30', preco: 'R$ 75', desc: 'Casa de praia com peixe frito e bobó. Porção para dois é padrão da casa.', desconto: '10%' },
+        { hora: '17:00', titulo: 'Farol de Itapuã ao entardecer', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'Ponto de encontro no fim do dia, com feirinha e roda de música na calçada.' } ] },
+      { titulo: 'Ilha de Itaparica, bate e volta', itens: [
+        { hora: '08:00', titulo: 'Ferry do Terminal São Joaquim', meta: 'Transporte · 50 min', preco: 'R$ 8', desc: 'Travessia da Baía de Todos os Santos. Suba ao deque superior para ver a cidade de longe.' },
+        { hora: '09:30', titulo: 'Centro histórico de Itaparica', meta: 'Cultura · 2h', preco: 'Grátis', desc: 'Fortaleza de São Lourenço, igrejas coloniais e a fonte da Bica.' },
+        { hora: '12:00', titulo: 'Praia da Penha', meta: 'Praia · 2h30', preco: 'Grátis', desc: 'Mar sem onda, ideal para criança. Barracas com cadeira e água de coco.' },
+        { hora: '16:00', titulo: 'Volta pelo pôr do sol na baía', meta: 'Passeio · 1h', preco: 'R$ 8', desc: 'Pegue o ferry do fim da tarde: o sol se põe atrás da cidade durante a travessia.' } ] }
     ]
   };
 
@@ -709,7 +776,12 @@
       { hora: '08:30', titulo: 'Mirante com vista de {cidade}', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'De manhã o ar é mais limpo e a luz bate de frente na cidade — melhor hora para foto.' },
       { hora: '10:30', titulo: 'Parque urbano', meta: 'Natureza · 2h', preco: 'Grátis', desc: 'Pausa de meio da viagem. Bom para descansar as pernas sem perder o dia.' },
       { hora: '14:00', titulo: 'Bairro de lojas e galerias', meta: 'Compras · 2h', preco: 'Grátis', desc: 'Comércio independente costuma render lembrança melhor que loja de aeroporto.' },
-      { hora: '18:30', titulo: 'Pôr do sol com música ao vivo', meta: 'Música · 2h30', preco: '≈ R$ 70', desc: 'Fecha o dia sem precisar voltar ao hotel para trocar de roupa.', desconto: '20%' } ] }
+      { hora: '18:30', titulo: 'Pôr do sol com música ao vivo', meta: 'Música · 2h30', preco: '≈ R$ 70', desc: 'Fecha o dia sem precisar voltar ao hotel para trocar de roupa.', desconto: '20%' } ] },
+    { titulo: 'Arredores e despedida', itens: [
+      { hora: '09:00', titulo: 'Bate e volta a partir de {cidade}', meta: 'Passeio · 4h', preco: '≈ R$ 120', desc: 'Toda cidade tem um vizinho que rende um dia: praia, serra ou vila histórica a menos de duas horas.' },
+      { hora: '14:00', titulo: 'Almoço no caminho de volta', meta: 'Gastronomia · 1h30', preco: '≈ R$ 55', desc: 'Parada fora do centro costuma custar metade e servir o dobro.' },
+      { hora: '17:00', titulo: 'Compras de última hora', meta: 'Compras · 1h30', preco: 'Grátis', desc: 'Deixe as lembranças para o fim: você já sabe o que a cidade faz de melhor.' },
+      { hora: '20:00', titulo: 'Jantar de despedida', meta: 'Gastronomia · 2h', preco: '≈ R$ 95', desc: 'Escolha o lugar de que mais gostou e volte. Repetir é subestimado em viagem.', desconto: '10%' } ] }
   ];
 
   function gerarRoteiroBase(cidade) {
@@ -756,7 +828,7 @@
   var ABAS = [['roteiro', 'Roteiro'], ['reservas', 'Reservas'], ['planos', 'Planos'], ['perfil', 'Perfil']];
 
   var state = {
-    screen: 'welcome', hist: [], destino: 'Lisboa', dias: 5, orcamento: 'Intermediário',
+    screen: 'welcome', hist: [], destino: 'Lisboa', dias: 4, orcamento: 'Intermediário',
     companhia: 'Família', estilo: ['Cultura', 'Gastronomia'], dia: 1, atvId: null,
     reservas: [], plano: 'mensal', usos: 2, prog: 0
   };
@@ -793,8 +865,27 @@
         setState({ prog: 100, screen: 'roteiro', hist: ['welcome'], dia: 1, usos: Math.max(0, state.usos - 1) });
         return;
       }
-      setState({ prog: p });
+      state.prog = p;
+      // Só a barra e os passos mudam. Reconstruir a tela a cada 80 ms
+      // remontava o DOM e reexecutava a animação de entrada — era isso
+      // que fazia a tela de carregamento piscar.
+      atualizarProgresso();
     }, 80);
+  }
+
+  function atualizarProgresso() {
+    var barra = document.getElementById('prog-fill');
+    if (!barra) return;
+    barra.style.width = state.prog + '%';
+    var pct = document.getElementById('prog-pct');
+    if (pct) pct.textContent = state.prog + '%';
+    for (var i = 0; i < STEPS.length; i++) {
+      var m = document.getElementById('step-' + i);
+      if (!m) continue;
+      var feito = state.prog >= (i + 1) * 25;
+      m.textContent = feito ? '✓' : '·';
+      m.style.color = feito ? 'var(--color-accent-700)' : 'var(--color-neutral-500)';
+    }
   }
 
   function atividadeAtual() {
@@ -835,16 +926,13 @@
     return '<div class="pane" style="gap:22px;padding:6px 0 34px">' +
       '<div style="padding:0 20px">' +
         '<div class="lockup" style="margin-bottom:14px">' +
-          '<svg class="logo" width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">' +
-            '<rect class="frame" x="2.6" y="2.6" width="26.8" height="26.8"/>' +
-            '<path class="rota" d="M7 25 L22 10"/>' +
-            '<rect class="destino" x="19" y="3" width="10" height="10"/>' +
-          '</svg><span class="nome" style="font-size:24px">SmarTravel</span>' +
+          '<svg class="logo" width="44" height="44" viewBox="0 0 120 120" aria-hidden="true"><circle cx="79" cy="41" r="27" fill="#F0A860"/><circle cx="77" cy="77" r="25" fill="#7FB4DA"/><path d="M57 9 C82 9 97 26 97 50 C97 66 92 78 82 89 C72 100 60 108 47 108 C25 108 9 90 9 65 C9 34 31 9 57 9 Z" fill="#123A5E"/><path d="M55 26 C58 26 60 31 60 40 L60 53 L88 71 L88 79 L60 71 L60 88 L70 96 L70 102 L55 98 L40 102 L40 96 L50 88 L50 71 L22 79 L22 71 L50 53 L50 40 C50 31 52 26 55 26 Z" fill="#fff"/><path d="M107 12 l2.6 6.4 6.4 2.6 -6.4 2.6 -2.6 6.4 -2.6-6.4 -6.4-2.6 6.4-2.6 z" fill="#F0A860"/></svg>' +
+          '<span class="nome" style="font-size:24px">SmarTravel</span>' +
         '</div>' +
         '<div style="font-size:38px;line-height:1.04;letter-spacing:-.02em">Seu roteiro pronto<br><span style="font-style:italic;color:var(--color-accent-700)">em um minuto.</span></div>' +
         '<p style="margin:14px 0 0;font-size:15px;line-height:1.5;color:var(--color-neutral-800);max-width:30ch">Diga para onde, quando e do que você gosta. A gente monta o dia a dia, com fontes verificadas e reserva no mesmo lugar.</p>' +
       '</div>' +
-      '<div class="foto" style="height:206px"><img src="img/welcome.jpg" alt="Vista da asa de um avião sobre nuvens ao entardecer" loading="lazy"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>' +
+      '<div class="foto" style="height:206px"><img src="img/welcome.jpg" alt="Vista da asa de um avião sobre nuvens ao entardecer" loading="lazy"><i class="veu"></i></div>' +
       '<div style="padding:0 20px;display:flex;flex-direction:column;gap:12px">' +
         '<button class="btn btn-primary btn-block" style="min-height:50px;font-size:16px" onclick="irTela(\'destino\')">Criar meu roteiro</button>' +
         '<button class="btn btn-ghost btn-block" style="min-height:40px;font-size:14px" onclick="irTela(\'perfil\')">Já tenho conta</button>' +
@@ -949,15 +1037,15 @@
     var steps = STEPS.map(function (label, i) {
       var done = state.prog >= (i + 1) * 25;
       return '<div style="display:flex;gap:12px;align-items:baseline;font-size:15px">' +
-        '<span style="width:14px;color:' + (done ? 'var(--color-accent-700)' : 'var(--color-neutral-500)') + '">' + (done ? '✓' : '·') + '</span>' +
+        '<span id="step-' + i + '" style="width:14px;color:' + (done ? 'var(--color-accent-700)' : 'var(--color-neutral-500)') + '">' + (done ? '✓' : '·') + '</span>' +
         '<span>' + label + '</span></div>';
     }).join('');
 
     return '<div class="pane" style="padding:40px 20px 34px;gap:30px">' +
       '<div style="font-size:30px;line-height:1.1;letter-spacing:-.015em">Montando seus<br>' + state.dias + ' dias em ' + esc(state.destino) + '</div>' +
       '<div style="display:flex;flex-direction:column;gap:8px">' +
-        '<div class="prog-track"><div class="prog-fill" style="width:' + state.prog + '%"></div></div>' +
-        '<div style="font-size:12px;color:var(--color-neutral-700)">' + state.prog + '%</div>' +
+        '<div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:' + state.prog + '%"></div></div>' +
+        '<div id="prog-pct" style="font-size:12px;color:var(--color-neutral-700)">' + state.prog + '%</div>' +
       '</div>' +
       '<div style="display:flex;flex-direction:column;gap:14px">' + steps + '</div>' +
       '<div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);max-width:32ch">Cruzando 240 fontes verificadas — nada de bloco de texto colado de fórum.</div>' +
@@ -1004,7 +1092,7 @@
     return '<div class="pane" style="padding:0 0 30px;gap:20px">' +
       '<div class="foto" style="height:132px">' +
         '<img src="' + fotoDe(state.destino) + '" alt="' + esc(state.destino) + '" loading="lazy">' +
-        '<i class="h1"></i><i class="h2"></i><i class="h3"></i>' +
+        '<i class="veu"></i>' +
       '</div>' +
       '<div style="padding:0 20px;display:flex;flex-direction:column;gap:6px;margin-top:-8px">' +
         '<div style="font-size:34px;line-height:1.05;letter-spacing:-.02em">' + esc(state.destino) + '</div>' +
@@ -1035,7 +1123,7 @@
     return '<div class="pane" style="padding:0 0 34px;gap:20px">' +
       '<div class="foto" style="height:180px">' +
         '<img src="' + fotoDe(state.destino) + '" alt="' + esc(state.destino) + '" loading="lazy">' +
-        '<i class="h1"></i><i class="h2"></i><i class="h3"></i>' +
+        '<i class="veu"></i>' +
         '<span class="legenda">' + esc(state.destino) + '</span>' +
       '</div>' +
       '<div style="padding:0 20px;display:flex;flex-direction:column;gap:8px">' +
@@ -1144,9 +1232,17 @@
   }
 
   /* ── RENDER ── */
+  var telaAnterior = null;
+
   function render() {
     var s = state.screen;
-    document.getElementById('app-body').innerHTML = (TELA_FN[s] || telaWelcome)();
+    var corpo = document.getElementById('app-body');
+    corpo.innerHTML = (TELA_FN[s] || telaWelcome)();
+    // A entrada só anima ao trocar de tela; marcar um chip não deve repetir o fade.
+    if (s !== telaAnterior && corpo.firstChild && corpo.firstChild.classList) {
+      corpo.firstChild.classList.add('enter');
+    }
+    telaAnterior = s;
     document.getElementById('app-title').textContent = TITULOS[s] || 'SmarTravel';
 
     var podeVoltar = s !== 'welcome' && s !== 'gerando';
