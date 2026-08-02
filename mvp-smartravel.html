@@ -144,14 +144,27 @@
   .tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
   .tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
 
-  /* Retícula de meio-tom: o placeholder de foto do protótipo, três telas de
-     pontos em ciano, magenta e preto sobrepostas em multiply. */
-  .halftone { position: relative; background: var(--color-surface); overflow: hidden; }
-  .halftone i { position: absolute; inset: 0; mix-blend-mode: multiply; display: block; }
-  .halftone .h1 { background-image: radial-gradient(circle, var(--color-accent) 30%, transparent 32%); background-size: 5px 5px; opacity: .5; transform: translate(1.5px, 1px); }
-  .halftone .h2 { background-image: radial-gradient(circle, var(--color-accent-2) 30%, transparent 32%); background-size: 5px 5px; opacity: .36; transform: translate(-2px, -1.5px); }
-  .halftone .h3 { background-image: radial-gradient(circle, var(--color-text) 26%, transparent 28%); background-size: 5px 5px; opacity: .5; }
-  .halftone span { position: absolute; left: 16px; bottom: 12px; font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; }
+  /* Foto tratada como impressão de jornal: a classe .halftone do design system
+     (dessaturação + contraste) somada à retícula de pontos que o protótipo já
+     usava no lugar do placeholder. */
+  .foto { position: relative; background: var(--color-surface); overflow: hidden; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(0.35) contrast(1.15); }
+  .foto i { position: absolute; inset: 0; mix-blend-mode: multiply; display: block; pointer-events: none; }
+  .foto .h1 { background-image: radial-gradient(circle, var(--color-accent) 30%, transparent 32%); background-size: 5px 5px; opacity: .34; transform: translate(1.5px, 1px); }
+  .foto .h2 { background-image: radial-gradient(circle, var(--color-accent-2) 30%, transparent 32%); background-size: 5px 5px; opacity: .24; transform: translate(-2px, -1.5px); }
+  .foto .h3 { background-image: radial-gradient(circle, var(--color-text) 26%, transparent 28%); background-size: 3px 3px; opacity: .3; }
+  .foto span.legenda {
+    position: absolute; left: 14px; bottom: 11px; font-size: 10.5px;
+    letter-spacing: .16em; text-transform: uppercase; color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,.65);
+  }
+
+  /* Marca — quadro do mapa, a rota na diagonal e o destino em magenta. */
+  .logo { display: block; flex: none; }
+  .logo .frame, .logo .rota { stroke: var(--color-accent); fill: none; stroke-width: 2.6; }
+  .logo .destino { fill: var(--color-accent-2); }
+  .lockup { display: inline-flex; align-items: center; gap: 9px; }
+  .lockup .nome { font-family: var(--font-heading); font-weight: var(--font-heading-weight); letter-spacing: -.01em; }
 
   .kicker { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-neutral-700); }
 
@@ -170,8 +183,6 @@
   .site-header { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--color-bg) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--color-divider); }
   .header-inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 26px; padding: 13px 32px; }
   .brand { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 21px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
-  .brand i { width: 14px; height: 14px; background: var(--color-accent); display: block; }
-  .brand i::after { content: ''; display: block; width: 7px; height: 7px; background: var(--color-accent-2); margin: 3.5px; }
   .header-nav { display: flex; align-items: center; gap: 4px; margin-left: 8px; }
   .header-nav a { color: var(--color-text); font-size: 14px; padding: 6px 11px; }
   .header-nav a:hover { background: color-mix(in srgb, var(--color-text) 6%, transparent); color: var(--color-text); }
@@ -277,7 +288,8 @@
   .plano-card ul { margin: 8px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.7; color: var(--color-neutral-800); }
 
   .persona { display: grid; grid-template-columns: 92px 1fr; gap: 20px; align-items: start; }
-  .persona .foto { height: 108px; }
+  /* As personas são fictícias — retícula abstrata em vez de foto de pessoa real. */
+  .persona .persona-foto { height: 108px; background: var(--color-surface); }
   .persona b { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 19px; }
   .persona .cargo { font-size: 13px; color: var(--color-neutral-700); margin-bottom: 8px; }
   .persona p { margin: 0; font-size: 14.5px; line-height: 1.6; }
@@ -328,7 +340,14 @@
 <!-- ── CABEÇALHO ── -->
 <header class="site-header">
   <div class="header-inner">
-    <span class="brand"><i></i>SmarTravel</span>
+    <span class="brand">
+      <svg class="logo" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect class="frame" x="2.6" y="2.6" width="26.8" height="26.8"/>
+        <path class="rota" d="M7 25 L22 10"/>
+        <rect class="destino" x="19" y="3" width="10" height="10"/>
+      </svg>
+      SmarTravel
+    </span>
     <nav class="header-nav">
       <a href="#problema">O problema</a>
       <a href="#como">Como funciona</a>
@@ -371,6 +390,11 @@
         <div class="screen">
           <div class="app-top">
             <button class="app-back" id="app-back" onclick="voltar()" aria-label="Voltar" style="display:none">←</button>
+            <svg class="logo" id="app-logo" width="19" height="19" viewBox="0 0 32 32" aria-hidden="true">
+              <rect class="frame" x="2.6" y="2.6" width="26.8" height="26.8"/>
+              <path class="rota" d="M7 25 L22 10"/>
+              <rect class="destino" x="19" y="3" width="10" height="10"/>
+            </svg>
             <div class="app-title" id="app-title">SmarTravel</div>
             <div class="app-usos" id="app-usos"></div>
           </div>
@@ -508,7 +532,7 @@
     </div>
     <div class="grid-3" style="gap:40px">
       <div class="persona">
-        <div class="halftone foto"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+        <div class="foto persona-foto"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
         <div>
           <b>Ana, 36 anos</b>
           <div class="cargo">Mãe de dois, trabalha em tempo integral</div>
@@ -516,7 +540,7 @@
         </div>
       </div>
       <div class="persona">
-        <div class="halftone foto"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+        <div class="foto persona-foto"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
         <div>
           <b>Denis, 24 anos</b>
           <div class="cargo">Estudante universitário</div>
@@ -547,7 +571,8 @@
 <footer>
   <strong>SmarTravel</strong> · Liga de Empreendedorismo · Grupo 4<br>
   Melissa · Julia · Isabelly · Henrique · Rafael<br>
-  MVP implementado por Claude Code a partir do design do grupo
+  MVP implementado por Claude Code a partir do design do grupo<br>
+  <span style="font-size:11.5px;opacity:.85">Fotos do Wikimedia Commons — Abertura: alexandar · CC BY-SA 3.0 · Buenos Aires: K-chorro · CC BY-SA 3.0 · Lisboa: Susanne Nilsson · CC BY-SA 2.0 · Madri: Marek Ślusarczyk (Tupungato) Photo portfolio · CC BY 3.0 · Nova York: Superbass · CC BY-SA 4.0 · Paris: Maksim Sokolov (maxergon.com) · CC BY-SA 4.0 · Rio de Janeiro: Matthias Bethke · CC BY-SA 4.0 · Roma: Sam valadi · CC BY 2.0 · Salvador: Matti Blume · CC BY-SA 4.0</span>
 </footer>
 
 <script>
@@ -600,6 +625,54 @@
         { hora: '16:00', titulo: 'Trastevere a pé', meta: 'Passeio · 2h', preco: 'Grátis', desc: 'Atravesse a Ponte Sisto no fim da tarde, quando as ruas de pedra enchem sem ficar impossíveis.' },
         { hora: '20:00', titulo: 'Jantar em Trastevere', meta: 'Gastronomia · 2h', preco: '€26', desc: 'Cacio e pepe feita na roda de queijo. Reserve: as casas boas lotam antes das 21h.', desconto: '15%' } ] }
     ],
+    'Paris': [
+      { titulo: 'Margem direita', itens: [
+        { hora: '08:30', titulo: 'Torre Eiffel', meta: 'Cultura · 2h · subida marcada', preco: '€29', desc: 'Reserve o horário de subida com antecedência. O segundo andar já entrega a vista; o topo é mais fila do que paisagem nova.', desconto: '15%' },
+        { hora: '11:30', titulo: 'Museu do Louvre', meta: 'Arte · 3h', preco: '€22', desc: 'Entre pela Porte des Lions, bem mais vazia que a pirâmide. Escolha duas alas: tentar ver tudo cansa e não rende.', desconto: '10%' },
+        { hora: '15:30', titulo: 'Jardim das Tulherias', meta: 'Natureza · 1h', preco: 'Grátis', desc: 'Cadeira verde na beira do tanque é instituição local. Bom intervalo entre dois museus.' },
+        { hora: '20:00', titulo: 'Jantar no Marais', meta: 'Gastronomia · 2h', preco: '€34', desc: 'Bistrô de bairro, cardápio curto escrito à mão. Reserve: as casas boas têm vinte lugares.', desconto: '10%' } ] },
+      { titulo: 'Margem esquerda', itens: [
+        { hora: '09:00', titulo: 'Musée d’Orsay', meta: 'Arte · 2h30', preco: '€16', desc: 'Antiga estação de trem virada museu. Comece pelo quinto andar, onde estão os impressionistas.' },
+        { hora: '12:30', titulo: 'Almoço em Saint-Germain', meta: 'Gastronomia · 1h30', preco: '€26', desc: 'Menu do dia sai bem mais barato que o cardápio à noite, e é a mesma cozinha.' },
+        { hora: '15:00', titulo: 'Jardim de Luxemburgo', meta: 'Natureza · 1h30', preco: 'Grátis', desc: 'Barquinhos no tanque octogonal e sombra de castanheiras. As crianças ficam horas.' },
+        { hora: '18:30', titulo: 'Passeio de barco no Sena', meta: 'Passeio · 1h', preco: '€17', desc: 'Saída perto da Pont Neuf. Pegue o do fim da tarde: a cidade acende durante o trajeto.', desconto: '20%' } ] }
+    ],
+    'Rio de Janeiro': [
+      { titulo: 'Zona Sul e morros', itens: [
+        { hora: '08:00', titulo: 'Pão de Açúcar', meta: 'Passeio · 2h30 · bondinho', preco: 'R$ 145', desc: 'Suba cedo: até as 10h a fila é curta e a baía ainda está sem neblina.', desconto: '15%' },
+        { hora: '11:30', titulo: 'Praia Vermelha e Pista Cláudio Coutinho', meta: 'Natureza · 1h30', preco: 'Grátis', desc: 'Trilha plana à beira-mar, com micos pelo caminho. Dá para fazer com criança.' },
+        { hora: '14:00', titulo: 'Almoço em Botafogo', meta: 'Gastronomia · 1h30', preco: 'R$ 72', desc: 'Bairro com a melhor relação preço-cozinha da Zona Sul. Peça o prato do dia.' },
+        { hora: '17:30', titulo: 'Pôr do sol no Arpoador', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'A pedra enche e a cidade aplaude o sol sumindo atrás do Dois Irmãos. Chegue 40 min antes.' } ] },
+      { titulo: 'Centro e Corcovado', itens: [
+        { hora: '08:30', titulo: 'Cristo Redentor', meta: 'Cultura · 3h · trem do Corcovado', preco: 'R$ 118', desc: 'O trem sai do Cosme Velho e tem horário marcado. Dia limpo é regra: com nuvem baixa, não se vê nada.', desconto: '10%' },
+        { hora: '13:00', titulo: 'Centro histórico a pé', meta: 'Cultura · 2h', preco: 'Grátis', desc: 'Confeitaria Colombo, Theatro Municipal e a Cinelândia em um raio de dez minutos.' },
+        { hora: '16:00', titulo: 'Escadaria Selarón', meta: 'Arte · 45 min', preco: 'Grátis', desc: 'Azulejos de mais de sessenta países. Vá de dia e desça pela Lapa.' },
+        { hora: '20:00', titulo: 'Roda de samba na Lapa', meta: 'Música · 3h', preco: 'R$ 50', desc: 'Casa com música ao vivo e sem palco: a roda fica no meio do salão.', desconto: '15%' } ] }
+    ],
+    'Nova York': [
+      { titulo: 'Midtown', itens: [
+        { hora: '08:30', titulo: 'Top of the Rock', meta: 'Passeio · 1h30 · horário marcado', preco: 'US$ 40', desc: 'Melhor que o Empire State por um motivo simples: daqui o Empire State aparece na foto.', desconto: '10%' },
+        { hora: '11:00', titulo: 'Central Park a pé', meta: 'Natureza · 2h', preco: 'Grátis', desc: 'Entre pela Grand Army Plaza e siga até o Bethesda Terrace. Alugue bicicleta se o grupo for grande.' },
+        { hora: '14:00', titulo: 'MoMA', meta: 'Arte · 2h30', preco: 'US$ 30', desc: 'Comece pelo quinto andar. Sexta a partir das 16h a entrada é gratuita, mas lota.' },
+        { hora: '19:30', titulo: 'Musical na Broadway', meta: 'Teatro · 2h30', preco: 'US$ 89', desc: 'Bilhete de última hora sai mais barato na TKTS da Times Square, mas sem escolher lugar.', desconto: '20%' } ] },
+      { titulo: 'Downtown e Brooklyn', itens: [
+        { hora: '09:00', titulo: 'Travessia da Ponte do Brooklyn', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Comece pelo lado de Manhattan e atravesse cedo: depois das 11h a passarela vira fila.' },
+        { hora: '11:30', titulo: 'Dumbo e Brooklyn Bridge Park', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'A vista clássica da ponte entre os prédios fica na esquina da Washington com a Water.' },
+        { hora: '14:00', titulo: 'Memorial do 11 de Setembro', meta: 'Cultura · 2h', preco: 'US$ 29', desc: 'As duas fontes são abertas e gratuitas; o museu é à parte e pede tempo.' },
+        { hora: '18:00', titulo: 'Jantar no West Village', meta: 'Gastronomia · 2h', preco: 'US$ 55', desc: 'Ruas fora do quadriculado, casas pequenas. Reserve ou aceite esperar no balcão.', desconto: '10%' } ] }
+    ],
+    'Madri': [
+      { titulo: 'Centro e museus', itens: [
+        { hora: '09:30', titulo: 'Museu do Prado', meta: 'Arte · 2h30', preco: '€15', desc: 'Velázquez e Goya na mesma manhã. As duas últimas horas do dia são gratuitas e cheias.', desconto: '10%' },
+        { hora: '12:30', titulo: 'Parque do Retiro', meta: 'Natureza · 1h30', preco: 'Grátis', desc: 'Palácio de Cristal e barco a remo no lago. Sombra farta no meio do dia.' },
+        { hora: '14:30', titulo: 'Almoço no Mercado de San Miguel', meta: 'Gastronomia · 1h30', preco: '€24', desc: 'Tapas em balcão de mercado. Caro para o padrão local, mas resolve o grupo indeciso.' },
+        { hora: '20:30', titulo: 'Tapas em La Latina', meta: 'Gastronomia · 2h30', preco: '€28', desc: 'Vá de bar em bar pela Cava Baja. Em Madri se janta tarde: antes das 21h os bares estão vazios.', desconto: '15%' } ] },
+      { titulo: 'Bairros e miradouros', itens: [
+        { hora: '10:00', titulo: 'Palácio Real', meta: 'Cultura · 2h', preco: '€14', desc: 'Vá na abertura. A troca da guarda acontece nas primeiras quartas do mês.' },
+        { hora: '13:00', titulo: 'Plaza Mayor e arredores', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'Praça fechada do século 17. Entre pelo Arco de Cuchilleros para o efeito completo.' },
+        { hora: '16:00', titulo: 'Templo de Debod ao pôr do sol', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'Templo egípcio remontado num parque alto. É o melhor pôr do sol gratuito da cidade.' },
+        { hora: '19:00', titulo: 'Bairro de Malasaña', meta: 'Compras · 2h', preco: 'Grátis', desc: 'Lojas independentes e sebos. Vira noite sem transição.' } ] }
+    ],
     'Salvador': [
       { titulo: 'Pelourinho e Centro', itens: [
         { hora: '09:00', titulo: 'Elevador Lacerda', meta: 'Passeio · 30 min', preco: 'R$ 0,50', desc: 'Ligue Cidade Baixa e Alta em um minuto. A vista da Baía de Todos os Santos já justifica a fila.' },
@@ -613,6 +686,44 @@
         { hora: '20:30', titulo: 'Show de música ao vivo', meta: 'Música · 2h', preco: 'R$ 40', desc: 'Casa pequena no Rio Vermelho, samba de roda e MPB. A noite do bairro começa tarde.' } ] }
     ]
   };
+
+  /* Uma foto por destino, de licença livre, servida do próprio repositório.
+     Cidades digitadas pelo usuário caem na imagem neutra de viagem. */
+  var FOTOS = {
+    'Lisboa': 'lisboa', 'Buenos Aires': 'buenos-aires', 'Roma': 'roma', 'Salvador': 'salvador',
+    'Paris': 'paris', 'Rio de Janeiro': 'rio', 'Nova York': 'nova-york', 'Madri': 'madri'
+  };
+  function fotoDe(cidade) { return 'img/' + (FOTOS[cidade] || 'welcome') + '.jpg'; }
+
+  /* Roteiro base para qualquer cidade digitada: a estrutura de um primeiro
+     rascunho, com preços marcados como estimativa. A tela deixa isso explícito
+     em vez de fingir que o conteúdo é curado. */
+  var MOLDE = [
+    { titulo: 'Centro e história', itens: [
+      { hora: '09:00', titulo: 'Café da manhã no centro', meta: 'Café · 45 min', preco: '≈ R$ 30', desc: 'Comece pelo café mais antigo que encontrar a pé do hotel — costuma ser o ponto onde a cidade acorda.' },
+      { hora: '10:30', titulo: 'Caminhada pelo centro histórico de {cidade}', meta: 'Cultura · 2h', preco: 'Grátis', desc: 'Percurso a pé pelas praças e igrejas principais. Vá antes do calor do meio-dia e leve água.' },
+      { hora: '13:00', titulo: 'Almoço no mercado municipal', meta: 'Gastronomia · 1h15', preco: '≈ R$ 60', desc: 'Mercado é o atalho para a comida local sem pesquisa: escolha o balcão com mais gente da cidade.' },
+      { hora: '15:30', titulo: 'Principal museu de {cidade}', meta: 'Cultura · 1h30', preco: '≈ R$ 40', desc: 'Duas alas bem vistas rendem mais que o museu inteiro na correria.', desconto: '10%' },
+      { hora: '20:00', titulo: 'Jantar no bairro boêmio', meta: 'Gastronomia · 2h', preco: '≈ R$ 90', desc: 'A rua onde os moradores saem à noite. Reserve se for sexta ou sábado.', desconto: '15%' } ] },
+    { titulo: 'Ar livre e vistas', itens: [
+      { hora: '08:30', titulo: 'Mirante com vista de {cidade}', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'De manhã o ar é mais limpo e a luz bate de frente na cidade — melhor hora para foto.' },
+      { hora: '10:30', titulo: 'Parque urbano', meta: 'Natureza · 2h', preco: 'Grátis', desc: 'Pausa de meio da viagem. Bom para descansar as pernas sem perder o dia.' },
+      { hora: '14:00', titulo: 'Bairro de lojas e galerias', meta: 'Compras · 2h', preco: 'Grátis', desc: 'Comércio independente costuma render lembrança melhor que loja de aeroporto.' },
+      { hora: '18:30', titulo: 'Pôr do sol com música ao vivo', meta: 'Música · 2h30', preco: '≈ R$ 70', desc: 'Fecha o dia sem precisar voltar ao hotel para trocar de roupa.', desconto: '20%' } ] }
+  ];
+
+  function gerarRoteiroBase(cidade) {
+    return MOLDE.map(function (d) {
+      return {
+        titulo: d.titulo,
+        itens: d.itens.map(function (a) {
+          return Object.assign({}, a, { titulo: a.titulo.replace('{cidade}', cidade) });
+        })
+      };
+    });
+  }
+
+  function ehCurado(cidade) { return !!CIDADES[cidade]; }
 
   var TELAS = [
     ['welcome', 'Boas-vindas'], ['destino', 'Destino'], ['datas', 'Datas e orçamento'],
@@ -668,7 +779,7 @@
     document.getElementById('phone').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  function dados() { return CIDADES[state.destino] || CIDADES['Lisboa']; }
+  function dados() { return CIDADES[state.destino] || gerarRoteiroBase(state.destino); }
 
   function gerar() {
     if (state.usos <= 0) { irTela('planos'); return; }
@@ -723,10 +834,17 @@
   function telaWelcome() {
     return '<div class="pane" style="gap:22px;padding:6px 0 34px">' +
       '<div style="padding:0 20px">' +
+        '<div class="lockup" style="margin-bottom:14px">' +
+          '<svg class="logo" width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">' +
+            '<rect class="frame" x="2.6" y="2.6" width="26.8" height="26.8"/>' +
+            '<path class="rota" d="M7 25 L22 10"/>' +
+            '<rect class="destino" x="19" y="3" width="10" height="10"/>' +
+          '</svg><span class="nome" style="font-size:24px">SmarTravel</span>' +
+        '</div>' +
         '<div style="font-size:38px;line-height:1.04;letter-spacing:-.02em">Seu roteiro pronto<br><span style="font-style:italic;color:var(--color-accent-700)">em um minuto.</span></div>' +
         '<p style="margin:14px 0 0;font-size:15px;line-height:1.5;color:var(--color-neutral-800);max-width:30ch">Diga para onde, quando e do que você gosta. A gente monta o dia a dia, com fontes verificadas e reserva no mesmo lugar.</p>' +
       '</div>' +
-      '<div class="halftone" style="height:206px"><i class="h1"></i><i class="h2"></i><i class="h3"></i><span>Foto — placeholder</span></div>' +
+      '<div class="foto" style="height:206px"><img src="img/welcome.jpg" alt="Vista da asa de um avião sobre nuvens ao entardecer" loading="lazy"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>' +
       '<div style="padding:0 20px;display:flex;flex-direction:column;gap:12px">' +
         '<button class="btn btn-primary btn-block" style="min-height:50px;font-size:16px" onclick="irTela(\'destino\')">Criar meu roteiro</button>' +
         '<button class="btn btn-ghost btn-block" style="min-height:40px;font-size:14px" onclick="irTela(\'perfil\')">Já tenho conta</button>' +
@@ -739,17 +857,35 @@
     var chips = Object.keys(CIDADES).map(function (c) {
       return segChip(esc(c), state.destino === c, 'setDestino(\'' + esc(c) + '\')');
     }).join('');
+    var digitado = !ehCurado(state.destino);
+
     return '<div class="pane" style="padding:6px 20px 34px;gap:18px">' +
       '<div class="step-label">Passo 1 de 3</div>' +
       '<div class="big-q">Para onde vamos?</div>' +
       '<div class="chips">' + chips + '</div>' +
       '<div style="display:flex;flex-direction:column;gap:7px">' +
         '<div style="font-size:12.5px;color:var(--color-neutral-700)">Outro destino</div>' +
-        '<input class="input" placeholder="Digite uma cidade ou país" style="min-height:44px;font-size:15px">' +
-        '<div style="font-size:12px;color:var(--color-neutral-700)">Nesta demonstração, os roteiros prontos são dos quatro destinos acima.</div>' +
+        '<div style="display:flex;gap:8px">' +
+          '<input class="input" id="destino-livre" placeholder="Digite uma cidade ou país" ' +
+            'style="min-height:44px;font-size:15px" onkeydown="if(event.key===\'Enter\')usarDestinoLivre()">' +
+          '<button class="btn btn-secondary" style="min-height:44px;white-space:nowrap" onclick="usarDestinoLivre()">Usar</button>' +
+        '</div>' +
+        (digitado
+          ? '<div style="font-size:12.5px;color:var(--color-accent-700)">✓ Destino escolhido: ' + esc(state.destino) + ' — montamos um roteiro base e refinamos com fontes locais.</div>'
+          : '<div style="font-size:12px;color:var(--color-neutral-700)">Qualquer cidade funciona: os oito destinos acima já têm roteiro curado, os demais saem como roteiro base.</div>') +
       '</div>' +
       '<button class="btn btn-primary btn-block" style="min-height:50px;font-size:16px;margin-top:8px" onclick="irTela(\'datas\')">Continuar</button>' +
     '</div>';
+  }
+
+  function usarDestinoLivre() {
+    var el = document.getElementById('destino-livre');
+    if (!el) return;
+    var v = (el.value || '').trim().replace(/\s+/g, ' ').slice(0, 40);
+    if (!v) return;
+    // normaliza a caixa para casar com os destinos curados ("lisboa" → "Lisboa")
+    var achado = Object.keys(CIDADES).filter(function (c) { return c.toLowerCase() === v.toLowerCase(); })[0];
+    setDestino(achado || v.replace(/(^|\s)\S/g, function (s) { return s.toUpperCase(); }));
   }
 
   function telaDatas() {
@@ -863,10 +999,17 @@
         '<button class="btn btn-secondary" style="align-self:flex-start;font-size:14px" onclick="irTela(\'estilo\')">Pedir sugestões</button>' +
       '</div>' : '';
 
+    var curado = ehCurado(state.destino);
+
     return '<div class="pane" style="padding:0 0 30px;gap:20px">' +
-      '<div style="padding:0 20px;display:flex;flex-direction:column;gap:6px">' +
+      '<div class="foto" style="height:132px">' +
+        '<img src="' + fotoDe(state.destino) + '" alt="' + esc(state.destino) + '" loading="lazy">' +
+        '<i class="h1"></i><i class="h2"></i><i class="h3"></i>' +
+      '</div>' +
+      '<div style="padding:0 20px;display:flex;flex-direction:column;gap:6px;margin-top:-8px">' +
         '<div style="font-size:34px;line-height:1.05;letter-spacing:-.02em">' + esc(state.destino) + '</div>' +
         '<div style="font-size:13.5px;color:var(--color-neutral-700)">' + state.dias + ' dias · ' + state.orcamento + ' · ' + state.companhia + '</div>' +
+        (curado ? '' : '<span class="tag tag-accent" style="align-self:flex-start;margin-top:4px">Roteiro base · preços estimados</span>') +
       '</div>' +
       '<div style="padding:0 20px;display:flex;gap:8px;overflow:auto">' + tabs + '</div>' +
       '<div style="padding:0 20px;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700)">' +
@@ -875,7 +1018,11 @@
       livre +
       '<div style="padding:8px 20px 0;display:flex;flex-direction:column;gap:10px">' +
         '<button class="btn btn-secondary btn-block" style="min-height:46px;font-size:15px" onclick="gerar()">Gerar outra versão deste roteiro</button>' +
-        '<div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700)">Fontes: turismo oficial de ' + esc(state.destino) + ', guias verificados e avaliações dos últimos 12 meses.</div>' +
+        '<div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700)">' +
+          (curado
+            ? 'Fontes: turismo oficial de ' + esc(state.destino) + ', guias verificados e avaliações dos últimos 12 meses.'
+            : 'Roteiro base montado pela estrutura do SmarTravel. Ao confirmar, a equipe cruza as fontes locais de ' + esc(state.destino) + ' e devolve os horários e preços conferidos.') +
+        '</div>' +
       '</div>' +
     '</div>';
   }
@@ -886,7 +1033,11 @@
     var jaReservado = reservados().indexOf(a.id) >= 0;
 
     return '<div class="pane" style="padding:0 0 34px;gap:20px">' +
-      '<div class="halftone" style="height:180px"><i class="h1"></i><i class="h2"></i><i class="h3"></i><span>Foto — placeholder</span></div>' +
+      '<div class="foto" style="height:180px">' +
+        '<img src="' + fotoDe(state.destino) + '" alt="' + esc(state.destino) + '" loading="lazy">' +
+        '<i class="h1"></i><i class="h2"></i><i class="h3"></i>' +
+        '<span class="legenda">' + esc(state.destino) + '</span>' +
+      '</div>' +
       '<div style="padding:0 20px;display:flex;flex-direction:column;gap:8px">' +
         '<div style="font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700)">Dia ' + a.dia + ' · ' + a.hora + '</div>' +
         '<div style="font-size:28px;line-height:1.1;letter-spacing:-.015em">' + esc(a.titulo) + '</div>' +
