@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f3f2f2'/><rect x='14' y='14' width='72' height='72' fill='%230088b0'/><rect x='30' y='30' width='40' height='40' fill='%23d6006c'/></svg>">
+<title>SmarTravel — Menos tempo planejando, mais tempo viajando</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+
+  /* ══════════════════════════════════════════════════════════════════════
+     Design system "Broadsheet" — tokens e classes do handoff do Claude
+     Design (_ds/broadsheet-1ba9a85f/styles.css). Inlinado porque cada
+     página deste repositório é um arquivo único e autossuficiente.
+     ══════════════════════════════════════════════════════════════════════ */
+  :root {
+    --color-bg: #f3f2f2;
+    --color-surface: #eae9e9;
+    --color-text: #201e1d;
+    --color-accent: #0088b0;
+    --color-accent-2: #d6006c;
+    --color-divider: color-mix(in srgb, #201e1d 16%, transparent);
+
+    --color-neutral-100: #f8f4f4;
+    --color-neutral-200: #eae7e7;
+    --color-neutral-300: #d7d3d3;
+    --color-neutral-400: #bab6b6;
+    --color-neutral-500: #9b9797;
+    --color-neutral-600: #7d7979;
+    --color-neutral-700: #605d5d;
+    --color-neutral-800: #444141;
+    --color-neutral-900: #2d2b2b;
+
+    --color-accent-100: #e9f8ff;
+    --color-accent-200: #cbeeff;
+    --color-accent-300: #99e0ff;
+    --color-accent-400: #62c5ee;
+    --color-accent-500: #38a6cf;
+    --color-accent-600: #1186ac;
+    --color-accent-700: #006786;
+    --color-accent-800: #004961;
+    --color-accent-900: #0a303e;
+
+    --color-accent-2-100: #fff1f4;
+    --color-accent-2-200: #ffdee6;
+    --color-accent-2-300: #ffc0d0;
+    --color-accent-2-400: #ff90b1;
+    --color-accent-2-500: #ff458e;
+    --color-accent-2-600: #d82071;
+    --color-accent-2-700: #aa0b56;
+    --color-accent-2-800: #790e3d;
+    --color-accent-2-900: #4b1528;
+
+    --color-process-yellow: #edbb00;
+
+    --font-heading: "Source Serif 4", system-ui, sans-serif;
+    --font-heading-weight: 600;
+    --font-body: "Source Serif 4", system-ui, sans-serif;
+
+    --space-1: 5.0px;  --space-2: 10.0px; --space-3: 15.0px;
+    --space-4: 20.0px; --space-6: 30.0px; --space-8: 40.0px;
+
+    --radius-sm: 1px; --radius-md: 2px; --radius-lg: 4px;
+
+    --shadow-sm: 0 1px 2px color-mix(in srgb, #2d2b2b 14%, transparent);
+    --shadow-md: 0 3px 10px color-mix(in srgb, #2d2b2b 16%, transparent);
+    --shadow-lg: 0 12px 32px color-mix(in srgb, #2d2b2b 22%, transparent);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; font-size: 15px; line-height: 1.55; font-weight: 400;
+    background: var(--color-bg); color: var(--color-text);
+    font-family: var(--font-body); scroll-behavior: smooth;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+    line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 var(--space-2);
+  }
+  h1 { font-size: 42px; } h2 { font-size: 32px; } h3 { font-size: 25px; }
+  h4 { font-size: 20px; } h5 { font-size: 16px; }
+  h6 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+  p { margin: 0 0 var(--space-3); }
+  a { color: var(--color-accent-700); text-decoration: none; text-underline-offset: 3px; }
+  a:hover { color: var(--color-accent-600); }
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  ::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+  .hr { height: 1px; border: 0; margin: var(--space-4) 0; background: var(--color-divider); }
+
+  /* — botões — */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer; text-decoration: none;
+    font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+    font-size: 14px; line-height: 1.2; color: var(--color-text);
+    background: transparent; border: 1px solid transparent;
+    padding: var(--space-2) calc(var(--space-3) * 1.2);
+    border-radius: var(--radius-md);
+  }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-primary { background: var(--color-accent); color: var(--color-bg); }
+  .btn-primary:hover { background: var(--color-accent-600); color: var(--color-bg); }
+  .btn-primary:active { background: var(--color-accent-700); }
+  .btn-secondary { border-color: var(--color-divider); }
+  .btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+  .btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+  .btn-ghost { color: var(--color-accent); padding-inline: var(--space-1); }
+  .btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+  .btn-icon { width: 36px; height: 36px; padding: 0; }
+  .btn-block { width: 100%; margin-top: var(--space-2); }
+
+  /* — formulários — */
+  .input {
+    width: 100%; min-height: 36px; padding: 6px 10px; font: inherit;
+    font-size: 14px; color: var(--color-text); caret-color: var(--color-accent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+  }
+  .input::placeholder { color: color-mix(in srgb, var(--color-text) 65%, transparent); opacity: 1; }
+  .input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
+  .input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+  .seg { display: inline-flex; overflow: hidden; border: 1px solid var(--color-divider); border-radius: var(--radius-md); }
+  .seg-opt { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px; cursor: pointer; }
+  .seg-opt input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+  .seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
+  .seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+  .seg-opt:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+
+  /* — cartões — */
+  .card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface); }
+  .card-kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
+  .card-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px; line-height: 1.2; }
+  .card-body { margin: 0; font-size: 13px; opacity: 0.8; flex: 1; }
+  .elev-sm { box-shadow: var(--shadow-sm); }
+  .elev-md { box-shadow: var(--shadow-md); }
+  .elev-lg { box-shadow: var(--shadow-lg); }
+
+  /* — etiquetas — */
+  .tag { display: inline-flex; align-items: center; font-size: 11px; letter-spacing: 0.02em; padding: 3px 10px; border-radius: calc(var(--radius-md) * 0.75); }
+  .tag-accent { background: var(--color-accent-100); color: var(--color-accent-800); }
+  .tag-accent-2 { background: var(--color-accent-2-100); color: var(--color-accent-2-800); }
+  .tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
+  .tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
+
+  /* Retícula de meio-tom: o placeholder de foto do protótipo, três telas de
+     pontos em ciano, magenta e preto sobrepostas em multiply. */
+  .halftone { position: relative; background: var(--color-surface); overflow: hidden; }
+  .halftone i { position: absolute; inset: 0; mix-blend-mode: multiply; display: block; }
+  .halftone .h1 { background-image: radial-gradient(circle, var(--color-accent) 30%, transparent 32%); background-size: 5px 5px; opacity: .5; transform: translate(1.5px, 1px); }
+  .halftone .h2 { background-image: radial-gradient(circle, var(--color-accent-2) 30%, transparent 32%); background-size: 5px 5px; opacity: .36; transform: translate(-2px, -1.5px); }
+  .halftone .h3 { background-image: radial-gradient(circle, var(--color-text) 26%, transparent 28%); background-size: 5px 5px; opacity: .5; }
+  .halftone span { position: absolute; left: 16px; bottom: 12px; font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; }
+
+  .kicker { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-neutral-700); }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     Barra do repositório (fora do design — navegação da Liga)
+     ══════════════════════════════════════════════════════════════════════ */
+  .repo-bar {
+    background: var(--color-surface); border-bottom: 1px solid var(--color-divider);
+    padding: 9px 32px; display: flex; align-items: center; gap: 9px;
+    font-size: 12.5px; color: var(--color-neutral-700);
+  }
+  .repo-bar a { color: inherit; display: inline-flex; align-items: center; gap: 6px; }
+  .repo-bar a:hover { color: var(--color-accent-700); }
+
+  /* ── CABEÇALHO ── */
+  .site-header { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--color-bg) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--color-divider); }
+  .header-inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 26px; padding: 13px 32px; }
+  .brand { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 21px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+  .brand i { width: 14px; height: 14px; background: var(--color-accent); display: block; }
+  .brand i::after { content: ''; display: block; width: 7px; height: 7px; background: var(--color-accent-2); margin: 3.5px; }
+  .header-nav { display: flex; align-items: center; gap: 4px; margin-left: 8px; }
+  .header-nav a { color: var(--color-text); font-size: 14px; padding: 6px 11px; }
+  .header-nav a:hover { background: color-mix(in srgb, var(--color-text) 6%, transparent); color: var(--color-text); }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── HERO ── */
+  .hero { display: grid; grid-template-columns: 1fr auto; gap: 64px; align-items: start; padding: 60px 0 56px; }
+  .hero h1 { font-size: 62px; line-height: 1.0; letter-spacing: -.02em; margin: 18px 0 20px; max-width: 13ch; }
+  .hero h1 em { font-style: italic; color: var(--color-accent-700); }
+  .hero-lead { font-size: 19px; line-height: 1.45; max-width: 42ch; color: var(--color-neutral-800); font-style: italic; margin-bottom: 22px; }
+  .hero-sub { font-size: 15.5px; line-height: 1.6; max-width: 44ch; }
+  .hero-actions { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; }
+  .hero-actions .btn { font-size: 15px; padding: 12px 20px; }
+  .premissas { display: flex; flex-direction: column; gap: 11px; margin-top: 34px; font-size: 14.5px; line-height: 1.55; max-width: 44ch; }
+  .premissas div span { color: var(--color-accent-700); font-variant-numeric: tabular-nums; }
+
+  /* ── CELULAR ── */
+  .phone-stage { display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; }
+  .phone {
+    position: relative; width: 402px; height: 874px; border-radius: 48px; overflow: hidden;
+    background: #F2F2F7; box-shadow: 0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12);
+    transition: all .35s cubic-bezier(.4,0,.2,1);
+  }
+  .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 126px; height: 37px; border-radius: 24px; background: #000; z-index: 50; }
+  .home-bar { position: absolute; bottom: 0; left: 0; right: 0; z-index: 60; height: 34px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 8px; pointer-events: none; }
+  .home-bar i { width: 139px; height: 5px; border-radius: 100px; background: rgba(0,0,0,0.25); display: block; }
+  .screen { height: 100%; display: flex; flex-direction: column; background: var(--color-bg); color: var(--color-text); }
+
+  .app-top { flex: none; padding: 58px 20px 10px; display: flex; align-items: center; gap: 12px; }
+  .app-back { border: 0; background: none; padding: 0; margin: 0; font: inherit; font-size: 19px; line-height: 1; color: var(--color-accent-700); cursor: pointer; }
+  .app-title { font-size: 16px; font-weight: 600; letter-spacing: .005em; }
+  .app-usos { margin-left: auto; font-size: 11.5px; letter-spacing: .05em; color: var(--color-neutral-700); }
+  .app-body { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; }
+  .app-body::-webkit-scrollbar { width: 0; }
+
+  .app-tabs { flex: none; padding: 10px 16px 42px; display: flex; gap: 4px; background: var(--color-bg); }
+  .app-tabs button { flex: 1; border: 0; background: none; font: inherit; cursor: pointer; padding: 8px 4px 6px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .app-tabs button span:first-child { font-size: 13px; }
+  .app-tabs button i { width: 14px; height: 2px; display: block; }
+
+  .pane { display: flex; flex-direction: column; animation: stFade .22s ease both; }
+  @keyframes stFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .step-label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-neutral-700); }
+  .big-q { font-size: 30px; line-height: 1.1; letter-spacing: -.015em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; }
+  .muted { color: var(--color-neutral-700); }
+
+  .atv-row { border: 0; background: none; font: inherit; text-align: left; cursor: pointer; padding: 14px 20px; display: flex; gap: 14px; align-items: flex-start; color: var(--color-text); width: 100%; }
+  .atv-row:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+  .atv-hora { font-size: 13px; width: 42px; flex: none; padding-top: 3px; color: var(--color-neutral-700); }
+  .atv-titulo { font-size: 16.5px; line-height: 1.25; }
+  .atv-meta { font-size: 13px; color: var(--color-neutral-700); }
+  .atv-preco { font-size: 13px; padding-top: 3px; color: var(--color-neutral-700); }
+
+  .prog-track { height: 3px; background: var(--color-neutral-300); }
+  .prog-fill { height: 3px; background: var(--color-accent); transition: width .12s linear; }
+
+  /* tela cheia do protótipo */
+  .fs-badge {
+    position: absolute; top: 16px; right: 16px; z-index: 70;
+    width: 30px; height: 30px; border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    color: var(--color-accent-700); border: 1px solid var(--color-divider);
+    cursor: pointer; display: grid; place-items: center; font-size: 13px;
+    backdrop-filter: blur(6px);
+  }
+  .fs-badge:hover { background: var(--color-bg); }
+  .fs-link { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12.5px; color: var(--color-neutral-700); background: var(--color-surface); border: 1px solid var(--color-divider); padding: 6px 13px; border-radius: var(--radius-md); user-select: none; }
+  .fs-link:hover { color: var(--color-accent-700); border-color: var(--color-accent); }
+  .phone.fs-mode { position: fixed !important; inset: 0 !important; width: 100dvw !important; height: 100dvh !important; border-radius: 0 !important; z-index: 9999 !important; box-shadow: none !important; }
+  .phone.fs-mode .island, .phone.fs-mode .home-bar { display: none; }
+  .phone.fs-mode .app-top { padding-top: 18px; }
+  .phone.fs-mode .app-tabs { padding-bottom: 16px; }
+  .phone.fs-mode ~ .fs-link { display: none; }
+  body.fs-open { overflow: hidden; }
+
+  /* ── SEÇÕES ── */
+  .sec { padding: 64px 0; border-top: 1px solid var(--color-divider); scroll-margin-top: 70px; }
+  .sec-head { display: grid; grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: end; margin-bottom: 34px; }
+  .sec-head h2 { margin: 0; font-size: 38px; letter-spacing: -.015em; max-width: 15ch; }
+  .sec-head p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--color-neutral-800); }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .stat { border-top: 2px solid var(--color-accent); padding-top: 16px; }
+  .stat b { display: block; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 52px; line-height: 1; letter-spacing: -.02em; }
+  .stat p { margin: 10px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--color-neutral-800); }
+  .fonte { margin-top: 22px; font-size: 12.5px; color: var(--color-neutral-700); }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .passo-n { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 40px; line-height: 1; color: var(--color-accent); letter-spacing: -.02em; }
+
+  .dif { display: flex; gap: 16px; align-items: flex-start; }
+  .dif i { width: 26px; height: 26px; flex: none; background: var(--color-accent); color: var(--color-bg); display: grid; place-items: center; font-size: 12px; font-style: normal; }
+  .dif b { display: block; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px; margin-bottom: 3px; }
+  .dif span { font-size: 14.5px; line-height: 1.55; color: var(--color-neutral-800); }
+
+  .plano-card { border: 1px solid var(--color-divider); padding: 26px; display: flex; flex-direction: column; gap: 8px; background: var(--color-bg); }
+  .plano-card.destaque { border-color: var(--color-accent); background: var(--color-accent-100); }
+  .plano-preco { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 34px; letter-spacing: -.02em; line-height: 1; }
+  .plano-card ul { margin: 8px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.7; color: var(--color-neutral-800); }
+
+  .persona { display: grid; grid-template-columns: 92px 1fr; gap: 20px; align-items: start; }
+  .persona .foto { height: 108px; }
+  .persona b { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 19px; }
+  .persona .cargo { font-size: 13px; color: var(--color-neutral-700); margin-bottom: 8px; }
+  .persona p { margin: 0; font-size: 14.5px; line-height: 1.6; }
+
+  .cta { padding: 72px 0 80px; border-top: 1px solid var(--color-divider); text-align: center; }
+  .cta h2 { font-size: 46px; letter-spacing: -.02em; margin: 0 0 14px; }
+  .cta h2 em { font-style: italic; color: var(--color-accent-700); }
+  .cta p { max-width: 50ch; margin: 0 auto 26px; font-size: 16px; color: var(--color-neutral-800); }
+
+  footer { border-top: 1px solid var(--color-divider); padding: 28px 32px 40px; text-align: center; font-size: 12.5px; line-height: 1.7; color: var(--color-neutral-700); }
+
+  /* ── RESPONSIVO (adição — o protótipo foi desenhado em 1180px) ── */
+  @media (max-width: 1080px) {
+    .hero { grid-template-columns: 1fr; gap: 44px; justify-items: center; text-align: center; }
+    .hero h1, .hero-lead, .hero-sub, .premissas { max-width: none; }
+    .hero-actions { justify-content: center; }
+    .premissas { text-align: left; }
+    .phone-stage { order: -1; }
+    .sec-head { grid-template-columns: 1fr; gap: 14px; align-items: start; }
+    .sec-head h2 { max-width: none; }
+    .grid-3, .grid-4, .stats { grid-template-columns: repeat(2, 1fr); }
+    .header-nav { display: none; }
+  }
+  @media (max-width: 760px) {
+    main, .header-inner { padding-left: 18px; padding-right: 18px; }
+    .hero h1 { font-size: 42px; }
+    .sec-head h2, .cta h2 { font-size: 30px; }
+    .grid-3, .grid-4, .stats { grid-template-columns: 1fr; }
+    .stat b { font-size: 42px; }
+    .persona { grid-template-columns: 1fr; }
+    .persona .foto { height: 80px; }
+    .phone { width: min(402px, 94vw); height: min(874px, 82vh); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── BARRA DO REPOSITÓRIO ── -->
+<div class="repo-bar">
+  <a href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar ao Repositório de MVPs
+  </a>
+  <span>·</span>
+  <span class="tag tag-accent">Liga de Empreendedorismo · Grupo 4</span>
+</div>
+
+<!-- ── CABEÇALHO ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <span class="brand"><i></i>SmarTravel</span>
+    <nav class="header-nav">
+      <a href="#problema">O problema</a>
+      <a href="#como">Como funciona</a>
+      <a href="#diferencial">Diferencial</a>
+      <a href="#planos">Planos</a>
+      <a href="#publico">Para quem</a>
+    </nav>
+    <div class="header-right">
+      <span class="tag tag-accent-2">Protótipo navegável</span>
+      <button class="btn btn-primary" onclick="comecar()">Criar meu roteiro</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div>
+      <div class="kicker">Protótipo navegável · MVP</div>
+      <h1>Menos tempo planejando, <em>mais tempo viajando.</em></h1>
+      <p class="hero-lead">Três perguntas, um roteiro dia a dia — e a reserva no mesmo lugar.</p>
+      <p class="hero-sub">Planejar uma viagem virou trabalho: dezenas de abas abertas, fóruns desatualizados e a sensação de que algo ficou de fora. O SmarTravel responde com um roteiro pronto em um minuto, montado a partir de fontes verificadas e com as reservas dentro do app.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="comecar()">Criar meu roteiro</button>
+        <button class="btn btn-secondary" onclick="irTela('planos')">Ver planos</button>
+      </div>
+      <div class="premissas">
+        <div><span>01</span> &nbsp;O roteiro é o produto. Três perguntas, nada de formulário longo.</div>
+        <div><span>02</span> &nbsp;Dois roteiros grátis. O paywall aparece no terceiro pedido, não na porta de entrada.</div>
+        <div><span>03</span> &nbsp;Desconto de parceiro e equipe humana aparecem dentro do fluxo, não em um slide.</div>
+        <div><span>04</span> &nbsp;Reservar sem sair do app — é o que separa o SmarTravel de pedir um roteiro a um chat.</div>
+      </div>
+    </div>
+
+    <div class="phone-stage">
+      <div class="phone" id="phone">
+        <div class="island"></div>
+        <button class="fs-badge" id="fs-badge" onclick="toggleFullscreen()" title="Tela cheia">⛶</button>
+        <div class="screen">
+          <div class="app-top">
+            <button class="app-back" id="app-back" onclick="voltar()" aria-label="Voltar" style="display:none">←</button>
+            <div class="app-title" id="app-title">SmarTravel</div>
+            <div class="app-usos" id="app-usos"></div>
+          </div>
+          <div class="app-body" id="app-body"></div>
+          <div class="app-tabs" id="app-tabs" style="display:none"></div>
+        </div>
+        <div class="home-bar"><i></i></div>
+      </div>
+      <div class="fs-link" onclick="toggleFullscreen()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        Ver em tela cheia
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROBLEMA ── -->
+  <section class="sec" id="problema">
+    <div class="sec-head">
+      <h2>Planejar cansa mais do que viajar</h2>
+      <p>O trabalho não está em escolher o destino — está em transformar vontade em itinerário. Comparar fontes, montar o dia a dia, conferir horários, reservar em cinco sites diferentes. É nesse intervalo que muita gente desiste.</p>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <b>74%</b>
+        <p>consideram o planejamento a etapa mais exaustiva de uma viagem.</p>
+      </div>
+      <div class="stat">
+        <b>58%</b>
+        <p>já desistiram de viajar por causa do estresse de planejar.</p>
+      </div>
+      <div class="stat">
+        <b>71%</b>
+        <p>seguem ansiosos depois de fechar — com medo do que pode dar errado.</p>
+      </div>
+    </div>
+    <p class="fonte">Levantamento citado no pitch do grupo · fonte: travelagentcentral.com</p>
+  </section>
+
+  <!-- ── COMO FUNCIONA ── -->
+  <section class="sec" id="como">
+    <div class="sec-head">
+      <h2>Do zero ao roteiro em um minuto</h2>
+      <p>Sem cadastro longo e sem formulário de agência. O app pergunta o essencial, monta o dia a dia e deixa tudo pronto para reservar — no mesmo lugar.</p>
+    </div>
+    <div class="grid-3">
+      <div>
+        <div class="passo-n">01</div>
+        <h4 style="margin:10px 0 6px">Três perguntas</h4>
+        <p style="font-size:14.5px;line-height:1.6;color:var(--color-neutral-800);margin:0">Para onde, por quanto tempo e do que você gosta. Orçamento e companhia entram junto, em um toque cada.</p>
+      </div>
+      <div>
+        <div class="passo-n">02</div>
+        <h4 style="margin:10px 0 6px">O roteiro se monta</h4>
+        <p style="font-size:14.5px;line-height:1.6;color:var(--color-neutral-800);margin:0">Dia a dia com horário, duração e preço por atividade — cruzando turismo oficial, guias verificados e avaliações recentes.</p>
+      </div>
+      <div>
+        <div class="passo-n">03</div>
+        <h4 style="margin:10px 0 6px">Reserve sem sair</h4>
+        <p style="font-size:14.5px;line-height:1.6;color:var(--color-neutral-800);margin:0">Abra qualquer atividade e reserve ali mesmo, com o desconto de parceiro já aplicado no preço.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DIFERENCIAL ── -->
+  <section class="sec" id="diferencial">
+    <div class="sec-head">
+      <h2>Por que não pedir isso a um chat?</h2>
+      <p>Um assistente genérico devolve texto. O SmarTravel devolve uma viagem que dá para executar — com preço, reserva e gente por trás quando algo sai do previsto.</p>
+    </div>
+    <div class="grid-4">
+      <div class="dif">
+        <i>✓</i>
+        <div><b>Reserva dentro do app</b><span>O roteiro não morre na tela: cada atividade tem botão de reservar e vai para a aba Reservas com código.</span></div>
+      </div>
+      <div class="dif">
+        <i>✓</i>
+        <div><b>Desconto de parceiro</b><span>Acordos com operadores e casas locais. O abatimento já vem embutido no preço que você vê.</span></div>
+      </div>
+      <div class="dif">
+        <i>✓</i>
+        <div><b>Equipe de verdade</b><span>Dúvida no roteiro ou problema com a IA, alguém responde em até 4 horas. Não é só um modelo respondendo sozinho.</span></div>
+      </div>
+      <div class="dif">
+        <i>✓</i>
+        <div><b>Fontes verificadas</b><span>Turismo oficial, guias checados e avaliações dos últimos 12 meses — não é texto colado de fórum.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PLANOS ── -->
+  <section class="sec" id="planos">
+    <div class="sec-head">
+      <h2>Comece de graça, pague só se voltar</h2>
+      <p>Os dois primeiros roteiros saem sem cartão. Depois você escolhe: paga pelo roteiro que gerar ou assina e não pensa mais nisso.</p>
+    </div>
+    <div class="grid-3">
+      <div class="plano-card">
+        <div class="kicker">Por uso</div>
+        <div class="plano-preco">R$ 9,90</div>
+        <div class="muted" style="font-size:13.5px">por roteiro gerado</div>
+        <ul>
+          <li>Dois primeiros grátis</li>
+          <li>Roteiros salvos para sempre</li>
+          <li>Reserva e descontos inclusos</li>
+        </ul>
+      </div>
+      <div class="plano-card destaque">
+        <div class="kicker">Mensal · mais escolhido</div>
+        <div class="plano-preco">R$ 19,90</div>
+        <div class="muted" style="font-size:13.5px">por mês, cancela quando quiser</div>
+        <ul>
+          <li>Roteiros ilimitados</li>
+          <li>Refazer quantas versões quiser</li>
+          <li>Atendimento humano prioritário</li>
+        </ul>
+      </div>
+      <div class="plano-card">
+        <div class="kicker">Anual</div>
+        <div class="plano-preco">R$ 149</div>
+        <div class="muted" style="font-size:13.5px">equivale a dois meses grátis</div>
+        <ul>
+          <li>Tudo do plano mensal</li>
+          <li>Melhor preço por viagem</li>
+          <li>Para quem viaja mais de duas vezes ao ano</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PARA QUEM ── -->
+  <section class="sec" id="publico">
+    <div class="sec-head">
+      <h2>Para quem o tempo vale mais que a pesquisa</h2>
+      <p>Duas pessoas diferentes, o mesmo impasse: querem viajar bem e não têm dias para montar o roteiro.</p>
+    </div>
+    <div class="grid-3" style="gap:40px">
+      <div class="persona">
+        <div class="halftone foto"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+        <div>
+          <b>Ana, 36 anos</b>
+          <div class="cargo">Mãe de dois, trabalha em tempo integral</div>
+          <p>Quer férias em família sem estresse. Precisa de um roteiro que funcione com crianças e que já venha resolvido — não sobra noite livre para pesquisar.</p>
+        </div>
+      </div>
+      <div class="persona">
+        <div class="halftone foto"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+        <div>
+          <b>Denis, 24 anos</b>
+          <div class="cargo">Estudante universitário</div>
+          <p>Viaja em férias e feriados com orçamento curto. Quer aproveitar cada dia do destino sem gastar a viagem inteira comparando preço e horário.</p>
+        </div>
+      </div>
+      <div>
+        <div class="kicker" style="margin-bottom:12px">Também alcança</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14.5px;line-height:1.55">
+          <div><b>Viajantes independentes</b> — quem monta a própria viagem e não quer pacote fechado.</div>
+          <div><b>Orçamentos diversos</b> — do econômico ao sem limites, com o roteiro ajustado à faixa.</div>
+          <div><b>Viagens temáticas</b> — gastronomia, arquitetura, natureza ou vida noturna.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── CTA ── -->
+<section class="cta">
+  <div class="kicker">Comece agora</div>
+  <h2>Menos tempo planejando, <em>mais tempo viajando.</em></h2>
+  <p>Toque no celular ao lado e percorra o app inteiro: das três perguntas até a reserva confirmada.</p>
+  <button class="btn btn-primary" style="font-size:16px;padding:14px 26px" onclick="comecar()">Criar meu roteiro</button>
+</section>
+
+<footer>
+  <strong>SmarTravel</strong> · Liga de Empreendedorismo · Grupo 4<br>
+  Melissa · Julia · Isabelly · Henrique · Rafael<br>
+  MVP implementado por Claude Code a partir do design do grupo
+</footer>
+
+<script>
+  /* ══════════════════════════════════════════════════════════════════════
+     Lógica portada do protótipo "SmarTravel App.dc.html" (classe DCLogic)
+     para JavaScript puro, preservando estado, histórico e transições.
+     ══════════════════════════════════════════════════════════════════════ */
+
+  var CIDADES = {
+    'Lisboa': [
+      { titulo: 'Baixa e Alfama', itens: [
+        { hora: '09:00', titulo: 'Café da manhã na Manteigaria', meta: 'Pastelaria · 40 min', preco: '€4', desc: 'Pastel de nata saindo do forno a cada dez minutos. Fica a três minutos do hotel, então dá para ir andando antes da primeira fila do dia.' },
+        { hora: '10:30', titulo: 'Mosteiro dos Jerónimos', meta: 'Cultura · 1h30 · fila menor até 11h', preco: '€12', desc: 'Entrada pelo claustro. Reservando pelo app você entra pela porta lateral, sem a fila principal.', desconto: '15%' },
+        { hora: '13:00', titulo: 'Almoço no Time Out Market', meta: 'Gastronomia · 1h', preco: '€18', desc: 'Doze cozinhas em um galpão só. Bom para grupo que não decide: cada um pega o que quer e todos sentam junto.' },
+        { hora: '16:00', titulo: 'Elétrico 28 até Alfama', meta: 'Passeio · 50 min', preco: '€3', desc: 'Pegue na Praça Martim Moniz, sentido Alfama, e desça no Miradouro das Portas do Sol. Evite entre 12h e 15h.' },
+        { hora: '20:00', titulo: 'Fado no Bairro Alto', meta: 'Música · 2h · jantar incluso', preco: '€35', desc: 'Casa pequena, mesas compartilhadas, três sets de fado. Reserva obrigatória — no app já vai com mesa marcada.', desconto: '15%' } ] },
+      { titulo: 'Belém e o rio', itens: [
+        { hora: '08:30', titulo: 'Torre de Belém', meta: 'Cultura · 1h', preco: '€8', desc: 'Chegue na abertura: a escada em espiral é estreita e engarrafa depois das 10h.' },
+        { hora: '11:00', titulo: 'MAAT', meta: 'Arte e arquitetura · 1h30', preco: '€9', desc: 'Suba na cobertura ondulada — a melhor vista do rio de graça, mesmo sem entrar nas galerias.' },
+        { hora: '14:00', titulo: 'Passeio de barco no Tejo', meta: 'Natureza · 2h · saída às 14h', preco: '€28', desc: 'Veleiro pequeno, no máximo doze pessoas. Leve casaco: venta mesmo em outubro.', desconto: '20%' },
+        { hora: '19:30', titulo: 'Jantar no Cais do Sodré', meta: 'Gastronomia · 1h30', preco: '€24', desc: 'Peixe do dia, cozinha aberta. Fica no caminho de volta ao hotel.' } ] },
+      { titulo: 'Sintra, bate e volta', itens: [
+        { hora: '07:45', titulo: 'Trem para Sintra', meta: 'Transporte · 40 min', preco: '€5', desc: 'Saída do Rossio. Compre ida e volta na hora — o bilhete solto sai mais caro.' },
+        { hora: '09:30', titulo: 'Palácio da Pena', meta: 'Cultura · 2h30 · horário marcado', preco: '€14', desc: 'A entrada tem hora marcada. Vá direto ao palácio e deixe o parque para a saída.', desconto: '10%' },
+        { hora: '13:00', titulo: 'Almoço no centro de Sintra', meta: 'Gastronomia · 1h', preco: '€16', desc: 'Travesseiro de Sintra na sobremesa, sem discussão.' },
+        { hora: '16:00', titulo: 'Cabo da Roca', meta: 'Natureza · 1h30 · ônibus 403', preco: '€6', desc: 'O ponto mais ocidental da Europa continental. Volte pelo 403 até Cascais e pegue o trem de lá.' } ] }
+    ],
+    'Buenos Aires': [
+      { titulo: 'San Telmo e Centro', itens: [
+        { hora: '09:00', titulo: 'Café Tortoni', meta: 'Café histórico · 1h', preco: '$8', desc: 'Chegue antes das 10h para não pegar a fila de turistas na porta.' },
+        { hora: '11:00', titulo: 'Feira de San Telmo', meta: 'Compras · 2h · só domingo', preco: 'Grátis', desc: 'Antiquários na Defensa. Leve dinheiro em espécie e negocie.' },
+        { hora: '13:30', titulo: 'Almoço de parrilla', meta: 'Gastronomia · 1h30', preco: '$16', desc: 'Bife de chorizo e uma taça de malbec da casa. Porções são grandes: peça uma para dois.' },
+        { hora: '17:00', titulo: 'Caminito, La Boca', meta: 'Passeio · 1h', preco: 'Grátis', desc: 'Fique nas quadras da feira e volte antes do anoitecer.' },
+        { hora: '21:00', titulo: 'Show de tango', meta: 'Música · 2h30 · jantar incluso', preco: '$45', desc: 'Casa antiga, orquestra ao vivo, aula rápida antes do show.', desconto: '15%' } ] },
+      { titulo: 'Recoleta e Palermo', itens: [
+        { hora: '09:30', titulo: 'Cemitério da Recoleta', meta: 'Cultura · 1h30', preco: '$6', desc: 'Pegue o mapa na entrada e procure o mausoléu dos Duarte.' },
+        { hora: '12:00', titulo: 'MALBA', meta: 'Arte · 2h', preco: '$10', desc: 'Arte latino-americana do século 20. Quarta é meia-entrada.' },
+        { hora: '15:00', titulo: 'Bosques de Palermo', meta: 'Natureza · 1h30', preco: 'Grátis', desc: 'Roseiral e pedalinho no lago. Bom para as crianças gastarem energia.' },
+        { hora: '20:00', titulo: 'Jantar em Palermo Soho', meta: 'Gastronomia · 2h', preco: '$22', desc: 'Cozinha de autor em casa reformada, mesa na calçada se estiver quente.', desconto: '10%' } ] }
+    ],
+    'Roma': [
+      { titulo: 'Roma antiga', itens: [
+        { hora: '08:30', titulo: 'Coliseu', meta: 'Cultura · 2h · horário marcado', preco: '€18', desc: 'Entrada com hora marcada. O primeiro horário do dia é o único sem sol a pino na arena.', desconto: '15%' },
+        { hora: '11:00', titulo: 'Fórum Romano e Palatino', meta: 'Cultura · 2h', preco: 'Incluso', desc: 'O bilhete do Coliseu já cobre os dois. Suba ao Palatino primeiro: a vista explica a planta do Fórum.' },
+        { hora: '14:00', titulo: 'Almoço em Monti', meta: 'Gastronomia · 1h', preco: '€19', desc: 'Bairro ao lado do Fórum, cantinas de bairro sem cardápio em quatro idiomas.' },
+        { hora: '17:00', titulo: 'Panteão e Piazza Navona', meta: 'Passeio · 1h30', preco: 'Grátis', desc: 'O óculo do Panteão rende mais no fim da tarde. Da praça, siga a pé até Navona.' } ] },
+      { titulo: 'Vaticano e Trastevere', itens: [
+        { hora: '08:00', titulo: 'Museus do Vaticano', meta: 'Arte · 3h · fila menor cedo', preco: '€20', desc: 'Reserve o primeiro horário. Da Capela Sistina, use a saída lateral para chegar direto à Basílica.', desconto: '10%' },
+        { hora: '12:30', titulo: 'Basílica de São Pedro', meta: 'Cultura · 1h30', preco: 'Grátis', desc: 'A cúpula cobra à parte e são 551 degraus — vale se as pernas ainda estiverem inteiras.' },
+        { hora: '16:00', titulo: 'Trastevere a pé', meta: 'Passeio · 2h', preco: 'Grátis', desc: 'Atravesse a Ponte Sisto no fim da tarde, quando as ruas de pedra enchem sem ficar impossíveis.' },
+        { hora: '20:00', titulo: 'Jantar em Trastevere', meta: 'Gastronomia · 2h', preco: '€26', desc: 'Cacio e pepe feita na roda de queijo. Reserve: as casas boas lotam antes das 21h.', desconto: '15%' } ] }
+    ],
+    'Salvador': [
+      { titulo: 'Pelourinho e Centro', itens: [
+        { hora: '09:00', titulo: 'Elevador Lacerda', meta: 'Passeio · 30 min', preco: 'R$ 0,50', desc: 'Ligue Cidade Baixa e Alta em um minuto. A vista da Baía de Todos os Santos já justifica a fila.' },
+        { hora: '10:00', titulo: 'Pelourinho a pé', meta: 'Cultura · 2h', preco: 'Grátis', desc: 'Comece pelo Terreiro de Jesus e desça pelas ladeiras. Terça à noite tem ensaio aberto de percussão.' },
+        { hora: '12:30', titulo: 'Almoço de moqueca', meta: 'Gastronomia · 1h30', preco: 'R$ 68', desc: 'Moqueca de peixe para dois com azeite de dendê na medida. Peça o acarajé de entrada.', desconto: '10%' },
+        { hora: '16:00', titulo: 'Igreja de São Francisco', meta: 'Cultura · 1h', preco: 'R$ 15', desc: 'Talha dourada do barroco brasileiro. A luz da tarde entra pelo claustro azulejado.' } ] },
+      { titulo: 'Praia e litoral', itens: [
+        { hora: '08:30', titulo: 'Farol da Barra', meta: 'Passeio · 1h', preco: 'R$ 18', desc: 'Museu Náutico dentro do forte. Vá cedo: depois das 10h o sol na ponta não perdoa.' },
+        { hora: '11:00', titulo: 'Praia do Porto da Barra', meta: 'Praia · 3h', preco: 'Grátis', desc: 'Água calma, uma das poucas praias urbanas boas para crianças. Barracas com cadeira e guarda-sol.' },
+        { hora: '16:00', titulo: 'Passeio de escuna pela baía', meta: 'Natureza · 3h', preco: 'R$ 120', desc: 'Saída da Marina. Parada para banho na Ilha dos Frades — leve protetor e dinheiro trocado.', desconto: '20%' },
+        { hora: '20:30', titulo: 'Show de música ao vivo', meta: 'Música · 2h', preco: 'R$ 40', desc: 'Casa pequena no Rio Vermelho, samba de roda e MPB. A noite do bairro começa tarde.' } ] }
+    ]
+  };
+
+  var TELAS = [
+    ['welcome', 'Boas-vindas'], ['destino', 'Destino'], ['datas', 'Datas e orçamento'],
+    ['estilo', 'Estilo'], ['gerando', 'Gerando'], ['roteiro', 'Roteiro'],
+    ['atividade', 'Atividade'], ['reservas', 'Reservas'], ['planos', 'Planos'], ['perfil', 'Perfil']
+  ];
+
+  var TITULOS = {
+    welcome: 'SmarTravel', destino: 'Novo roteiro', datas: 'Novo roteiro', estilo: 'Novo roteiro',
+    gerando: 'Novo roteiro', roteiro: 'Roteiro', atividade: 'Atividade', reservas: 'Reservas',
+    planos: 'Planos', perfil: 'Perfil'
+  };
+
+  var STEPS = ['Lendo suas preferências', 'Cruzando fontes verificadas', 'Montando o dia a dia', 'Aplicando descontos de parceiros'];
+
+  var PLANOS = [
+    { id: 'uso', nome: 'Pagar por uso', preco: 'R$ 9,90', nota: 'por roteiro gerado' },
+    { id: 'mensal', nome: 'Mensal', preco: 'R$ 19,90', nota: 'roteiros ilimitados, cancela quando quiser' },
+    { id: 'anual', nome: 'Anual', preco: 'R$ 149', nota: 'dois meses grátis no ano' }
+  ];
+
+  var ORCAMENTOS = [
+    { nome: 'Econômico', faixa: 'até R$ 200 / dia' },
+    { nome: 'Intermediário', faixa: 'R$ 200 a 500 / dia' },
+    { nome: 'Sem limites', faixa: 'acima de R$ 500' }
+  ];
+
+  var COMPANHIAS = ['Sozinho', 'Casal', 'Família', 'Amigos'];
+  var ESTILOS = ['Cultura', 'Gastronomia', 'Natureza', 'Vida noturna', 'Compras', 'Arquitetura', 'Praia', 'Com crianças'];
+  var ABAS = [['roteiro', 'Roteiro'], ['reservas', 'Reservas'], ['planos', 'Planos'], ['perfil', 'Perfil']];
+
+  var state = {
+    screen: 'welcome', hist: [], destino: 'Lisboa', dias: 5, orcamento: 'Intermediário',
+    companhia: 'Família', estilo: ['Cultura', 'Gastronomia'], dia: 1, atvId: null,
+    reservas: [], plano: 'mensal', usos: 2, prog: 0
+  };
+  var timer = null;
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function setState(patch) { Object.assign(state, patch); render(); }
+
+  /* ── navegação com histórico ── */
+  function irTela(s) { state.hist.push(state.screen); setState({ screen: s }); }
+  function voltar() {
+    var anterior = state.hist.length ? state.hist[state.hist.length - 1] : 'welcome';
+    setState({ screen: anterior, hist: state.hist.slice(0, -1) });
+  }
+  function resetar(s) { setState({ screen: s, hist: [] }); }
+  function comecar() {
+    resetar('destino');
+    document.getElementById('phone').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function dados() { return CIDADES[state.destino] || CIDADES['Lisboa']; }
+
+  function gerar() {
+    if (state.usos <= 0) { irTela('planos'); return; }
+    state.prog = 0;
+    irTela('gerando');
+    clearInterval(timer);
+    timer = setInterval(function () {
+      var p = state.prog + 5;
+      if (p >= 100) {
+        clearInterval(timer);
+        setState({ prog: 100, screen: 'roteiro', hist: ['welcome'], dia: 1, usos: Math.max(0, state.usos - 1) });
+        return;
+      }
+      setState({ prog: p });
+    }, 80);
+  }
+
+  function atividadeAtual() {
+    var d = dados();
+    for (var i = 0; i < d.length; i++) {
+      for (var j = 0; j < d[i].itens.length; j++) {
+        if (i + '-' + j === state.atvId) {
+          return Object.assign({ id: i + '-' + j, dia: i + 1 }, d[i].itens[j]);
+        }
+      }
+    }
+    return null;
+  }
+
+  function abrirAtividade(id) { state.atvId = id; irTela('atividade'); }
+
+  function reservar() {
+    var a = atividadeAtual();
+    if (!a) return;
+    state.reservas.push({ id: a.id, titulo: a.titulo, meta: a.meta, preco: a.preco, codigo: 'ST-' + (4180 + state.reservas.length * 7) });
+    render();
+  }
+
+  function trocar() { state.atvId = null; irTela('roteiro'); }
+  function assinar() { state.usos = 99; resetar('perfil'); }
+
+  function reservados() { return state.reservas.map(function (r) { return r.id; }); }
+
+  /* ── componentes de formulário do design system ── */
+  function segChip(nome, marcado, acao, extra) {
+    return '<label class="seg" style="cursor:pointer' + (extra || '') + '">' +
+      '<span class="seg-opt" style="font-size:14px;padding:9px 13px' + (extra ? ';width:100%;justify-content:space-between' : '') + '">' +
+      '<input type="radio"' + (marcado ? ' checked' : '') + ' onchange="' + acao + '">' + nome + '</span></label>';
+  }
+
+  /* ── TELAS ── */
+  function telaWelcome() {
+    return '<div class="pane" style="gap:22px;padding:6px 0 34px">' +
+      '<div style="padding:0 20px">' +
+        '<div style="font-size:38px;line-height:1.04;letter-spacing:-.02em">Seu roteiro pronto<br><span style="font-style:italic;color:var(--color-accent-700)">em um minuto.</span></div>' +
+        '<p style="margin:14px 0 0;font-size:15px;line-height:1.5;color:var(--color-neutral-800);max-width:30ch">Diga para onde, quando e do que você gosta. A gente monta o dia a dia, com fontes verificadas e reserva no mesmo lugar.</p>' +
+      '</div>' +
+      '<div class="halftone" style="height:206px"><i class="h1"></i><i class="h2"></i><i class="h3"></i><span>Foto — placeholder</span></div>' +
+      '<div style="padding:0 20px;display:flex;flex-direction:column;gap:12px">' +
+        '<button class="btn btn-primary btn-block" style="min-height:50px;font-size:16px" onclick="irTela(\'destino\')">Criar meu roteiro</button>' +
+        '<button class="btn btn-ghost btn-block" style="min-height:40px;font-size:14px" onclick="irTela(\'perfil\')">Já tenho conta</button>' +
+        '<div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);text-align:center">Os dois primeiros roteiros são grátis. Sem cartão.</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function telaDestino() {
+    var chips = Object.keys(CIDADES).map(function (c) {
+      return segChip(esc(c), state.destino === c, 'setDestino(\'' + esc(c) + '\')');
+    }).join('');
+    return '<div class="pane" style="padding:6px 20px 34px;gap:18px">' +
+      '<div class="step-label">Passo 1 de 3</div>' +
+      '<div class="big-q">Para onde vamos?</div>' +
+      '<div class="chips">' + chips + '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:7px">' +
+        '<div style="font-size:12.5px;color:var(--color-neutral-700)">Outro destino</div>' +
+        '<input class="input" placeholder="Digite uma cidade ou país" style="min-height:44px;font-size:15px">' +
+        '<div style="font-size:12px;color:var(--color-neutral-700)">Nesta demonstração, os roteiros prontos são dos quatro destinos acima.</div>' +
+      '</div>' +
+      '<button class="btn btn-primary btn-block" style="min-height:50px;font-size:16px;margin-top:8px" onclick="irTela(\'datas\')">Continuar</button>' +
+    '</div>';
+  }
+
+  function telaDatas() {
+    var orc = ORCAMENTOS.map(function (o) {
+      return '<label class="seg" style="cursor:pointer;width:100%">' +
+        '<span class="seg-opt" style="font-size:14.5px;padding:12px 14px;width:100%;justify-content:space-between">' +
+        '<input type="radio"' + (state.orcamento === o.nome ? ' checked' : '') + ' onchange="setOrcamento(\'' + esc(o.nome) + '\')">' +
+        '<span>' + o.nome + '</span><span style="font-size:12.5px;opacity:.75">' + o.faixa + '</span></span></label>';
+    }).join('');
+    var comp = COMPANHIAS.map(function (c) {
+      return segChip(c, state.companhia === c, 'setCompanhia(\'' + c + '\')');
+    }).join('');
+
+    return '<div class="pane" style="padding:6px 20px 34px;gap:24px">' +
+      '<div style="display:flex;flex-direction:column;gap:14px">' +
+        '<div class="step-label">Passo 2 de 3</div>' +
+        '<div class="big-q">Quanto tempo e quanto dinheiro?</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px">' +
+        '<div style="font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700)">Duração</div>' +
+        '<div style="display:flex;align-items:baseline;gap:16px">' +
+          '<button class="btn btn-secondary btn-icon" style="width:44px;height:44px;font-size:20px" aria-label="Menos um dia" onclick="setDias(-1)">−</button>' +
+          '<div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:40px;line-height:1;letter-spacing:-.02em">' + state.dias + '</span><span style="font-size:15px;color:var(--color-neutral-700)">dias</span></div>' +
+          '<button class="btn btn-secondary btn-icon" style="width:44px;height:44px;font-size:20px;margin-left:auto" aria-label="Mais um dia" onclick="setDias(1)">+</button>' +
+        '</div>' +
+        '<div style="font-size:13px;color:var(--color-neutral-700)">12 a 17 de outubro · a definir depois</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px">' +
+        '<div style="font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700)">Orçamento</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px">' + orc + '</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px">' +
+        '<div style="font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700)">Com quem</div>' +
+        '<div class="chips">' + comp + '</div>' +
+      '</div>' +
+      '<button class="btn btn-primary btn-block" style="min-height:50px;font-size:16px" onclick="irTela(\'estilo\')">Continuar</button>' +
+    '</div>';
+  }
+
+  function telaEstilo() {
+    var chips = ESTILOS.map(function (e) {
+      var on = state.estilo.indexOf(e) >= 0;
+      return '<label class="seg" style="cursor:pointer"><span class="seg-opt" style="font-size:14px;padding:9px 13px">' +
+        '<input type="checkbox"' + (on ? ' checked' : '') + ' onchange="toggleEstilo(\'' + e + '\')">' + e + '</span></label>';
+    }).join('');
+    var resumo = state.estilo.length
+      ? state.estilo.length + ' escolhidos: ' + state.estilo.join(', ')
+      : 'Escolha ao menos um para o roteiro não sair genérico.';
+
+    return '<div class="pane" style="padding:6px 20px 34px;gap:20px">' +
+      '<div class="step-label">Passo 3 de 3</div>' +
+      '<div class="big-q">O que você não quer perder?</div>' +
+      '<div class="chips">' + chips + '</div>' +
+      '<div style="font-size:13px;color:var(--color-neutral-700)">' + esc(resumo) + '</div>' +
+      '<button class="btn btn-primary btn-block" style="min-height:52px;font-size:16px;margin-top:6px" onclick="gerar()">Gerar meu roteiro</button>' +
+      '<div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);text-align:center">Você pode trocar qualquer atividade depois.</div>' +
+    '</div>';
+  }
+
+  function telaGerando() {
+    var steps = STEPS.map(function (label, i) {
+      var done = state.prog >= (i + 1) * 25;
+      return '<div style="display:flex;gap:12px;align-items:baseline;font-size:15px">' +
+        '<span style="width:14px;color:' + (done ? 'var(--color-accent-700)' : 'var(--color-neutral-500)') + '">' + (done ? '✓' : '·') + '</span>' +
+        '<span>' + label + '</span></div>';
+    }).join('');
+
+    return '<div class="pane" style="padding:40px 20px 34px;gap:30px">' +
+      '<div style="font-size:30px;line-height:1.1;letter-spacing:-.015em">Montando seus<br>' + state.dias + ' dias em ' + esc(state.destino) + '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:8px">' +
+        '<div class="prog-track"><div class="prog-fill" style="width:' + state.prog + '%"></div></div>' +
+        '<div style="font-size:12px;color:var(--color-neutral-700)">' + state.prog + '%</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:14px">' + steps + '</div>' +
+      '<div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);max-width:32ch">Cruzando 240 fontes verificadas — nada de bloco de texto colado de fórum.</div>' +
+    '</div>';
+  }
+
+  function telaRoteiro() {
+    var d = dados();
+    var diaData = d[state.dia - 1];
+    var res = reservados();
+
+    var tabs = [];
+    for (var i = 1; i <= state.dias; i++) {
+      tabs.push(segChip('Dia ' + i, state.dia === i, 'setDia(' + i + ')'));
+    }
+
+    var lista = '';
+    if (diaData) {
+      lista = diaData.itens.map(function (a, j) {
+        var id = (state.dia - 1) + '-' + j;
+        var temParceiro = !!a.desconto;
+        var jaReservado = res.indexOf(id) >= 0;
+        return '<button class="atv-row" onclick="abrirAtividade(\'' + id + '\')">' +
+          '<span class="atv-hora">' + a.hora + '</span>' +
+          '<span style="flex:1;display:flex;flex-direction:column;gap:4px">' +
+            '<span class="atv-titulo">' + esc(a.titulo) + '</span>' +
+            '<span class="atv-meta">' + esc(a.meta) + '</span>' +
+            (temParceiro ? '<span class="tag tag-accent-2" style="font-size:11px;align-self:flex-start;margin-top:2px">Parceiro · ' + a.desconto + ' off</span>' : '') +
+            (jaReservado ? '<span style="font-size:12px;color:var(--color-accent-700);margin-top:2px">✓ Reservado no app</span>' : '') +
+          '</span>' +
+          '<span class="atv-preco">' + a.preco + '</span>' +
+        '</button>';
+      }).join('');
+    }
+
+    var livre = !diaData ? '<div style="padding:24px 20px;display:flex;flex-direction:column;gap:10px">' +
+        '<div style="font-size:18px">Dia livre</div>' +
+        '<div style="font-size:14px;line-height:1.55;color:var(--color-neutral-700);max-width:32ch">Deixamos em branco de propósito. Toque para pedir sugestões de bate-volta ou para descansar.</div>' +
+        '<button class="btn btn-secondary" style="align-self:flex-start;font-size:14px" onclick="irTela(\'estilo\')">Pedir sugestões</button>' +
+      '</div>' : '';
+
+    return '<div class="pane" style="padding:0 0 30px;gap:20px">' +
+      '<div style="padding:0 20px;display:flex;flex-direction:column;gap:6px">' +
+        '<div style="font-size:34px;line-height:1.05;letter-spacing:-.02em">' + esc(state.destino) + '</div>' +
+        '<div style="font-size:13.5px;color:var(--color-neutral-700)">' + state.dias + ' dias · ' + state.orcamento + ' · ' + state.companhia + '</div>' +
+      '</div>' +
+      '<div style="padding:0 20px;display:flex;gap:8px;overflow:auto">' + tabs + '</div>' +
+      '<div style="padding:0 20px;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700)">' +
+        (diaData ? 'Dia ' + state.dia + ' · ' + esc(diaData.titulo) : 'Dia ' + state.dia) + '</div>' +
+      '<div style="display:flex;flex-direction:column">' + lista + '</div>' +
+      livre +
+      '<div style="padding:8px 20px 0;display:flex;flex-direction:column;gap:10px">' +
+        '<button class="btn btn-secondary btn-block" style="min-height:46px;font-size:15px" onclick="gerar()">Gerar outra versão deste roteiro</button>' +
+        '<div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700)">Fontes: turismo oficial de ' + esc(state.destino) + ', guias verificados e avaliações dos últimos 12 meses.</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function telaAtividade() {
+    var a = atividadeAtual();
+    if (!a) return '<div class="pane" style="padding:20px"><div class="muted">Atividade não encontrada.</div></div>';
+    var jaReservado = reservados().indexOf(a.id) >= 0;
+
+    return '<div class="pane" style="padding:0 0 34px;gap:20px">' +
+      '<div class="halftone" style="height:180px"><i class="h1"></i><i class="h2"></i><i class="h3"></i><span>Foto — placeholder</span></div>' +
+      '<div style="padding:0 20px;display:flex;flex-direction:column;gap:8px">' +
+        '<div style="font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700)">Dia ' + a.dia + ' · ' + a.hora + '</div>' +
+        '<div style="font-size:28px;line-height:1.1;letter-spacing:-.015em">' + esc(a.titulo) + '</div>' +
+        '<div style="font-size:14px;color:var(--color-neutral-700)">' + esc(a.meta) + '</div>' +
+      '</div>' +
+      '<div style="padding:0 20px;font-size:15px;line-height:1.6">' + esc(a.desc) + '</div>' +
+      (a.desconto ? '<div style="margin:0 20px;padding:16px;background:var(--color-accent-2-100);display:flex;flex-direction:column;gap:6px">' +
+        '<div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-2-700)">Parceiro SmarTravel</div>' +
+        '<div style="font-size:15px;line-height:1.45;color:var(--color-accent-2-900)">' + a.desconto + ' de desconto reservando pelo app. O preço já está com o abatimento.</div>' +
+      '</div>' : '') +
+      '<div style="padding:0 20px;display:flex;flex-direction:column;gap:12px">' +
+        '<div style="display:flex;align-items:baseline;justify-content:space-between">' +
+          '<span style="font-size:13px;color:var(--color-neutral-700)">Por pessoa</span>' +
+          '<span style="font-size:26px;letter-spacing:-.01em">' + a.preco + '</span>' +
+        '</div>' +
+        (jaReservado
+          ? '<div style="font-size:15px;color:var(--color-accent-700)">✓ Reserva confirmada — está em Reservas.</div>'
+          : '<button class="btn btn-primary btn-block" style="min-height:50px;font-size:16px" onclick="reservar()">Reservar no app</button>') +
+        '<button class="btn btn-secondary btn-block" style="min-height:44px;font-size:14.5px" onclick="trocar()">Trocar por outra sugestão</button>' +
+        '<button class="btn btn-ghost btn-block" style="min-height:40px;font-size:14px" onclick="irTela(\'perfil\')">Falar com alguém da equipe</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function telaReservas() {
+    var vazio = state.reservas.length === 0;
+    var itens = state.reservas.map(function (r) {
+      return '<div style="display:flex;flex-direction:column;gap:4px">' +
+        '<div style="font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">Confirmado · ' + r.codigo + '</div>' +
+        '<div style="font-size:17px;line-height:1.25">' + esc(r.titulo) + '</div>' +
+        '<div style="font-size:13px;color:var(--color-neutral-700)">' + esc(r.meta) + ' · ' + r.preco + '</div>' +
+      '</div>';
+    }).join('');
+
+    return '<div class="pane" style="padding:6px 20px 34px;gap:18px">' +
+      '<div class="big-q">Suas reservas</div>' +
+      (vazio ? '<div style="font-size:15px;line-height:1.6;color:var(--color-neutral-700);max-width:32ch">Nada reservado ainda. Abra uma atividade do roteiro e reserve por lá — fica tudo junto, com os descontos dos parceiros.</div>' : '') +
+      '<div style="display:flex;flex-direction:column;gap:16px">' + itens + '</div>' +
+      '<button class="btn btn-secondary btn-block" style="min-height:46px;font-size:15px" onclick="resetar(\'roteiro\')">Voltar ao roteiro</button>' +
+    '</div>';
+  }
+
+  function telaPlanos() {
+    var lista = PLANOS.map(function (p) {
+      return '<label class="seg" style="cursor:pointer;width:100%">' +
+        '<span class="seg-opt" style="font-size:15px;padding:14px;width:100%;align-items:flex-start;gap:12px">' +
+        '<input type="radio"' + (state.plano === p.id ? ' checked' : '') + ' onchange="setPlano(\'' + p.id + '\')">' +
+        '<span style="flex:1;display:flex;flex-direction:column;gap:3px;text-align:left">' +
+          '<span>' + p.nome + '</span><span style="font-size:12.5px;opacity:.8">' + p.nota + '</span></span>' +
+        '<span style="font-size:15px">' + p.preco + '</span></span></label>';
+    }).join('');
+    var atual = PLANOS.filter(function (p) { return p.id === state.plano; })[0] || PLANOS[1];
+
+    return '<div class="pane" style="padding:6px 20px 34px;gap:20px">' +
+      '<div class="big-q" style="text-wrap:pretty">Seus dois roteiros grátis acabaram</div>' +
+      '<p style="margin:0;font-size:15px;line-height:1.55;color:var(--color-neutral-800);max-width:32ch">Os roteiros que você já fez continuam seus. Para gerar novos, escolha como prefere pagar.</p>' +
+      '<div style="display:flex;flex-direction:column;gap:9px">' + lista + '</div>' +
+      '<button class="btn btn-primary btn-block" style="min-height:50px;font-size:16px" onclick="assinar()">Continuar com ' + atual.nome.toLowerCase() + '</button>' +
+      '<button class="btn btn-ghost btn-block" style="min-height:40px;font-size:14px" onclick="voltar()">Agora não</button>' +
+    '</div>';
+  }
+
+  function telaPerfil() {
+    var economia = state.reservas.length ? 'R$ ' + (state.reservas.length * 74) + ',00' : 'R$ 0,00';
+    var planoAtual = state.usos > 90 ? 'Plano mensal ativo' : state.usos + ' de 2 roteiros grátis restantes';
+    var salvos = state.usos > 90 ? '4' : String(2 - state.usos);
+
+    return '<div class="pane" style="padding:6px 20px 34px;gap:22px">' +
+      '<div style="display:flex;flex-direction:column;gap:4px">' +
+        '<div class="big-q">Ana Ribeiro</div>' +
+        '<div style="font-size:13.5px;color:var(--color-neutral-700)">' + planoAtual + '</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:14px">' +
+        '<div style="display:flex;justify-content:space-between;font-size:15px"><span>Roteiros salvos</span><span style="color:var(--color-neutral-700)">' + salvos + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:15px"><span>Reservas feitas</span><span style="color:var(--color-neutral-700)">' + state.reservas.length + '</span></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:15px"><span>Economia com parceiros</span><span style="color:var(--color-accent-2-700)">' + economia + '</span></div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:8px">' +
+        '<div style="font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700)">Equipe SmarTravel</div>' +
+        '<div style="font-size:15px;line-height:1.6;max-width:32ch">Tem gente de verdade atrás do app: dúvida no roteiro ou problema com a IA, alguém responde em até 4 horas.</div>' +
+        '<button class="btn btn-secondary" style="align-self:flex-start;font-size:14.5px;min-height:44px">Abrir conversa</button>' +
+      '</div>' +
+      '<button class="btn btn-ghost btn-block" style="min-height:40px;font-size:14px" onclick="irTela(\'planos\')">Ver planos</button>' +
+    '</div>';
+  }
+
+  var TELA_FN = {
+    welcome: telaWelcome, destino: telaDestino, datas: telaDatas, estilo: telaEstilo,
+    gerando: telaGerando, roteiro: telaRoteiro, atividade: telaAtividade,
+    reservas: telaReservas, planos: telaPlanos, perfil: telaPerfil
+  };
+
+  /* ── setters ── */
+  function setDestino(c) { setState({ destino: c, dia: 1 }); }
+  function setOrcamento(o) { setState({ orcamento: o }); }
+  function setCompanhia(c) { setState({ companhia: c }); }
+  function setDias(delta) { setState({ dias: Math.min(14, Math.max(1, state.dias + delta)) }); }
+  function setDia(n) { setState({ dia: n }); }
+  function setPlano(p) { setState({ plano: p }); }
+  function toggleEstilo(e) {
+    var i = state.estilo.indexOf(e);
+    if (i >= 0) state.estilo.splice(i, 1); else state.estilo.push(e);
+    render();
+  }
+
+  /* ── RENDER ── */
+  function render() {
+    var s = state.screen;
+    document.getElementById('app-body').innerHTML = (TELA_FN[s] || telaWelcome)();
+    document.getElementById('app-title').textContent = TITULOS[s] || 'SmarTravel';
+
+    var podeVoltar = s !== 'welcome' && s !== 'gerando';
+    document.getElementById('app-back').style.display = podeVoltar ? '' : 'none';
+
+    document.getElementById('app-usos').textContent =
+      state.usos > 90 ? 'Plano ativo' : state.usos + ' de 2 roteiros grátis';
+
+    var mostrarAbas = ['roteiro', 'reservas', 'planos', 'perfil'].indexOf(s) >= 0;
+    var tabs = document.getElementById('app-tabs');
+    tabs.style.display = mostrarAbas ? '' : 'none';
+    if (mostrarAbas) {
+      tabs.innerHTML = ABAS.map(function (t) {
+        var ativo = s === t[0];
+        return '<button onclick="resetar(\'' + t[0] + '\')" style="color:' +
+          (ativo ? 'var(--color-accent-700)' : 'var(--color-neutral-700)') + '">' +
+          '<span>' + t[1] + '</span><i style="background:' + (ativo ? 'var(--color-accent)' : 'transparent') + '"></i></button>';
+      }).join('');
+    }
+  }
+
+  /* ── TELA CHEIA (fora do design — pedido para o pitch) ── */
+  function toggleFullscreen() {
+    var phone = document.getElementById('phone');
+    var badge = document.getElementById('fs-badge');
+    var isFs = phone.classList.toggle('fs-mode');
+    document.body.classList.toggle('fs-open', isFs);
+    badge.innerHTML = isFs ? '✕' : '⛶';
+    badge.title = isFs ? 'Sair da tela cheia' : 'Tela cheia';
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.getElementById('phone').classList.contains('fs-mode')) toggleFullscreen();
+  });
+
+  render();
+</script>
+</body>
+</html>
