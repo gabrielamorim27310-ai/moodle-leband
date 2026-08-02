@@ -282,6 +282,7 @@
   /* doar */
   .verif-banner { background: var(--color-accent-2-100); border-radius: 24px; padding: 14px; display: flex; align-items: center; gap: 11px; }
   .verif-ico { width: 40px; height: 40px; border-radius: 999px; background: var(--color-bg); display: grid; place-items: center; font-size: 18px; flex: none; }
+  .forma-grupo { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--text-muted); margin: 6px 0 2px; padding-left: 2px; }
   .forma-btn { text-align: left; cursor: pointer; background: var(--color-surface); border: 2px solid transparent; border-radius: 24px; padding: 14px; display: flex; align-items: center; gap: 12px; font-family: var(--font-body); color: var(--color-text); }
   .forma-ico { width: 40px; height: 40px; flex: none; border-radius: 999px; background: var(--color-bg); display: grid; place-items: center; font-size: 18px; }
   .forma-title { display: block; font-family: var(--font-heading); font-size: 14.5px; }
@@ -474,7 +475,7 @@
     <div>
       <span class="tag tag-accent" style="font-size:12px;padding:6px 14px">Voluntários · Doadores · ONGs</span>
       <h1>Encontre ONGs de confiança perto de você</h1>
-      <p class="hero-lead">Um mapa com todas as causas na palma da mão. Filtre por aquilo que move você — mulheres, animais, crianças, meio ambiente — e doe tempo, serviços ou dinheiro para instituições verificadas.</p>
+      <p class="hero-lead">Um mapa com todas as causas na palma da mão. Filtre por aquilo que move você — mulheres, animais, crianças, meio ambiente — e ajude do jeito que couber para você — dinheiro, itens, serviço, tempo ou alcance.</p>
       <div class="hero-actions">
         <button class="btn btn-primary" onclick="comecar()">Quero ajudar</button>
         <button class="btn btn-secondary" onclick="irPainelONG()">Cadastrar minha ONG</button>
@@ -561,8 +562,8 @@
       </div>
       <div class="card elev-sm" style="padding:26px;gap:10px">
         <span class="feat-ico">🎁</span>
-        <span class="card-title" style="font-size:20px">Três formas de doar</span>
-        <p class="card-body" style="font-size:14px;line-height:1.55">Doe materiais, ofereça serviços e habilidades — aulas, leituras, conversas — ou contribua financeiramente.</p>
+        <span class="card-title" style="font-size:20px">Muitas formas de doar</span>
+        <p class="card-body" style="font-size:14px;line-height:1.55">Dinheiro é só uma delas. Alimentos, roupas, serviço profissional, voluntariado presencial, empréstimo de espaço ou equipamento e até divulgação — cada ONG diz do que precisa.</p>
       </div>
       <div class="card elev-sm" style="padding:26px;gap:10px">
         <span class="feat-ico">🏅</span>
@@ -599,7 +600,7 @@
       <div class="passo">
         <span class="passo-n">3</span>
         <b>Doe do seu jeito</b>
-        <span>Materiais, serviços ou dinheiro — com repasse transparente e taxa justa de 5%.</span>
+        <span>Itens, serviço, tempo, estrutura ou dinheiro. A taxa de 5% só existe nas doações em dinheiro.</span>
       </div>
       <div class="passo">
         <span class="passo-n">4</span>
@@ -733,16 +734,39 @@
 
   var TABS = [['mapa','Mapa','🗺️'],['descobrir','Descobrir','🔍'],['doar','Doar','💚'],['horas','Horas','🏅'],['perfil','Perfil','👤']];
 
+  /* Doar não é só dinheiro. A taxa de 5% incide apenas nas formas em
+     dinheiro; todas as outras passam sem tarifa. */
   var FORMAS = [
-    { k:'material',   icone:'📦',  titulo:'Doação material',  desc:'Roupas, alimentos, higiene e itens da lista de necessidades.' },
-    { k:'servico',    icone:'🧑‍🏫', titulo:'Doação de serviço', desc:'Aulas, leituras, conversas, consultoria e habilidades profissionais.' },
-    { k:'financeiro', icone:'💚',  titulo:'Auxílio financeiro', desc:'Doação única ou recorrente, com repasse transparente.' }
+    { k:'unica',        grupo:'Dinheiro',           icone:'💚',  titulo:'Doação única',            desc:'Um valor agora, com repasse transparente e rastreável.', taxa:true },
+    { k:'recorrente',   grupo:'Dinheiro',           icone:'🔁',  titulo:'Doação mensal',           desc:'Apoio previsível — é com ele que a ONG consegue planejar o ano.', taxa:true },
+    { k:'material',     grupo:'Itens',              icone:'📦',  titulo:'Alimentos e mantimentos', desc:'Cesta básica, água, produtos de limpeza e higiene.' },
+    { k:'roupas',       grupo:'Itens',              icone:'🧥',  titulo:'Roupas e agasalhos',      desc:'Peças limpas e em bom estado, separadas por tamanho.' },
+    { k:'servico',      grupo:'Tempo e habilidade', icone:'🧑‍🏫', titulo:'Serviço profissional',    desc:'Aulas, leitura, consultoria jurídica, atendimento, design.' },
+    { k:'voluntariado', grupo:'Tempo e habilidade', icone:'🙌',  titulo:'Voluntariado presencial', desc:'Mutirões, feiras e plantões, com data marcada no calendário da ONG.' },
+    { k:'espaco',       grupo:'Estrutura',          icone:'🏠',  titulo:'Espaço ou equipamento',   desc:'Empréstimo de sala, veículo, som ou impressora para um evento.' },
+    { k:'divulgacao',   grupo:'Alcance',            icone:'📣',  titulo:'Divulgação',              desc:'Compartilhar a campanha não custa nada e é o que mais falta.' }
   ];
 
   var TEXTO_SEM_TARIFA = {
-    material: 'Sem tarifa: a ONG confirma o recebimento pelo app e você combina o ponto de coleta.',
-    servico:  'Sem tarifa: as horas doadas entram automaticamente no seu certificado de voluntariado.'
+    material:     'Sem tarifa. Você separa os itens, a ONG confirma o recebimento pelo app e vocês combinam o ponto de coleta.',
+    roupas:       'Sem tarifa. Peças limpas e separadas por tamanho poupam à ONG o trabalho de triagem — que costuma ser o gargalo.',
+    servico:      'Sem tarifa. As horas doadas entram automaticamente no seu certificado de voluntariado.',
+    voluntariado: 'Sem tarifa. Você escolhe a data no calendário da ONG e as horas contam para o certificado.',
+    espaco:       'Sem tarifa. Descreva o que pode emprestar e por quanto tempo; a ONG responde pelo app.',
+    divulgacao:   'Custo zero. Para instituição pequena, alcance costuma valer tanto quanto doação.'
   };
+
+  var CTA_FORMA = {
+    unica: 'Continuar doação', recorrente: 'Assinar doação mensal',
+    material: 'Combinar entrega', roupas: 'Combinar entrega',
+    servico: 'Oferecer meu serviço', voluntariado: 'Escolher data',
+    espaco: 'Oferecer estrutura', divulgacao: 'Compartilhar campanha'
+  };
+
+  function formaAtual() {
+    for (var i = 0; i < FORMAS.length; i++) if (FORMAS[i].k === state.forma) return FORMAS[i];
+    return FORMAS[0];
+  }
 
   var HISTORICO = [
     { icone:'👩', nome:'Casa Aurora', atividade:'Oficina de currículo · 12 mai', horas:'6h' },
@@ -765,7 +789,7 @@
   var VALORES = [100, 500, 5000];
 
   var state = {
-    tab: 'mapa', causa: 'Todas', ongId: 'aurora', forma: 'financeiro', valor: 5000,
+    tab: 'mapa', causa: 'Todas', ongId: 'aurora', forma: 'unica', valor: 5000,
     simValor: 5000, horas: 32, doado: 340, confirmado: false, horasRegistradas: false
   };
   var lastTab = null;
@@ -821,7 +845,7 @@
   function continuarDoacao() {
     setState({
       confirmado: true,
-      doado: state.forma === 'financeiro' ? state.doado + state.valor : state.doado
+      doado: formaAtual().taxa ? state.doado + state.valor : state.doado
     });
   }
   function registrarHoras() { setState({ horas: state.horas + 6, horasRegistradas: true }); }
@@ -988,10 +1012,17 @@
   function painelDoar() {
     var ong = ongAtual();
 
+    var grupoAtual = '';
     var formas = FORMAS.map(function (f) {
       var on = state.forma === f.k;
-      return '<button class="forma-btn" style="border-color:' + (on ? 'var(--color-accent)' : 'transparent') + '"' +
-             ' onclick="pickForma(\'' + f.k + '\')">' +
+      var cabecalho = '';
+      if (f.grupo !== grupoAtual) {
+        grupoAtual = f.grupo;
+        cabecalho = '<div class="forma-grupo">' + f.grupo + '</div>';
+      }
+      return cabecalho +
+        '<button class="forma-btn" style="border-color:' + (on ? 'var(--color-accent)' : 'transparent') + '"' +
+        ' onclick="pickForma(\'' + f.k + '\')">' +
         '<span class="forma-ico">' + f.icone + '</span>' +
         '<span style="display:block;flex:1">' +
           '<span class="forma-title">' + f.titulo + '</span>' +
@@ -1001,20 +1032,28 @@
       '</button>';
     }).join('');
 
+    var forma = formaAtual();
     var resumo;
-    if (state.forma === 'financeiro') {
+    if (forma.taxa) {
       var v = state.valor;
+      var mensal = forma.k === 'recorrente';
+      var sufixo = mensal ? ' / mês' : '';
       var chips = VALORES.map(function (n) {
         return '<button class="tag" style="' + chipStyle(v === n) + '" onclick="pickValor(' + n + ')">' + brl(n) + '</button>';
       }).join('');
       resumo =
         '<span class="valores">' + chips + '</span>' +
-        '<span class="resumo-row"><span style="opacity:.7">Sua doação</span><span>' + brl(v) + '</span></span>' +
-        '<span class="resumo-row"><span style="opacity:.7">Taxa ONGoing (5%)</span><span>− ' + brl(v * 0.05) + '</span></span>' +
+        '<span class="resumo-row"><span style="opacity:.7">Sua doação</span><span>' + brl(v) + sufixo + '</span></span>' +
+        '<span class="resumo-row"><span style="opacity:.7">Taxa ONGoing (5%)</span><span>− ' + brl(v * 0.05) + sufixo + '</span></span>' +
         '<span class="resumo-rule"></span>' +
-        '<span class="resumo-total"><span>Vai para a ONG</span><span>' + brl(v * 0.95) + '</span></span>';
+        '<span class="resumo-total"><span>Vai para a ONG</span><span>' + brl(v * 0.95) + sufixo + '</span></span>';
     } else {
-      resumo = '<span style="font-size:12.5px;opacity:.75;line-height:1.5">' + TEXTO_SEM_TARIFA[state.forma] + '</span>';
+      resumo = '<span style="font-size:12.5px;opacity:.75;line-height:1.5">' + TEXTO_SEM_TARIFA[forma.k] + '</span>';
+      // Nas formas em itens, mostra o que esta ONG pediu no mapa.
+      if (forma.k === 'material' || forma.k === 'roupas') {
+        resumo += '<span style="font-size:12.5px;color:var(--color-terra,var(--color-accent));opacity:.9;line-height:1.5">' +
+                  '📍 ' + esc(ong.nome) + ' pede agora: ' + esc(ong.precisa) + '</span>';
+      }
     }
 
     return '<div class="panel">' +
@@ -1029,10 +1068,10 @@
         '</div>' +
         formas +
         '<div class="resumo">' +
-          '<span class="resumo-title">' + (state.forma === 'financeiro' ? 'Transparência da taxa justa' : 'Como funciona') + '</span>' +
+          '<span class="resumo-title">' + (forma.taxa ? 'Transparência da taxa justa' : 'Como funciona') + '</span>' +
           resumo +
           '<button class="btn btn-primary btn-block" style="font-size:13px;padding:11px" onclick="continuarDoacao()">' +
-            (state.confirmado ? 'Doação registrada ✓' : 'Continuar doação') +
+            (state.confirmado ? (forma.taxa ? 'Doação registrada ✓' : 'Registrado ✓') : CTA_FORMA[forma.k]) +
           '</button>' +
         '</div>' +
       '</div>' +
