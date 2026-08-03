@@ -238,6 +238,12 @@
   .atv-meta { font-size: 13px; color: var(--color-neutral-700); }
   .atv-preco { font-size: 13px; padding-top: 3px; color: var(--color-neutral-700); }
 
+  /* Bloco de apoio à apresentação — deliberadamente discreto e rotulado,
+     para a banca não confundir com funcionalidade do produto. */
+  .demo-reset { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--color-divider); }
+  .demo-reset-tag { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 5px; }
+  .demo-reset-txt { font-size: 12px; line-height: 1.5; color: var(--color-neutral-700); margin-bottom: 4px; }
+
   .prog-track { height: 3px; background: var(--color-neutral-300); }
   .prog-fill { height: 3px; background: var(--color-accent); transition: width .12s linear; }
 
@@ -827,12 +833,28 @@
   var ESTILOS = ['Cultura', 'Gastronomia', 'Natureza', 'Vida noturna', 'Compras', 'Arquitetura', 'Praia', 'Com crianças'];
   var ABAS = [['roteiro', 'Roteiro'], ['reservas', 'Reservas'], ['planos', 'Planos'], ['perfil', 'Perfil']];
 
-  var state = {
-    screen: 'welcome', hist: [], destino: 'Lisboa', dias: 4, orcamento: 'Intermediário',
-    companhia: 'Família', estilo: ['Cultura', 'Gastronomia'], dia: 1, atvId: null,
-    reservas: [], plano: 'mensal', usos: 2, prog: 0
-  };
+  /* Uma função em vez de um literal: o reinício da demonstração parte
+     exatamente do mesmo estado inicial, sem risco de os dois saírem de sincronia. */
+  function estadoInicial() {
+    return {
+      screen: 'welcome', hist: [], destino: 'Lisboa', dias: 4, orcamento: 'Intermediário',
+      companhia: 'Família', estilo: ['Cultura', 'Gastronomia'], dia: 1, atvId: null,
+      reservas: [], plano: 'mensal', usos: 2, prog: 0
+    };
+  }
+
+  var state = estadoInicial();
   var timer = null;
+
+  /* Controle do protótipo, não do produto: devolve os dois roteiros grátis
+     para reapresentar o paywall sem precisar recarregar a página. */
+  function reiniciarDemo() {
+    clearInterval(timer);
+    timer = null;
+    state = estadoInicial();
+    telaAnterior = null;
+    render();
+  }
 
   function esc(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -1209,6 +1231,11 @@
         '<button class="btn btn-secondary" style="align-self:flex-start;font-size:14.5px;min-height:44px">Abrir conversa</button>' +
       '</div>' +
       '<button class="btn btn-ghost btn-block" style="min-height:40px;font-size:14px" onclick="irTela(\'planos\')">Ver planos</button>' +
+      '<div class="demo-reset">' +
+        '<div class="demo-reset-tag">Controle do protótipo</div>' +
+        '<div class="demo-reset-txt">Devolve os dois roteiros grátis e limpa as reservas, para apresentar o fluxo de novo do começo.</div>' +
+        '<button class="btn btn-secondary btn-block" style="min-height:40px;font-size:13px" onclick="reiniciarDemo()">Reiniciar demonstração</button>' +
+      '</div>' +
     '</div>';
   }
 
