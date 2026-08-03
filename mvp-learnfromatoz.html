@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23F0E9FE'/><path d='M50 22 L82 38 L50 54 L18 38 Z' fill='%231B2A6B'/><text x='34' y='84' font-size='34' font-family='Arial,sans-serif' font-weight='bold' fill='%232E6BF0'>A</text><text x='56' y='84' font-size='34' font-family='Arial,sans-serif' font-weight='bold' fill='%23E8382C'>Z</text></svg>">
+<title>Learn From A to Z — Conhecimento para transformar vidas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+  :root {
+    /* Paleta tirada da marca do grupo: azul e vermelho do "A to Z",
+       o navy do wordmark e o lilás do fundo do deck. */
+    --azul: #2E6BF0;
+    --azul-escuro: #1B2A6B;
+    --azul-pale: #E8F0FE;
+    --vermelho: #E8382C;
+    --vermelho-pale: #FDEBEA;
+    --roxo: #7B4FE0;
+    --roxo-claro: #C9B0F5;
+    --roxo-pale: #F1EAFE;
+    --amarelo: #FFC42E;
+    --verde: #22B14C;
+    --laranja: #FF8A1F;
+    --rosa: #F0468C;
+
+    --bg: #FFFFFF;
+    --surface: #F8F6FE;
+    --texto: #1B2A6B;
+    --muted: #6C7599;
+    --borda: #E6E2F5;
+    --raio: 18px;
+    --raio-sm: 12px;
+    --sombra: 0 4px 18px rgba(27,42,107,.07);
+    --sombra-lg: 0 22px 60px rgba(27,42,107,.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', system-ui, sans-serif; background: var(--bg);
+    color: var(--texto); font-size: 15px; line-height: 1.6; scroll-behavior: smooth;
+  }
+  h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -.02em; font-weight: 900; }
+  a { color: var(--azul); text-decoration: none; }
+  :focus-visible { outline: 3px solid var(--azul); outline-offset: 2px; }
+  ::selection { background: var(--roxo-claro); }
+
+  /* ── BARRA DO REPOSITÓRIO ── */
+  .repo-bar {
+    background: var(--surface); border-bottom: 1px solid var(--borda);
+    padding: 9px 28px; display: flex; align-items: center; gap: 9px;
+    font-size: 12.5px; color: var(--muted);
+  }
+  .repo-bar a { color: inherit; display: inline-flex; align-items: center; gap: 6px; }
+  .repo-bar a:hover { color: var(--roxo); }
+  .pill { background: var(--roxo-pale); color: var(--roxo); padding: 3px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+
+  /* ── LOGO ── */
+  .marca { display: inline-flex; align-items: center; gap: 11px; }
+  .marca .nome { font-weight: 900; font-size: 20px; color: var(--azul-escuro); letter-spacing: -.03em; white-space: nowrap; }
+  .marca .nome .a { color: var(--azul); }
+  .marca .nome .z { color: var(--vermelho); }
+
+  /* ── CABEÇALHO ── */
+  header.topo {
+    position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,.92);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--borda);
+  }
+  .topo-inner { max-width: 1140px; margin: 0 auto; display: flex; align-items: center; gap: 26px; padding: 13px 28px; }
+  .topo nav { display: flex; gap: 3px; margin-left: 10px; }
+  .topo nav a { color: var(--texto); font-size: 14.5px; font-weight: 700; padding: 7px 13px; border-radius: 999px; }
+  .topo nav a:hover { background: var(--roxo-pale); color: var(--roxo); }
+  .topo-dir { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer;
+    padding: 12px 22px; border-radius: 999px; border: 2px solid transparent;
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-azul { background: var(--azul); color: #fff; box-shadow: 0 4px 14px rgba(46,107,240,.3); }
+  .btn-azul:hover { background: #1F58D8; }
+  .btn-roxo { background: var(--roxo); color: #fff; box-shadow: 0 4px 14px rgba(123,79,224,.3); }
+  .btn-roxo:hover { background: #6A3ED0; }
+  .btn-linha { background: #fff; color: var(--texto); border-color: var(--borda); }
+  .btn-linha:hover { border-color: var(--roxo); color: var(--roxo); }
+  .btn-sm { font-size: 13px; padding: 8px 16px; }
+
+  main { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
+
+  /* ── HERO ── */
+  .hero { display: grid; grid-template-columns: 1fr auto; gap: 56px; align-items: center; padding: 56px 0 48px; }
+  .selo-hero {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--roxo-pale);
+    color: var(--roxo); font-weight: 800; font-size: 13px; padding: 7px 16px;
+    border-radius: 999px; margin-bottom: 20px;
+  }
+  .hero h1 { font-size: clamp(2.1rem, 4.4vw, 3.35rem); margin-bottom: 16px; }
+  .hero h1 .azul { color: var(--azul); }
+  .hero h1 .verm { color: var(--vermelho); }
+  .hero p.lead { font-size: 18px; color: var(--muted); max-width: 46ch; margin-bottom: 26px; }
+  .hero-acoes { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-marcas { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 28px; }
+  .hero-marca { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--muted); }
+  .hero-marca i { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-style: normal; color: #fff; }
+
+  /* ── CELULAR ── */
+  .palco { display: flex; flex-direction: column; align-items: center; gap: 13px; position: relative; }
+  .palco::before {
+    content: ''; position: absolute; width: 330px; height: 330px; border-radius: 50%;
+    background: var(--roxo-claro); opacity: .5; top: 4%; z-index: 0;
+  }
+  .fone {
+    position: relative; z-index: 1; width: 348px; background: var(--azul-escuro);
+    border-radius: 42px; padding: 13px; box-shadow: var(--sombra-lg);
+    transition: all .35s cubic-bezier(.4,0,.2,1);
+  }
+  .fone::before {
+    content: ''; position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
+    width: 78px; height: 21px; background: var(--azul-escuro); border-radius: 0 0 13px 13px; z-index: 30;
+  }
+  .tela { background: var(--bg); border-radius: 31px; overflow: hidden; height: 690px; display: flex; flex-direction: column; }
+
+  .app-topo { padding: 40px 16px 10px; background: var(--bg); flex: none; display: flex; align-items: center; gap: 9px; }
+  .app-topo .titulo { font-weight: 900; font-size: 16px; }
+  .app-topo .xp { margin-left: auto; display: flex; align-items: center; gap: 5px; background: var(--amarelo); color: #6A4A00; font-size: 11.5px; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
+  .app-corpo { flex: 1; overflow-y: auto; padding: 4px 16px 62px; scrollbar-width: none; }
+  .app-corpo::-webkit-scrollbar { display: none; }
+  .painel { animation: entra .24s ease both; }
+  @keyframes entra { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+
+  .abas { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--borda); display: flex; padding: 8px 4px 12px; z-index: 20; }
+  .abas button { flex: 1; border: 0; background: none; cursor: pointer; font-family: inherit; padding: 5px 2px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .abas .ic { font-size: 17px; line-height: 1; }
+  .abas .lb { font-size: 9.5px; font-weight: 800; }
+
+  /* blocos do app */
+  .cartao { background: #fff; border: 1.5px solid var(--borda); border-radius: var(--raio-sm); padding: 12px; margin-bottom: 9px; }
+  .rotulo { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 14px 0 8px; }
+  .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; margin-bottom: 10px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: none; padding: 6px 13px; border-radius: 999px; font-size: 12px; font-weight: 800; cursor: pointer; border: 1.5px solid var(--borda); background: #fff; color: var(--muted); font-family: inherit; }
+  .chip.on { background: var(--roxo); border-color: var(--roxo); color: #fff; }
+
+  .materia { display: flex; gap: 11px; align-items: center; }
+  .materia-ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 19px; flex: none; }
+  .materia b { display: block; font-size: 13.5px; font-weight: 800; }
+  .materia small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .barra { height: 6px; background: var(--surface); border-radius: 99px; overflow: hidden; margin-top: 7px; }
+  .barra i { display: block; height: 100%; border-radius: 99px; }
+  .verif { display: inline-flex; align-items: center; gap: 3px; background: var(--azul-pale); color: var(--azul); font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 999px; }
+
+  /* quiz */
+  .quiz-pergunta { font-size: 15px; font-weight: 800; line-height: 1.35; margin: 6px 0 12px; }
+  .quiz-op {
+    width: 100%; text-align: left; font-family: inherit; font-size: 13.5px; font-weight: 700;
+    background: #fff; border: 2px solid var(--borda); border-radius: var(--raio-sm);
+    padding: 11px 13px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 9px;
+    color: var(--texto); transition: border-color .15s, background .15s;
+  }
+  .quiz-op:hover { border-color: var(--roxo-claro); }
+  .quiz-op .letra { width: 22px; height: 22px; border-radius: 50%; background: var(--surface); color: var(--muted); display: grid; place-items: center; font-size: 11px; font-weight: 900; flex: none; }
+  .quiz-op.certa { border-color: var(--verde); background: #F0FBF3; }
+  .quiz-op.certa .letra { background: var(--verde); color: #fff; }
+  .quiz-op.errada { border-color: var(--vermelho); background: var(--vermelho-pale); }
+  .quiz-op.errada .letra { background: var(--vermelho); color: #fff; }
+  .quiz-feedback { border-radius: var(--raio-sm); padding: 11px 13px; font-size: 12.5px; font-weight: 700; line-height: 1.5; margin-top: 4px; }
+  .quiz-feedback.ok { background: #F0FBF3; color: #14803A; }
+  .quiz-feedback.nao { background: var(--vermelho-pale); color: #A82019; }
+
+  /* tela cheia */
+  .fs-btn {
+    position: absolute; top: 16px; right: -12px; z-index: 40; width: 31px; height: 31px;
+    border-radius: 50%; background: var(--vermelho); color: #fff; border: 2px solid #fff;
+    cursor: pointer; display: grid; place-items: center; font-size: 13px;
+    box-shadow: 0 3px 10px rgba(232,56,44,.4); transition: transform .18s;
+  }
+  .fs-btn:hover { transform: scale(1.12); }
+  .fs-link { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12.5px; font-weight: 700; color: var(--muted); background: var(--surface); border: 1.5px solid var(--borda); padding: 6px 15px; border-radius: 999px; user-select: none; }
+  .fs-link:hover { color: var(--roxo); border-color: var(--roxo); }
+  .fone.cheio { position: fixed !important; inset: 0 !important; width: 100dvw !important; height: 100dvh !important; border-radius: 0 !important; padding: 0 !important; z-index: 9999 !important; }
+  .fone.cheio::before { display: none; }
+  .fone.cheio .tela { border-radius: 0 !important; height: 100dvh !important; }
+  .fone.cheio .app-topo { padding-top: 16px; }
+  .fone.cheio .fs-btn { top: 12px; right: 12px; }
+  .fone.cheio ~ .fs-link { display: none; }
+  body.travado { overflow: hidden; }
+
+  /* ── SEÇÕES ── */
+  .secao { padding: 70px 0; scroll-margin-top: 74px; }
+  .secao-topo { text-align: center; max-width: 620px; margin: 0 auto 44px; }
+  .kicker { display: inline-block; font-size: 12.5px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: var(--roxo); margin-bottom: 12px; }
+  .secao-topo h2 { font-size: clamp(1.7rem, 3.2vw, 2.35rem); margin-bottom: 12px; }
+  .secao-topo p { color: var(--muted); font-size: 16.5px; }
+
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+
+  .dado { background: var(--surface); border-radius: var(--raio); padding: 26px 22px; border-top: 5px solid var(--vermelho); }
+  .dado b { display: block; font-size: 42px; font-weight: 900; line-height: 1; color: var(--vermelho); letter-spacing: -.03em; }
+  .dado p { font-size: 14.5px; color: var(--muted); margin-top: 10px; font-weight: 600; }
+  .dado cite { display: block; font-size: 12px; color: var(--muted); margin-top: 10px; font-style: normal; opacity: .8; }
+
+  .func { background: #fff; border: 1.5px solid var(--borda); border-radius: var(--raio); padding: 26px; transition: transform .2s, box-shadow .2s; }
+  .func:hover { transform: translateY(-4px); box-shadow: var(--sombra); }
+  .func-ico { width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center; font-size: 24px; margin-bottom: 15px; }
+  .func h3 { font-size: 17.5px; margin-bottom: 8px; }
+  .func p { font-size: 14.5px; color: var(--muted); }
+
+  /* quem somos — a tela mais importante */
+  .quem { background: linear-gradient(160deg, var(--roxo-pale), #EAF1FE); }
+  .quem-caixa { background: #fff; border-radius: 26px; padding: 40px; box-shadow: var(--sombra); }
+  .quem-caixa h3 { font-size: 21px; margin-bottom: 14px; }
+  .oferta { display: flex; gap: 13px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--borda); }
+  .oferta:last-child { border-bottom: 0; }
+  .oferta-ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 19px; flex: none; }
+  .oferta b { display: block; font-size: 15.5px; font-weight: 800; margin-bottom: 3px; }
+  .oferta span { font-size: 14px; color: var(--muted); }
+  .objetivo { background: var(--azul-escuro); color: #fff; border-radius: 22px; padding: 32px; }
+  .objetivo .kicker { color: var(--roxo-claro); }
+  .objetivo h3 { font-size: 24px; margin-bottom: 12px; }
+  .objetivo p { font-size: 15.5px; opacity: .88; }
+  .objetivo .frase { margin-top: 22px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.2); font-size: 16px; font-weight: 800; }
+  .objetivo .frase span { color: var(--amarelo); }
+
+  .pilar { display: flex; gap: 13px; align-items: flex-start; }
+  .pilar i { width: 30px; height: 30px; border-radius: 50%; background: var(--roxo); color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 900; font-style: normal; flex: none; }
+  .pilar b { display: block; font-size: 15.5px; font-weight: 800; margin-bottom: 3px; }
+  .pilar span { font-size: 14px; color: var(--muted); }
+
+  /* ── PLANOS ── */
+  .plano { background: #fff; border: 2px solid var(--borda); border-radius: 22px; padding: 30px; display: flex; flex-direction: column; }
+  .plano.destaque { border-color: var(--roxo); box-shadow: 0 12px 34px rgba(123,79,224,.16); }
+  .plano-topo { padding-bottom: 18px; border-bottom: 1px solid var(--borda); margin-bottom: 18px; }
+  .plano-nome { font-size: 19px; font-weight: 900; margin-bottom: 8px; }
+  .plano-nome .plus { background: linear-gradient(135deg, #C9A227, #E8C766); color: #4A3708; font-size: 13px; padding: 2px 10px; border-radius: 999px; vertical-align: middle; }
+  .plano-preco { font-size: 38px; font-weight: 900; letter-spacing: -.03em; color: var(--azul-escuro); }
+  .plano-preco small { font-size: 16px; font-weight: 800; color: var(--muted); }
+  .plano-nota { font-size: 13.5px; color: var(--muted); font-weight: 700; margin-top: 4px; }
+  .plano-lista { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .plano-lista li { font-size: 14.5px; font-weight: 600; padding-left: 27px; position: relative; }
+  .plano-lista li::before { content: '✓'; position: absolute; left: 0; top: 0; width: 19px; height: 19px; border-radius: 50%; background: var(--verde); color: #fff; font-size: 10px; font-weight: 900; display: grid; place-items: center; }
+  .plano-lista li.lim::before { content: '!'; background: var(--amarelo); color: #6A4A00; }
+
+  .escada { margin-top: 26px; background: var(--azul-escuro); border-radius: 24px; padding: 34px; color: #fff; }
+  .escada-topo { max-width: 620px; margin-bottom: 26px; }
+  .escada-topo h3 { font-size: clamp(1.4rem, 2.4vw, 1.8rem); margin-bottom: 10px; }
+  .escada-topo p { font-size: 15px; opacity: .82; }
+  .escada-degraus { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: end; }
+  .degrau { background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.16); border-radius: 16px; padding: 18px 16px; }
+  .degrau:nth-child(1) { margin-top: 36px; }
+  .degrau:nth-child(2) { margin-top: 24px; }
+  .degrau:nth-child(3) { margin-top: 12px; }
+  .degrau.alvo { background: var(--verde); border-color: var(--verde); }
+  .degrau .nv { display: block; font-size: 11.5px; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; opacity: .75; margin-bottom: 6px; }
+  .degrau b { display: block; font-size: 25px; font-weight: 900; letter-spacing: -.02em; }
+  .degrau small { display: block; font-size: 12px; opacity: .8; margin-top: 5px; font-weight: 700; line-height: 1.35; }
+
+  .publico { background: var(--surface); }
+  .idade { background: #fff; border: 1.5px solid var(--borda); border-radius: var(--raio); padding: 26px; text-align: center; }
+  .idade .n { font-size: 36px; font-weight: 900; color: var(--azul); letter-spacing: -.03em; }
+  .idade b { display: block; font-size: 16px; margin: 6px 0 6px; }
+  .idade p { font-size: 14px; color: var(--muted); }
+
+  .cta { text-align: center; padding: 76px 0 84px; }
+  .cta h2 { font-size: clamp(1.9rem, 3.8vw, 2.7rem); margin-bottom: 14px; }
+  .cta p { color: var(--muted); font-size: 17px; max-width: 46ch; margin: 0 auto 28px; }
+
+  footer { background: var(--azul-escuro); color: rgba(255,255,255,.65); text-align: center; padding: 34px 28px; font-size: 13.5px; line-height: 1.8; }
+  footer strong { color: #fff; }
+  footer .equipe { font-size: 13px; opacity: .8; }
+
+  @media (max-width: 1000px) {
+    .hero { grid-template-columns: 1fr; gap: 40px; justify-items: center; text-align: center; }
+    .hero p.lead { max-width: none; }
+    .hero-acoes, .hero-marcas { justify-content: center; }
+    .palco { order: -1; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; gap: 28px; }
+    .topo nav { display: none; }
+  }
+  @media (max-width: 620px) {
+    main, .topo-inner { padding-left: 18px; padding-right: 18px; }
+    .grid-4, .grid-3 { grid-template-columns: 1fr; }
+    .quem-caixa, .objetivo { padding: 26px 20px; }
+    .fone { width: min(348px, 92vw); }
+    .tela { height: min(690px, 80vh); }
+    .palco::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── BARRA DO REPOSITÓRIO ── -->
+<div class="repo-bar">
+  <a href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar ao Repositório de MVPs
+  </a>
+  <span>·</span>
+  <span class="pill">Liga de Empreendedorismo · Grupo 3</span>
+</div>
+
+<!-- ── CABEÇALHO ── -->
+<header class="topo">
+  <div class="topo-inner">
+    <span class="marca">
+      <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="#F1EAFE"/>
+        <circle cx="32" cy="8.5" r="5" fill="#7B4FE0"/>
+        <circle cx="53" cy="20" r="5" fill="#FFC42E"/>
+        <circle cx="53" cy="44" r="5" fill="#FF8A1F"/>
+        <circle cx="32" cy="55.5" r="5" fill="#F0468C"/>
+        <circle cx="11" cy="44" r="5" fill="#22B14C"/>
+        <circle cx="11" cy="20" r="5" fill="#2E6BF0"/>
+        <path d="M32 17 L48 25 L32 33 L16 25 Z" fill="#1B2A6B"/>
+        <path d="M44 28.5 v7" stroke="#1B2A6B" stroke-width="2.4" stroke-linecap="round"/>
+        <text x="21" y="49" font-family="Nunito, Arial" font-size="17" font-weight="900" fill="#2E6BF0">A</text>
+        <text x="34" y="49" font-family="Nunito, Arial" font-size="17" font-weight="900" fill="#E8382C">Z</text>
+      </svg>
+      <span class="nome">Learn From <span class="a">A</span> to <span class="z">Z</span></span>
+    </span>
+    <nav>
+      <a href="#problema">O problema</a>
+      <a href="#quem">Quem somos</a>
+      <a href="#plataforma">A plataforma</a>
+      <a href="#planos">Planos</a>
+      <a href="#publico">Para quem</a>
+    </nav>
+    <div class="topo-dir">
+      <button class="btn btn-roxo btn-sm" onclick="abrirApp('sobre')">Conhecer o app</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div>
+      <div class="selo-hero">💜 Plataforma gratuita para estudantes de baixa renda</div>
+      <h1>Conhecimento para<br>transformar <span class="azul">vidas</span>, do <span class="azul">A</span> ao <span class="verm">Z</span>.</h1>
+      <p class="lead">Aulas on-line, exercícios em formato de game e matérias que a escola não ensina — reunidos em um app pensado para quem a desigualdade deixou para trás.</p>
+      <div class="hero-acoes">
+        <button class="btn btn-azul" onclick="abrirApp('sobre')">Ver quem somos</button>
+        <button class="btn btn-linha" onclick="abrirApp('games')">Testar um exercício</button>
+      </div>
+      <div class="hero-marcas">
+        <div class="hero-marca"><i style="background:var(--verde)">✓</i> Aulas gratuitas</div>
+        <div class="hero-marca"><i style="background:var(--azul)">✓</i> Revisadas por especialistas</div>
+        <div class="hero-marca"><i style="background:var(--roxo)">✓</i> Gamificação com IA</div>
+      </div>
+    </div>
+
+    <div class="palco">
+      <div class="fone" id="fone">
+        <button class="fs-btn" id="fs-btn" onclick="telaCheia()" title="Tela cheia">⛶</button>
+        <div class="tela">
+          <div class="app-topo">
+            <svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true">
+              <circle cx="32" cy="32" r="30" fill="#F1EAFE"/>
+              <path d="M32 17 L48 25 L32 33 L16 25 Z" fill="#1B2A6B"/>
+              <text x="21" y="49" font-family="Nunito, Arial" font-size="17" font-weight="900" fill="#2E6BF0">A</text>
+              <text x="34" y="49" font-family="Nunito, Arial" font-size="17" font-weight="900" fill="#E8382C">Z</text>
+            </svg>
+            <span class="titulo" id="app-titulo">Sobre</span>
+            <span class="xp">⚡ <span id="app-xp">1.240</span> XP</span>
+          </div>
+          <div class="app-corpo" id="app-corpo"></div>
+          <div class="abas" id="app-abas"></div>
+        </div>
+      </div>
+      <div class="fs-link" onclick="telaCheia()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        Ver em tela cheia
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROBLEMA ── -->
+  <section class="secao" id="problema">
+    <div class="secao-topo">
+      <span class="kicker">O problema</span>
+      <h2>Não é falta de vontade. É falta de acesso.</h2>
+      <p>O estudante de baixa renda não aprende menos porque se esforça menos — ele estuda em uma escola com menos estrutura, sem reforço fora da sala e sem alguém para explicar de novo o que não entendeu.</p>
+    </div>
+    <div class="grid-4">
+      <div class="dado">
+        <b>61%</b>
+        <p>das crianças e jovens brasileiros vivem privação de direitos básicos, educação inclusa.</p>
+        <cite>Unicef</cite>
+      </div>
+      <div class="dado">
+        <b>40%</b>
+        <p>dos estudantes enfrentam dificuldade na alfabetização — o cenário é pior entre os mais pobres.</p>
+        <cite>Levantamento citado no pitch</cite>
+      </div>
+      <div class="dado">
+        <b>38,7%</b>
+        <p>é a fatia de salas de aula com estrutura adequada; a falta dela afeta o aprendizado.</p>
+        <cite>Anuário Brasileiro da Educação Básica</cite>
+      </div>
+      <div class="dado">
+        <b>31</b>
+        <p>escolas públicas de baixa renda mantêm excelência no ensino desde 2011 — eram 215.</p>
+        <cite>Pesquisa citada no G1</cite>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-top:34px">
+      <div class="func">
+        <div class="func-ico" style="background:var(--vermelho-pale)">🏫</div>
+        <h3>A escola pública não dá conta sozinha</h3>
+        <p>Problemas de ensino e de infraestrutura recaem sobre o aluno, que chega ao ensino médio com lacunas do fundamental.</p>
+      </div>
+      <div class="func">
+        <div class="func-ico" style="background:var(--azul-pale)">🤖</div>
+        <h3>Nem toda tecnologia resolve</h3>
+        <p>A IA abriu caminho para novos sistemas de ensino, mas poucos entregam um estudo completo — a maioria vira só um chat que responde.</p>
+      </div>
+      <div class="func">
+        <div class="func-ico" style="background:var(--roxo-pale)">💸</div>
+        <h3>Reforço custa caro</h3>
+        <p>Curso particular, plataforma paga e professor de apoio ficam fora do alcance justamente de quem mais precisaria deles.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ── QUEM SOMOS — a tela mais importante ── -->
+<section class="secao quem" id="quem">
+  <main>
+    <div class="secao-topo">
+      <span class="kicker">Quem somos</span>
+      <h2>Uma plataforma digital inteira, de graça</h2>
+      <p>A Learn From A to Z reúne o que um estudante precisa para aprender de verdade — e devolve isso sem cobrar nada de quem não pode pagar.</p>
+    </div>
+    <div class="grid-2">
+      <div class="quem-caixa">
+        <h3>O que a plataforma oferece</h3>
+        <div class="oferta">
+          <div class="oferta-ico" style="background:var(--azul-pale)">🎥</div>
+          <div>
+            <b>Aulas on-line</b>
+            <span>Matérias básicas do fundamental, o conteúdo do ensino médio e assuntos que não entram no currículo normal da escola.</span>
+          </div>
+        </div>
+        <div class="oferta">
+          <div class="oferta-ico" style="background:var(--vermelho-pale)">✏️</div>
+          <div>
+            <b>Exercícios</b>
+            <span>Prática logo depois da aula, com correção na hora e explicação de onde o raciocínio saiu do trilho.</span>
+          </div>
+        </div>
+        <div class="oferta">
+          <div class="oferta-ico" style="background:var(--roxo-pale)">🎮</div>
+          <div>
+            <b>Aprendizado gamificado com IA</b>
+            <span>Os exercícios viram desafios, e a IA acompanha os erros para insistir no que você ainda não domina.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="objetivo">
+        <span class="kicker">Nosso objetivo</span>
+        <h3>Despertar a paixão pelo aprendizado</h3>
+        <p>Não queremos só melhorar nota. Queremos que o estudante descubra que gosta de aprender — porque é essa vontade que sustenta o estudo depois que a plataforma sai de cena.</p>
+        <p style="margin-top:14px">E, no caminho, formar bons cidadãos: gente que entende o mundo em que vive e tem instrumento para mudar o próprio lugar nele.</p>
+        <div class="frase">Aprenda. Cresça. <span>Realize.</span> ♡</div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<main>
+  <!-- ── A PLATAFORMA ── -->
+  <section class="secao" id="plataforma">
+    <div class="secao-topo">
+      <span class="kicker">Como funcionaria</span>
+      <h2>Cinco compromissos da plataforma</h2>
+      <p>O usuário teria acesso a aulas gratuitas revisadas por especialistas parceiros e a recursos imersivos que mapeiam o próprio aprendizado.</p>
+    </div>
+    <div class="grid-2" style="align-items:start;gap:34px">
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <div class="pilar">
+          <i>1</i>
+          <div><b>Ensino revisado por especialistas</b><span>Todo conteúdo passa por professores parceiros antes de ir ao ar. Aula gratuita não pode significar aula descuidada.</span></div>
+        </div>
+        <div class="pilar">
+          <i>2</i>
+          <div><b>Personalização por IA</b><span>A plataforma percebe onde você erra e refaz a trilha em cima disso, em vez de empurrar o mesmo conteúdo para todo mundo.</span></div>
+        </div>
+        <div class="pilar">
+          <i>3</i>
+          <div><b>Aprendizagem ativa</b><span>Assistir não basta: cada aula termina em exercício, e cada erro vira uma explicação.</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <div class="pilar">
+          <i>4</i>
+          <div><b>Gamificação com propósito</b><span>Pontos e ofensiva existem para sustentar o hábito de estudar, não para virar o objetivo do app.</span></div>
+        </div>
+        <div class="pilar">
+          <i>5</i>
+          <div><b>Gestão inteligente da rotina</b><span>O app monta o plano da semana com o tempo que você realmente tem, e ajusta quando a semana aperta.</span></div>
+        </div>
+        <div class="pilar">
+          <i>+</i>
+          <div><b>Parcerias e avaliação constante</b><span>Parcerias externas ampliam o acervo, e a eficácia é medida sempre — se uma trilha não faz o aluno avançar, ela é refeita.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ── PLANOS ── -->
+<section class="secao" id="planos" style="background:var(--surface)">
+  <main>
+    <div class="secao-topo">
+      <span class="kicker">Sistema freemium</span>
+      <h2>De graça para todos. Mais barato para quem estuda.</h2>
+      <p>O plano gratuito já entrega a maior parte do ensino médio. E, no Premium, a mensalidade cai conforme o aluno se compromete — quanto mais constante o estudo, menos ele paga.</p>
+    </div>
+
+    <div class="grid-2" style="align-items:stretch;gap:24px">
+      <div class="plano">
+        <div class="plano-topo">
+          <div class="plano-nome">Plano gratuito</div>
+          <div class="plano-preco">R$ 0</div>
+          <div class="plano-nota">para sempre, com anúncios</div>
+        </div>
+        <ul class="plano-lista">
+          <li>Aulas sobre matérias básicas do fundamental</li>
+          <li>Exercícios gamificados e sistema imersivo de aprendizado</li>
+          <li>Acesso à maioria dos conteúdos do ensino médio</li>
+          <li>Acesso parcial às matérias especiais</li>
+          <li class="lim">Com anúncios</li>
+        </ul>
+      </div>
+
+      <div class="plano destaque">
+        <div class="plano-topo">
+          <div class="plano-nome">A to Z <span class="plus">Plus</span></div>
+          <div class="plano-preco">R$ 49,90<small>/mês</small></div>
+          <div class="plano-nota">e cai até R$ 27,90 conforme você estuda</div>
+        </div>
+        <ul class="plano-lista">
+          <li>Todas as aulas e exercícios da plataforma</li>
+          <li>Todas as ferramentas de imersão</li>
+          <li>Todas as ferramentas de aprendizado por gamificação</li>
+          <li>Acesso total às matérias especiais</li>
+          <li>Sem anúncios</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="escada">
+      <div class="escada-topo">
+        <span class="kicker" style="color:var(--amarelo)">O diferencial do modelo</span>
+        <h3>Estudar sai mais barato do que não estudar</h3>
+        <p>Em vez de desconto por tempo de contrato, o preço cai por constância. O aluno que aparece todo dia paga menos — e a plataforma só ganha quando ele realmente aprende.</p>
+      </div>
+      <div class="escada-degraus">
+        <div class="degrau"><span class="nv">Nível 1</span><b>R$ 49,90</b><small>ao assinar</small></div>
+        <div class="degrau"><span class="nv">Nível 2</span><b>R$ 39,90</b><small>15 dias de ofensiva</small></div>
+        <div class="degrau"><span class="nv">Nível 3</span><b>R$ 32,90</b><small>30 dias e 80% das metas</small></div>
+        <div class="degrau alvo"><span class="nv">Nível 4</span><b>R$ 27,90</b><small>90 dias mantendo a rotina</small></div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ── PARA QUEM ── -->
+<section class="secao publico" id="publico">
+  <main>
+    <div class="secao-topo">
+      <span class="kicker">Para quem</span>
+      <h2>Jovens de 12 a 18 anos</h2>
+      <p>A faixa em que o estudo fica mais exigente e o apoio fora da escola faz a maior diferença — para o bem ou para o prejuízo.</p>
+    </div>
+    <div class="grid-3">
+      <div class="idade">
+        <div class="n">12–14</div>
+        <b>Fim do fundamental</b>
+        <p>Fechando lacunas antes que virem bola de neve no ensino médio.</p>
+      </div>
+      <div class="idade">
+        <div class="n">15–17</div>
+        <b>Ensino médio</b>
+        <p>Acompanhando o conteúdo da série e se preparando para as avaliações que decidem o próximo passo.</p>
+      </div>
+      <div class="idade">
+        <div class="n">18</div>
+        <b>Vestibular e primeiro emprego</b>
+        <p>Revisão completa, mais as matérias de fora do currículo que o mercado cobra e a escola não ensinou.</p>
+      </div>
+    </div>
+  </main>
+</section>
+
+<main>
+  <section class="cta">
+    <span class="kicker">Comece agora</span>
+    <h2>Aprenda. Cresça. Realize.</h2>
+    <p>Toque no celular acima e percorra o app: quem somos, as aulas, os exercícios em formato de game e o acompanhamento da rotina.</p>
+    <button class="btn btn-azul" style="font-size:16px;padding:15px 30px" onclick="abrirApp('sobre')">Conhecer a plataforma</button>
+  </section>
+</main>
+
+<footer>
+  <strong>Learn From A to Z</strong> · Conhecimento para transformar vidas<br>
+  Liga de Empreendedorismo · Grupo 3<br>
+  <span class="equipe">Ana Beatriz Couto · Davi Abe · Felipe Massaki Ohotaguro · Henrique Cavalieri</span><br>
+  <span class="equipe">MVP implementado por Claude Code a partir do pitch do grupo</span>
+</footer>
+
+<script>
+  /* ══════════════════════════════════════════════════════════════
+     Estado e dados do protótipo
+     ══════════════════════════════════════════════════════════════ */
+
+  var ABAS = [
+    ['sobre',     'Sobre',     '💜'],
+    ['aulas',     'Aulas',     '🎥'],
+    ['games',     'Games',     '🎮'],
+    ['rotina',    'Rotina',    '📅'],
+    ['perfil',    'Perfil',    '👤']
+  ];
+
+  var TITULOS = { sobre: 'Sobre', aulas: 'Aulas', games: 'Exercícios', rotina: 'Minha rotina', perfil: 'Perfil' };
+
+  var MATERIAS = [
+    { nome: 'Matemática',        nivel: 'Ensino médio', ico: '📐', cor: 'var(--azul)',     bg: 'var(--azul-pale)',     pct: 68, aulas: 42 },
+    { nome: 'Português',         nivel: 'Ensino médio', ico: '📖', cor: 'var(--vermelho)', bg: 'var(--vermelho-pale)', pct: 54, aulas: 38 },
+    { nome: 'Biologia',          nivel: 'Ensino médio', ico: '🧪', cor: 'var(--verde)',    bg: '#EAF7EE',              pct: 31, aulas: 29 },
+    { nome: 'História',          nivel: 'Ensino médio', ico: '🏛️', cor: 'var(--laranja)',  bg: '#FFF1E3',              pct: 47, aulas: 26 },
+    { nome: 'Física',            nivel: 'Ensino médio', ico: '⚛️', cor: 'var(--roxo)',     bg: 'var(--roxo-pale)',     pct: 22, aulas: 31 },
+    { nome: 'Frações e razões',  nivel: 'Fundamental',  ico: '🔢', cor: 'var(--azul)',     bg: 'var(--azul-pale)',     pct: 92, aulas: 18 },
+    { nome: 'Leitura e escrita', nivel: 'Fundamental',  ico: '✍️', cor: 'var(--rosa)',     bg: '#FEECF4',              pct: 76, aulas: 22 },
+    { nome: 'Educação financeira', nivel: 'Fora do currículo', ico: '💰', cor: 'var(--verde)',   bg: '#EAF7EE',          pct: 12, aulas: 14 },
+    { nome: 'Programação',       nivel: 'Fora do currículo', ico: '💻', cor: 'var(--azul)',     bg: 'var(--azul-pale)', pct: 0,  aulas: 20 },
+    { nome: 'Oratória',          nivel: 'Fora do currículo', ico: '🎤', cor: 'var(--laranja)',  bg: '#FFF1E3',          pct: 0,  aulas: 11 },
+    { nome: 'Direitos e cidadania', nivel: 'Fora do currículo', ico: '⚖️', cor: 'var(--roxo)',  bg: 'var(--roxo-pale)', pct: 8, aulas: 9 }
+  ];
+
+  var NIVEIS = ['Todos', 'Fundamental', 'Ensino médio', 'Fora do currículo'];
+
+  var QUIZ = [
+    { materia: 'Matemática', pergunta: 'Qual é o valor de x na equação 2x + 6 = 20?',
+      opcoes: ['x = 5', 'x = 7', 'x = 10', 'x = 13'], correta: 1,
+      explica: 'Tire o 6 dos dois lados (2x = 14) e depois divida por 2. Chega em x = 7.' },
+    { materia: 'Português', pergunta: 'Qual das palavras está escrita corretamente?',
+      opcoes: ['excessão', 'exceção', 'esceção', 'excesão'], correta: 1,
+      explica: 'É "exceção", com ç. A confusão vem de "excesso", que se escreve com ss e tem outra origem.' },
+    { materia: 'Biologia', pergunta: 'Qual gás é o principal responsável pelo aumento do efeito estufa?',
+      opcoes: ['Oxigênio (O₂)', 'Nitrogênio (N₂)', 'Gás carbônico (CO₂)', 'Hélio (He)'], correta: 2,
+      explica: 'O CO₂ retém calor na atmosfera. Ele vem sobretudo da queima de combustíveis fósseis.' },
+    { materia: 'Educação financeira', pergunta: 'Guardando R$ 50 por mês, sem juros, quanto você terá em um ano?',
+      opcoes: ['R$ 500', 'R$ 550', 'R$ 600', 'R$ 650'], correta: 2,
+      explica: 'São 12 meses × R$ 50 = R$ 600. Com juros de poupança daria um pouco mais.' }
+  ];
+
+  var CONQUISTAS = [
+    { ico: '🔥', nome: 'Ofensiva de 12 dias', desc: 'Estudou todo dia por duas semanas' },
+    { ico: '📐', nome: 'Mestre das equações', desc: '50 exercícios de álgebra corretos' },
+    { ico: '🌅', nome: 'Madrugador', desc: '10 aulas assistidas antes das 8h' },
+    { ico: '🎯', nome: 'Precisão', desc: '20 acertos seguidos no quiz' }
+  ];
+
+  /* Escada de preço do plano Premium: o valor cai conforme a constância.
+     Os valores são os do pitch; os critérios de cada nível são proposta minha. */
+  var PRECOS = [
+    { preco: 'R$ 49,90', dias: 0 },
+    { preco: 'R$ 39,90', dias: 15 },
+    { preco: 'R$ 32,90', dias: 30 },
+    { preco: 'R$ 27,90', dias: 90 }
+  ];
+
+  function nivelPreco() {
+    var n = 1;
+    for (var i = 0; i < PRECOS.length; i++) if (state.ofensiva >= PRECOS[i].dias) n = i + 1;
+    var prox = PRECOS[n];   // undefined quando já está no último nível
+    return { n: n, preco: PRECOS[n - 1].preco, faltam: prox ? prox.dias - state.ofensiva : 0 };
+  }
+
+  var state = { aba: 'sobre', nivel: 'Todos', quiz: 0, resposta: null, xp: 1240, ofensiva: 12, acertos: 0 };
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function setState(p) { Object.assign(state, p); render(); }
+
+  /* ── TELAS ── */
+  function telaSobre() {
+    return '<div class="painel">' +
+      '<div style="text-align:center;padding:12px 0 6px">' +
+        '<svg width="76" height="76" viewBox="0 0 64 64" aria-hidden="true">' +
+          '<circle cx="32" cy="32" r="30" fill="#F1EAFE"/>' +
+          '<circle cx="32" cy="8.5" r="5" fill="#7B4FE0"/><circle cx="53" cy="20" r="5" fill="#FFC42E"/>' +
+          '<circle cx="53" cy="44" r="5" fill="#FF8A1F"/><circle cx="32" cy="55.5" r="5" fill="#F0468C"/>' +
+          '<circle cx="11" cy="44" r="5" fill="#22B14C"/><circle cx="11" cy="20" r="5" fill="#2E6BF0"/>' +
+          '<path d="M32 17 L48 25 L32 33 L16 25 Z" fill="#1B2A6B"/>' +
+          '<path d="M44 28.5 v7" stroke="#1B2A6B" stroke-width="2.4" stroke-linecap="round"/>' +
+          '<text x="21" y="49" font-family="Nunito, Arial" font-size="17" font-weight="900" fill="#2E6BF0">A</text>' +
+          '<text x="34" y="49" font-family="Nunito, Arial" font-size="17" font-weight="900" fill="#E8382C">Z</text>' +
+        '</svg>' +
+        '<div style="font-weight:900;font-size:19px;margin-top:8px;letter-spacing:-.03em">Learn From <span style="color:var(--azul)">A</span> to <span style="color:var(--vermelho)">Z</span></div>' +
+        '<div style="font-size:13px;color:var(--muted);font-weight:700;margin-top:3px">Conhecimento para transformar vidas.</div>' +
+        '<div style="display:inline-block;margin-top:10px;background:var(--roxo);color:#fff;font-size:11.5px;font-weight:800;padding:5px 14px;border-radius:999px">Aprenda. Cresça. Realize. ♡</div>' +
+      '</div>' +
+
+      '<div class="cartao" style="background:var(--surface);border-color:transparent;margin-top:14px">' +
+        '<div style="font-size:13px;line-height:1.6;font-weight:600">Somos uma <b>plataforma digital gratuita</b> para estudantes de baixa renda. Reunimos aula, exercício e acompanhamento em um lugar só — para que a falta de dinheiro deixe de decidir quem aprende.</div>' +
+      '</div>' +
+
+      '<div class="rotulo">O que oferecemos</div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:var(--azul-pale)">🎥</div>' +
+        '<div><b>Aulas on-line</b><small>Fundamental, ensino médio e matérias fora do currículo</small></div>' +
+      '</div></div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:var(--vermelho-pale)">✏️</div>' +
+        '<div><b>Exercícios</b><small>Correção na hora, com explicação do erro</small></div>' +
+      '</div></div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:var(--roxo-pale)">🎮</div>' +
+        '<div><b>Aprendizado gamificado com IA</b><small>A trilha se refaz em cima do que você ainda erra</small></div>' +
+      '</div></div>' +
+
+      '<div class="cartao" style="background:var(--azul-escuro);border-color:transparent;color:#fff;margin-top:12px">' +
+        '<div style="font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--roxo-claro);margin-bottom:6px">Nosso objetivo</div>' +
+        '<div style="font-size:14.5px;font-weight:800;line-height:1.4;margin-bottom:7px">Despertar a paixão pelo aprendizado e formar bons cidadãos.</div>' +
+        '<div style="font-size:12.5px;opacity:.85;line-height:1.55">Porque é a vontade de aprender que sustenta o estudo depois que a plataforma sai de cena.</div>' +
+      '</div>' +
+
+      '<button class="btn btn-azul" style="width:100%;margin-top:14px;font-size:14px;padding:12px" onclick="irAba(\'aulas\')">Ver as aulas</button>' +
+    '</div>';
+  }
+
+  function telaAulas() {
+    var chips = NIVEIS.map(function (n) {
+      return '<button class="chip' + (state.nivel === n ? ' on' : '') + '" onclick="setNivel(\'' + esc(n) + '\')">' + esc(n) + '</button>';
+    }).join('');
+
+    var lista = MATERIAS.filter(function (m) {
+      return state.nivel === 'Todos' || m.nivel === state.nivel;
+    });
+
+    var cards = lista.map(function (m) {
+      return '<div class="cartao">' +
+        '<div class="materia">' +
+          '<div class="materia-ico" style="background:' + m.bg + '">' + m.ico + '</div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<b>' + esc(m.nome) + ' <span class="verif">✓ revisado</span></b>' +
+            '<small>' + m.aulas + ' aulas · ' + esc(m.nivel) + '</small>' +
+          '</div>' +
+        '</div>' +
+        '<div class="barra"><i style="width:' + m.pct + '%;background:' + m.cor + '"></i></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:700;margin-top:5px">' +
+          '<span>' + (m.pct === 0 ? 'Ainda não começou' : m.pct + '% concluído') + '</span>' +
+          '<span>' + (m.pct === 0 ? 'Começar' : 'Continuar') + ' →</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    return '<div class="painel">' +
+      '<div class="chips">' + chips + '</div>' +
+      '<div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:9px">' +
+        lista.length + ' matérias · todas gratuitas</div>' +
+      cards +
+    '</div>';
+  }
+
+  function telaGames() {
+    var q = QUIZ[state.quiz];
+    var respondeu = state.resposta !== null;
+
+    var opcoes = q.opcoes.map(function (op, i) {
+      var cls = 'quiz-op';
+      if (respondeu && i === q.correta) cls += ' certa';
+      else if (respondeu && i === state.resposta) cls += ' errada';
+      return '<button class="' + cls + '"' + (respondeu ? ' disabled style="cursor:default"' : '') +
+        ' onclick="responder(' + i + ')">' +
+        '<span class="letra">' + 'ABCD'[i] + '</span>' + esc(op) + '</button>';
+    }).join('');
+
+    var feedback = '';
+    if (respondeu) {
+      var acertou = state.resposta === q.correta;
+      feedback = '<div class="quiz-feedback ' + (acertou ? 'ok' : 'nao') + '">' +
+        (acertou ? '🎉 Acertou! +20 XP' : '👀 Não foi dessa vez.') + '<br>' + esc(q.explica) + '</div>' +
+        '<button class="btn btn-roxo" style="width:100%;margin-top:10px;font-size:14px;padding:11px" onclick="proximaQuestao()">Próxima questão</button>';
+    }
+
+    return '<div class="painel">' +
+      '<div class="cartao" style="background:linear-gradient(135deg,var(--roxo),var(--azul));border-color:transparent;color:#fff">' +
+        '<div style="display:flex;align-items:center;gap:10px">' +
+          '<div style="font-size:26px">🔥</div>' +
+          '<div style="flex:1">' +
+            '<div style="font-size:15px;font-weight:900">Ofensiva de ' + state.ofensiva + ' dias</div>' +
+            '<div style="font-size:11.5px;opacity:.85;font-weight:700">Responda 5 questões hoje para manter</div>' +
+          '</div>' +
+          '<div style="text-align:right"><div style="font-size:17px;font-weight:900">' + state.acertos + '/5</div>' +
+          '<div style="font-size:10px;opacity:.85;font-weight:700">hoje</div></div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="rotulo">Quiz relâmpago</div>' +
+      '<div class="cartao">' +
+        '<span class="verif" style="background:var(--roxo-pale);color:var(--roxo)">' + esc(q.materia) + '</span>' +
+        '<div class="quiz-pergunta">' + esc(q.pergunta) + '</div>' +
+        opcoes +
+        feedback +
+      '</div>' +
+
+      '<div class="rotulo">Outros modos</div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:var(--vermelho-pale)">🕵️</div>' +
+        '<div><b>Caça ao erro</b><small>Ache o erro na resolução e ganhe XP em dobro</small></div>' +
+      '</div></div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:#FFF1E3">⚔️</div>' +
+        '<div><b>Duelo de conhecimento</b><small>Dispute com outro estudante em tempo real</small></div>' +
+      '</div></div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:#EAF7EE">🧩</div>' +
+        '<div><b>Missão da semana</b><small>Sequência de desafios montada pela IA a partir dos seus erros</small></div>' +
+      '</div></div>' +
+    '</div>';
+  }
+
+  function telaRotina() {
+    var dias = [['Seg', 100], ['Ter', 80], ['Qua', 100], ['Qui', 60], ['Sex', 40], ['Sáb', 0], ['Dom', 0]];
+    var barras = dias.map(function (d) {
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">' +
+        '<div style="width:100%;height:70px;background:var(--surface);border-radius:7px;display:flex;align-items:flex-end;overflow:hidden">' +
+          '<div style="width:100%;height:' + d[1] + '%;background:' + (d[1] >= 80 ? 'var(--verde)' : d[1] > 0 ? 'var(--amarelo)' : 'transparent') + ';border-radius:7px"></div>' +
+        '</div>' +
+        '<span style="font-size:10px;font-weight:800;color:var(--muted)">' + d[0] + '</span>' +
+      '</div>';
+    }).join('');
+
+    return '<div class="painel">' +
+      '<div class="cartao" style="border-color:transparent;background:var(--surface)">' +
+        '<div style="font-size:11px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:9px">Sua semana</div>' +
+        '<div style="display:flex;gap:6px;align-items:flex-end">' + barras + '</div>' +
+        '<div style="font-size:12px;color:var(--muted);font-weight:700;margin-top:10px">Meta de 30 min por dia · 4 de 7 dias cumpridos</div>' +
+      '</div>' +
+
+      '<div class="cartao" style="background:var(--roxo-pale);border-color:transparent">' +
+        '<div style="display:flex;gap:9px;align-items:flex-start">' +
+          '<div style="font-size:19px">🤖</div>' +
+          '<div style="font-size:12.5px;line-height:1.55;font-weight:700;color:var(--texto)">' +
+            '<b>A IA sugere:</b> você errou 6 de 10 questões de Física esta semana. Reservei 20 min amanhã para revisar <b>leis de Newton</b> antes de seguir.' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="rotulo">Plano de hoje</div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:var(--azul-pale)">📐</div>' +
+        '<div style="flex:1"><b>Matemática · Equações do 2º grau</b><small>Aula de 12 min + 5 exercícios</small></div>' +
+        '<div style="font-size:11px;font-weight:800;color:var(--verde)">✓ feito</div>' +
+      '</div></div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:var(--roxo-pale)">⚛️</div>' +
+        '<div style="flex:1"><b>Física · Leis de Newton</b><small>Revisão sugerida pela IA · 20 min</small></div>' +
+        '<div style="font-size:11px;font-weight:800;color:var(--muted)">18h</div>' +
+      '</div></div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:#EAF7EE">💰</div>' +
+        '<div style="flex:1"><b>Educação financeira · Juros</b><small>Fora do currículo · 15 min</small></div>' +
+        '<div style="font-size:11px;font-weight:800;color:var(--muted)">20h</div>' +
+      '</div></div>' +
+    '</div>';
+  }
+
+  function telaPerfil() {
+    var conq = CONQUISTAS.map(function (c) {
+      return '<div class="cartao" style="text-align:center;padding:14px 8px;margin-bottom:0">' +
+        '<div style="font-size:26px">' + c.ico + '</div>' +
+        '<div style="font-size:11.5px;font-weight:800;margin-top:5px;line-height:1.25">' + esc(c.nome) + '</div>' +
+        '<div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:3px;line-height:1.3">' + esc(c.desc) + '</div>' +
+      '</div>';
+    }).join('');
+
+    return '<div class="painel">' +
+      '<div style="text-align:center;padding:10px 0 4px">' +
+        '<div style="width:66px;height:66px;border-radius:50%;background:linear-gradient(135deg,var(--azul),var(--roxo));color:#fff;display:grid;place-items:center;font-size:26px;font-weight:900;margin:0 auto 9px">L</div>' +
+        '<div style="font-weight:900;font-size:17px">Lucas Ferreira</div>' +
+        '<div style="font-size:12.5px;color:var(--muted);font-weight:700">2º ano do ensino médio · 15 anos</div>' +
+      '</div>' +
+
+      '<div style="display:flex;gap:7px;margin:14px 0 4px">' +
+        '<div class="cartao" style="flex:1;text-align:center;margin:0"><div style="font-size:17px;font-weight:900;color:var(--azul)">' + state.xp.toLocaleString('pt-BR') + '</div><div style="font-size:10px;color:var(--muted);font-weight:700">XP total</div></div>' +
+        '<div class="cartao" style="flex:1;text-align:center;margin:0"><div style="font-size:17px;font-weight:900;color:var(--vermelho)">' + state.ofensiva + '</div><div style="font-size:10px;color:var(--muted);font-weight:700">dias seguidos</div></div>' +
+        '<div class="cartao" style="flex:1;text-align:center;margin:0"><div style="font-size:17px;font-weight:900;color:var(--roxo)">7</div><div style="font-size:10px;color:var(--muted);font-weight:700">matérias</div></div>' +
+      '</div>' +
+
+      '<div class="rotulo">Conquistas</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">' + conq + '</div>' +
+
+      '<div class="rotulo">Meu plano</div>' +
+      '<div class="cartao" style="border-color:transparent;background:var(--surface)">' +
+        '<div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">' +
+          '<div style="font-size:19px">🎒</div>' +
+          '<div style="flex:1"><b style="font-size:13.5px">Plano gratuito</b>' +
+          '<small style="display:block;font-size:11.5px;color:var(--muted);font-weight:700">Ensino médio quase todo, com anúncios</small></div>' +
+        '</div>' +
+        '<div style="font-size:12px;line-height:1.55;font-weight:700;color:var(--texto);background:#fff;border-radius:10px;padding:10px 11px">' +
+          'No <b>A to Z Plus</b> a mensalidade cai conforme sua constância. Com <b>' + state.ofensiva + ' dias</b> de ofensiva você está no ' +
+          '<b>Nível ' + nivelPreco().n + '</b> — ' + nivelPreco().preco + '/mês.' +
+          (nivelPreco().faltam ? '<br><span style="color:var(--roxo)">Faltam ' + nivelPreco().faltam + ' dias para o Nível ' + (nivelPreco().n + 1) + ' e ' + PRECOS[nivelPreco().n].preco + '/mês.</span>' : '') +
+        '</div>' +
+        '<div style="display:flex;gap:5px;margin-top:9px">' +
+          PRECOS.map(function (p, i) {
+            var atual = i + 1 === nivelPreco().n;
+            return '<div style="flex:1;text-align:center;padding:7px 3px;border-radius:9px;background:' +
+              (atual ? 'var(--roxo)' : '#fff') + ';color:' + (atual ? '#fff' : 'var(--muted)') + '">' +
+              '<div style="font-size:9px;font-weight:900;letter-spacing:.06em;opacity:.8">NÍVEL ' + (i + 1) + '</div>' +
+              '<div style="font-size:11.5px;font-weight:900;margin-top:2px">' + p.preco + '</div></div>';
+          }).join('') +
+        '</div>' +
+      '</div>' +
+
+      '<div class="rotulo">Conta</div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:var(--azul-pale)">🎯</div>' +
+        '<div><b>Meta diária</b><small>30 minutos por dia</small></div>' +
+      '</div></div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:var(--roxo-pale)">🔔</div>' +
+        '<div><b>Lembretes de estudo</b><small>Todo dia às 18h</small></div>' +
+      '</div></div>' +
+      '<div class="cartao"><div class="materia">' +
+        '<div class="materia-ico" style="background:#EAF7EE">🏅</div>' +
+        '<div><b>Certificados</b><small>Emitir comprovante de horas estudadas</small></div>' +
+      '</div></div>' +
+    '</div>';
+  }
+
+  var TELAS = { sobre: telaSobre, aulas: telaAulas, games: telaGames, rotina: telaRotina, perfil: telaPerfil };
+
+  /* ── AÇÕES ── */
+  function irAba(a) { setState({ aba: a }); }
+  function setNivel(n) { setState({ nivel: n }); }
+
+  function responder(i) {
+    if (state.resposta !== null) return;   // já respondeu esta questão
+    var acertou = i === QUIZ[state.quiz].correta;
+    setState({
+      resposta: i,
+      xp: acertou ? state.xp + 20 : state.xp,
+      acertos: acertou ? Math.min(5, state.acertos + 1) : state.acertos
+    });
+  }
+
+  function proximaQuestao() {
+    setState({ quiz: (state.quiz + 1) % QUIZ.length, resposta: null });
+  }
+
+  function abrirApp(aba) {
+    setState({ aba: aba });
+    document.getElementById('fone').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* ── RENDER ── */
+  function render() {
+    document.getElementById('app-corpo').innerHTML = (TELAS[state.aba] || telaSobre)();
+    document.getElementById('app-titulo').textContent = TITULOS[state.aba] || 'Sobre';
+    document.getElementById('app-xp').textContent = state.xp.toLocaleString('pt-BR');
+
+    document.getElementById('app-abas').innerHTML = ABAS.map(function (t) {
+      var on = state.aba === t[0];
+      return '<button onclick="irAba(\'' + t[0] + '\')" style="opacity:' + (on ? '1' : '.4') + '">' +
+        '<span class="ic">' + t[2] + '</span>' +
+        '<span class="lb" style="color:' + (on ? 'var(--roxo)' : 'var(--muted)') + '">' + t[1] + '</span>' +
+      '</button>';
+    }).join('');
+  }
+
+  /* ── TELA CHEIA ── */
+  function telaCheia() {
+    var f = document.getElementById('fone');
+    var b = document.getElementById('fs-btn');
+    var cheio = f.classList.toggle('cheio');
+    document.body.classList.toggle('travado', cheio);
+    b.innerHTML = cheio ? '✕' : '⛶';
+    b.title = cheio ? 'Sair da tela cheia' : 'Tela cheia';
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.getElementById('fone').classList.contains('cheio')) telaCheia();
+  });
+
+  render();
+</script>
+</body>
+</html>
