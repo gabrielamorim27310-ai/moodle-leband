@@ -895,10 +895,9 @@
         '<h2 style="font:800 25px/1.1 \'Plus Jakarta Sans\';letter-spacing:-.03em">Mapa da casa</h2>' +
         '<span class="pill" style="background:var(--bg-verde);color:var(--tx-verde)">' + (LOCAIS.length - fora.length) + ' em casa</span>' +
       '</div>' +
-      '<div class="mapa-wrap" id="mapa-wrap">' +
-        '<div class="mapa-fallback" id="mapa-fallback"><div class="grade"></div></div>' +
-        '<div id="leaflet-mapa"></div>' +
-      '</div>' +
+      // Só o encaixe: o nó do mapa é persistente e entra aqui no render,
+      // senão cada setState destruiria o contêiner do Leaflet.
+      '<div id="mapa-slot"></div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">' +
         '<span class="kicker-app">Onde está cada um</span>' +
         (fora.length > 1
@@ -1106,10 +1105,24 @@
      MAPA — Leaflet sobre OpenStreetMap, sem chave de API.
      Sem o CDN, o mapa ilustrativo de fundo permanece no lugar.
      ══════════════════════════════════════════════════════════════ */
-  var mapa = null, marcadores = [];
+  var mapa = null, marcadores = [], mapaEl = null;
+
+  /* O contêiner do mapa vive fora do ciclo de render: é criado uma vez e
+     reencaixado no slot a cada tela. Assim o Leaflet sobrevive a qualquer
+     mudança de estado — chamar um morador, marcar tarefa, trocar de aba —
+     e mantém o zoom e o enquadramento em que o usuário estava. */
+  function mapaNode() {
+    if (!mapaEl) {
+      mapaEl = document.createElement('div');
+      mapaEl.className = 'mapa-wrap';
+      mapaEl.innerHTML = '<div class="mapa-fallback" id="mapa-fallback"><div class="grade"></div></div>' +
+                         '<div id="leaflet-mapa"></div>';
+    }
+    return mapaEl;
+  }
 
   function initMapa() {
-    var el = document.getElementById('leaflet-mapa');
+    var el = mapaEl && mapaEl.querySelector ? mapaEl.querySelector('#leaflet-mapa') : null;
     if (!el || !window.L) return;
     if (mapa) { setTimeout(function () { mapa.invalidateSize(); }, 60); return; }
 
@@ -1125,7 +1138,7 @@
       maxZoom: 19,
       attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
     }).addTo(mapa).on('tileload', function () {
-      var fb = document.getElementById('mapa-fallback');
+      var fb = mapaEl && mapaEl.querySelector ? mapaEl.querySelector('#mapa-fallback') : null;
       if (fb) fb.style.opacity = '0';
     });
 
@@ -1179,6 +1192,8 @@
       }).join('');
     }
 
+    var slot = document.getElementById('mapa-slot');
+    if (slot && slot.appendChild) slot.appendChild(mapaNode());
     if (state.tela === 'map') initMapa();
   }
 
