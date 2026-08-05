@@ -138,6 +138,22 @@
   .casa-pin { width: 34px; height: 34px; border-radius: 12px; background: var(--navy); border: 3px solid #fff; display: grid; place-items: center; box-shadow: 0 3px 10px rgba(1,59,92,.4); }
   .ping { position: absolute; inset: 0; border-radius: 999px; animation: hsPing 2.2s ease-out infinite; }
 
+
+  /* chamar um morador de volta */
+  .chamar { flex: none; border: none; cursor: pointer; font-family: inherit; border-radius: 999px; background: var(--azul); color: #fff; padding: 8px 13px; font: 700 11.5px/1 'Plus Jakarta Sans'; }
+  .chamar:hover { background: var(--azul-forte); }
+  .msg-op { display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit; background: var(--bg-azul); border: 1px solid var(--linha-2); color: var(--navy); border-radius: 14px; padding: 11px 13px; font: 700 12.5px/1.3 'Plus Jakarta Sans'; margin-bottom: 7px; }
+  .msg-op:hover { background: #fff; border-color: var(--azul); }
+  .msg-op.cancelar { background: none; border: none; color: var(--slate); text-align: center; margin-bottom: 0; font-weight: 600; }
+  .app-aviso {
+    position: absolute; left: 14px; right: 14px; bottom: 84px; z-index: 50;
+    background: var(--navy); color: #fff; border-radius: 16px; padding: 12px 14px;
+    font: 600 12.5px/1.45 'Plus Jakarta Sans'; box-shadow: 0 10px 26px rgba(1,59,92,.4);
+    opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .25s, transform .25s;
+  }
+  .app-aviso.on { opacity: 1; transform: none; }
+  .app-aviso b { color: var(--ciano-claro); }
+
   /* tela cheia */
   .fs-btn { position: absolute; top: 18px; right: -12px; z-index: 70; width: 32px; height: 32px; border-radius: 999px; background: var(--azul); color: #fff; border: 2px solid #fff; cursor: pointer; display: grid; place-items: center; font-size: 13px; box-shadow: 0 3px 12px rgba(15,158,230,.5); }
   .fs-btn:hover { background: var(--azul-forte); }
@@ -282,6 +298,7 @@
         <button class="fs-btn" id="fs-btn" onclick="telaCheia()" title="Tela cheia">⛶</button>
         <div class="tela">
           <div class="app-corpo" id="app-corpo"></div>
+          <div class="app-aviso" id="app-aviso"></div>
           <div class="abas" id="app-abas"></div>
         </div>
       </div>
@@ -350,7 +367,7 @@
       <div>
         <span class="kicker">Localização compartilhada</span>
         <h2 style="font:800 clamp(1.7rem,3.2vw,2.4rem)/1.12 'Plus Jakarta Sans';margin-bottom:14px">Saber quem está a caminho evita metade das brigas</h2>
-        <p style="font:400 16.5px/1.6 'Plus Jakarta Sans';color:var(--slate);margin:0 0 24px">"Você está vindo?" é a mensagem mais repetida em grupo de casa. O mapa responde antes de alguém perguntar — e conecta a localização às tarefas: quem está no mercado recebe a lista de compras, quem chegou em casa recebe o lembrete do lixo.</p>
+        <p style="font:400 16.5px/1.6 'Plus Jakarta Sans';color:var(--slate);margin:0 0 24px">"Você está vindo?" é a mensagem mais repetida em grupo de casa. O mapa responde antes de alguém perguntar — e conecta a localização às tarefas: quem está no mercado recebe a lista de compras, quem chegou em casa recebe o lembrete do lixo — e, se precisar, um toque chama de volta quem ainda está na rua.</p>
 
         <div class="loc-item">
           <span class="av" style="width:38px;height:38px;font-size:14px;background:#0f9ee6">M</span>
@@ -381,6 +398,16 @@
             <span style="width:34px;height:34px;border-radius:11px;background:var(--bg-verde);color:var(--tx-verde);display:grid;place-items:center;flex:none;font-size:16px">🏠</span>
             <div><b style="font:700 15px/1.3 'Plus Jakarta Sans'">Pedro chegou em casa</b>
             <div style="font:500 13.5px/1.5 'Plus Jakarta Sans';color:var(--slate);margin-top:3px">Lembrete de tirar o lixo disparado — a tarefa dele vence às 20h.</div></div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--linha);border-radius:22px;padding:22px;margin-bottom:16px">
+          <div class="kicker" style="margin-bottom:10px">Chamar de volta</div>
+          <div style="font:500 14.5px/1.6 'Plus Jakarta Sans';color:var(--slate);margin-bottom:14px">Viu que alguém está fora e a casa precisa dele? Um toque manda o recado, sem abrir outro aplicativo e sem cobrança em grupo.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <span class="pill" style="background:var(--bg-azul);color:var(--azul-forte);font-size:12px;padding:7px 12px">Pode voltar pra casa?</span>
+            <span class="pill" style="background:var(--bg-ciano);color:#0e8f9f;font-size:12px;padding:7px 12px">Já é hora do jantar 🍽️</span>
+            <span class="pill" style="background:var(--bg-laranja);color:var(--tx-laranja);font-size:12px;padding:7px 12px">Sua tarefa vence hoje ⏰</span>
+            <span class="pill" style="background:var(--bg-verde);color:var(--tx-verde);font-size:12px;padding:7px 12px">Traz pão na volta 🥖</span>
           </div>
         </div>
         <div style="background:#fff;border:1px solid var(--linha);border-radius:22px;padding:22px">
@@ -578,11 +605,36 @@
     ['profile','Perfil',  '👤']
   ];
 
+  /* Mensagens prontas para chamar quem está fora — um toque, sem digitar. */
+  var MENSAGENS = [
+    'Pode voltar pra casa?',
+    'Já é hora do jantar 🍽️',
+    'Sua tarefa vence hoje ⏰',
+    'Traz pão na volta 🥖'
+  ];
+
   var state = {
     tela: 'home', ob: 0, filtro: 'Todas', casa: 'Casa Amarela',
-    tipo: 'República', tarefas: TAREFAS.map(function (t) { return Object.assign({}, t); })
+    tipo: 'República', tarefas: TAREFAS.map(function (t) { return Object.assign({}, t); }),
+    chamados: {},      // inicial do morador → { msg, hora }
+    chamando: null     // morador com a escolha de mensagem aberta
   };
   var telaAnterior = null;
+  var avisoTimer = null;
+
+  function agora() {
+    var d = new Date();
+    return ('0' + d.getHours()).slice(-2) + 'h' + ('0' + d.getMinutes()).slice(-2);
+  }
+
+  function aviso(msg) {
+    var el = document.getElementById('app-aviso');
+    if (!el) return;
+    el.innerHTML = msg;
+    el.classList.add('on');
+    clearTimeout(avisoTimer);
+    avisoTimer = setTimeout(function () { el.classList.remove('on'); }, 3200);
+  }
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function setState(p) { Object.assign(state, p); render(); }
@@ -803,27 +855,56 @@
   }
 
   function telaMapa() {
+    var fora = LOCAIS.filter(function (l) { return !l.casa; });
+
     var itens = LOCAIS.map(function (l) {
       var m = membro(l.i);
       var cor = l.st === 'Em casa' ? ['var(--bg-verde)', 'var(--tx-verde)']
               : l.st === 'A caminho' ? ['var(--bg-azul)', 'var(--azul-forte)']
               : ['var(--bg-laranja)', 'var(--tx-laranja)'];
-      return '<div class="task-row">' + av(m.cor, 32, 12.5) + l.i + '</span>' +
-        '<span style="flex:1"><b style="display:block;font:700 13.5px/1.2 \'Plus Jakarta Sans\'">' + m.nome + '</b>' +
-        '<small style="display:block;font:500 11.5px/1.3 \'Plus Jakarta Sans\';color:var(--slate);margin-top:3px">' + l.lugar + '</small></span>' +
-        '<span class="pill" style="background:' + cor[0] + ';color:' + cor[1] + '">' + l.st + '</span></div>';
+      var chamado = state.chamados[l.i];
+      var escolhendo = state.chamando === l.i;
+
+      var linha = '<div class="task-row" style="' + (escolhendo ? 'border-color:' + AZUL : '') + '">' +
+        av(m.cor, 32, 12.5) + l.i + '</span>' +
+        '<span style="flex:1;min-width:0">' +
+          '<b style="display:block;font:700 13.5px/1.2 \'Plus Jakarta Sans\'">' + m.nome + '</b>' +
+          '<small style="display:block;font:500 11.5px/1.3 \'Plus Jakarta Sans\';color:var(--slate);margin-top:3px">' + l.lugar + '</small>' +
+          (chamado ? '<small style="display:block;font:700 11px/1.3 \'Plus Jakarta Sans\';color:' + AZUL + ';margin-top:4px">✓ Chamado ' + chamado.hora + ' · “' + esc(chamado.msg) + '”</small>' : '') +
+        '</span>' +
+        (l.casa
+          ? '<span class="pill" style="background:' + cor[0] + ';color:' + cor[1] + '">' + l.st + '</span>'
+          : '<button class="chamar" onclick="chamar(\'' + l.i + '\')">' + (chamado ? '↻' : '👋') + ' ' + (chamado ? 'De novo' : 'Chamar') + '</button>') +
+      '</div>';
+
+      // Escolha da mensagem, aberta logo abaixo do morador
+      if (escolhendo) {
+        linha += '<div class="cartao" style="border-color:' + AZUL + ';border-radius:18px;padding:13px;margin-top:-4px">' +
+          '<div class="kicker-app" style="margin-bottom:9px">O que dizer para ' + m.nome + '?</div>' +
+          MENSAGENS.map(function (msg) {
+            return '<button class="msg-op" onclick="enviarChamado(\'' + l.i + '\', ' + JSON.stringify(msg).replace(/"/g, '&quot;') + ')">' + msg + '</button>';
+          }).join('') +
+          '<button class="msg-op cancelar" onclick="fecharChamado()">Cancelar</button>' +
+        '</div>';
+      }
+      return linha;
     }).join('');
 
     return '<div class="pane">' +
       '<div style="display:flex;align-items:center;justify-content:space-between">' +
         '<h2 style="font:800 25px/1.1 \'Plus Jakarta Sans\';letter-spacing:-.03em">Mapa da casa</h2>' +
-        '<span class="pill" style="background:var(--bg-verde);color:var(--tx-verde)">2 em casa</span>' +
+        '<span class="pill" style="background:var(--bg-verde);color:var(--tx-verde)">' + (LOCAIS.length - fora.length) + ' em casa</span>' +
       '</div>' +
       '<div class="mapa-wrap" id="mapa-wrap">' +
         '<div class="mapa-fallback" id="mapa-fallback"><div class="grade"></div></div>' +
         '<div id="leaflet-mapa"></div>' +
       '</div>' +
-      '<div class="kicker-app">Onde está cada um</div>' + itens +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">' +
+        '<span class="kicker-app">Onde está cada um</span>' +
+        (fora.length > 1
+          ? '<button class="chamar" style="background:var(--navy)" onclick="chamarTodos()">👋 Chamar os ' + fora.length + '</button>'
+          : '') +
+      '</div>' + itens +
       '<div class="cartao" style="background:var(--bg-ciano);border-color:transparent;display:flex;gap:11px;align-items:flex-start">' +
         '<span style="font-size:19px">🛒</span>' +
         '<span><b style="font:800 13px/1.3 \'Plus Jakarta Sans\'">Lucas chegou ao mercado</b>' +
@@ -1000,6 +1081,25 @@
   function abrirApp(t) {
     irTela(t);
     document.getElementById('fone').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* ── Chamar um morador de volta ── */
+  function chamar(i) { setState({ chamando: state.chamando === i ? null : i }); }
+  function fecharChamado() { setState({ chamando: null }); }
+
+  function enviarChamado(i, msg) {
+    var novos = Object.assign({}, state.chamados);
+    novos[i] = { msg: msg, hora: agora() };
+    setState({ chamados: novos, chamando: null });
+    aviso('👋 <b>' + membro(i).nome + '</b> recebeu: “' + esc(msg) + '”');
+  }
+
+  function chamarTodos() {
+    var novos = Object.assign({}, state.chamados);
+    var fora = LOCAIS.filter(function (l) { return !l.casa; });
+    fora.forEach(function (l) { novos[l.i] = { msg: MENSAGENS[1], hora: agora() }; });
+    setState({ chamados: novos, chamando: null });
+    aviso('👋 Chamado enviado para <b>' + fora.map(function (l) { return membro(l.i).nome; }).join(' e ') + '</b>');
   }
 
   /* ══════════════════════════════════════════════════════════════
