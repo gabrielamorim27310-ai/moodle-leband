@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23fff5e8'/><path d='M28 30v26a22 22 0 0 0 44 0V30' fill='none' stroke='%23f79a3e' stroke-width='11' stroke-linecap='round'/></svg>">
+<title>UniMatch — Guia de faculdades personalizado</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    /* Paleta do design entregue pelo grupo */
+    --ac: #f79a3e; --ac7: #b05d12; --ac8: #80420e;
+    --ac1: #fff5e8; --ac2: #ffe7c9; --ac3: #ffd3a1;
+    --s2: #f9d05f; --s2-2: #fff3cd; --s2-7: #a67f18; --s2-9: #4c3a0b;
+    --n1: #f5f6f8; --n2: #eceef2; --n3: #dde0e6; --n5: #989ea8; --n6: #6e747d; --n7: #4e535a;
+    --txt: #171412; --sage: #7a8a5e;
+    --raio: 18px; --raio-lg: 26px;
+    --sombra: 0 4px 20px rgba(23,20,18,.07);
+    --sombra-lg: 0 22px 60px rgba(23,20,18,.22);
+    --head: 'Caprasimo', system-ui, serif;
+    --body: 'Figtree', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--txt); font-family: var(--body); font-size: 15px; line-height: 1.6; scroll-behavior: smooth; }
+  h1, h2, h3 { font-family: var(--head); font-weight: 400; line-height: 1.14; letter-spacing: -.01em; margin: 0; }
+  a { color: var(--ac7); text-decoration: none; }
+  :focus-visible { outline: 3px solid var(--ac); outline-offset: 2px; }
+  ::selection { background: var(--ac2); }
+
+  .repo-bar { background: var(--ac8); color: var(--ac2); padding: 9px 24px; text-align: center; font-size: 12.5px; font-weight: 500; }
+  .repo-bar a { color: var(--ac3); font-weight: 700; }
+
+  .topo { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--n2); }
+  .topo-in { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 24px; padding: 13px 26px; }
+  .marca { display: flex; align-items: center; gap: 9px; font-family: var(--head); font-size: 21px; }
+  .marca .u { color: var(--ac7); }
+  .topo nav { display: flex; gap: 4px; margin-left: 8px; }
+  .topo nav a { color: var(--n7); font-size: 14.5px; font-weight: 600; padding: 7px 12px; border-radius: 999px; }
+  .topo nav a:hover { background: var(--ac1); color: var(--ac7); }
+  .topo .dir { margin-left: auto; }
+
+  .btn { border: none; cursor: pointer; font-family: var(--body); font-weight: 700; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background .18s, transform .18s; }
+  .btn-lar { background: var(--ac); color: #fff; padding: 14px 24px; font-size: 15px; }
+  .btn-lar:hover { background: var(--ac7); transform: translateY(-1px); }
+  .btn-linha { background: #fff; color: var(--txt); border: 1.5px solid var(--n3); padding: 14px 24px; font-size: 15px; }
+  .btn-linha:hover { border-color: var(--ac); color: var(--ac7); }
+  .btn-sm { padding: 10px 18px; font-size: 13.5px; }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 0 26px; }
+
+  /* ── HERO ── */
+  .hero { background: linear-gradient(168deg, var(--ac1) 0%, #fffdf9 55%, #fff 100%); border-bottom: 1px solid var(--n2); }
+  .hero-in { max-width: 1180px; margin: 0 auto; padding: 58px 26px 64px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 54px; align-items: center; }
+  .selo { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--ac2); color: var(--ac7); padding: 8px 15px; border-radius: 999px; font-size: 12.5px; font-weight: 700; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(2.1rem, 4.3vw, 3.4rem); margin-bottom: 18px; }
+  .hero h1 span { color: var(--ac7); }
+  .hero p.lead { font-size: 17.5px; color: var(--n6); max-width: 48ch; margin: 0 0 26px; }
+  .hero-acoes { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-checks { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 24px; }
+  .hero-checks span { display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 600; color: var(--n6); }
+  .hero-checks i { width: 20px; height: 20px; border-radius: 999px; background: var(--ac2); color: var(--ac8); display: grid; place-items: center; font-size: 10px; font-style: normal; font-weight: 800; }
+
+  /* ── CELULAR ── */
+  .palco { display: flex; flex-direction: column; align-items: center; gap: 14px; flex: none; }
+  .fone { position: relative; width: 372px; flex: none; background: #1c1917; border-radius: 46px; padding: 12px; box-shadow: var(--sombra-lg); transition: width .3s, border-radius .3s, padding .3s; }
+  .fone::before { content: ''; position: absolute; top: 24px; left: 50%; transform: translateX(-50%); width: 100px; height: 28px; background: #1c1917; border-radius: 999px; z-index: 60; }
+  .tela { position: relative; height: 780px; border-radius: 36px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+  .app-corpo { flex: 1; overflow-y: auto; padding: 52px 16px 16px; scrollbar-width: none; }
+  .app-corpo::-webkit-scrollbar { display: none; }
+  .pane { display: flex; flex-direction: column; gap: 13px; }
+  .pane.entra { animation: umFade .22s ease both; }
+  @keyframes umFade { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+  .abas { flex: none; display: flex; background: #fff; border-top: 1px solid var(--n2); padding: 7px 2px 24px; }
+  .abas button { flex: 1; border: none; background: none; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; }
+  .abas .lb { font-size: 9.5px; font-weight: 800; }
+
+  .kicker-app { font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--ac7); }
+  .cartao { background: #fff; border: 1px solid var(--n2); border-radius: var(--raio); padding: 14px; box-shadow: var(--sombra); }
+  .chip-row { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .chip-row::-webkit-scrollbar { display: none; }
+  .chip { flex: none; border: 1px solid var(--n3); background: #fff; color: var(--n6); cursor: pointer; font-family: inherit; border-radius: 999px; padding: 8px 13px; font-size: 12px; font-weight: 700; }
+  .chip.on { background: var(--ac); border-color: var(--ac); color: #fff; }
+
+  /* ficha da instituição */
+  .inst { border: 1px solid var(--n2); border-radius: var(--raio); overflow: hidden; background: #fff; box-shadow: var(--sombra); cursor: pointer; text-align: left; font-family: inherit; width: 100%; padding: 0; display: block; }
+  .inst-foto { position: relative; height: 108px; background: var(--ac1); overflow: hidden; }
+  .inst-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .inst-iniciais { width: 100%; height: 100%; display: grid; place-items: center; font-family: var(--head); font-size: 34px; color: var(--ac7); background: linear-gradient(140deg, var(--ac2), var(--s2-2)); }
+  .inst-score { position: absolute; top: 9px; right: 9px; background: rgba(255,255,255,.94); border-radius: 999px; padding: 5px 11px; font-size: 12.5px; font-weight: 800; color: var(--ac8); box-shadow: 0 2px 8px rgba(23,20,18,.2); }
+  .inst-corpo { padding: 12px 13px 13px; }
+  .inst-nome { font-family: var(--head); font-size: 16px; }
+  .inst-curso { font-size: 12px; color: var(--n6); font-weight: 600; margin-top: 2px; }
+  .inst-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .tag { border-radius: 999px; padding: 3px 9px; font-size: 10.5px; font-weight: 700; background: var(--n1); color: var(--n7); }
+  .tag.laranja { background: var(--ac1); color: var(--ac8); }
+  .tag.amarela { background: var(--s2-2); color: var(--s2-9); }
+  .tag.sage { background: #eef2e7; color: #4b5a35; }
+  .motivo { display: flex; gap: 7px; font-size: 11.5px; color: var(--n7); line-height: 1.45; margin-top: 7px; }
+  .motivo i { color: var(--ac); font-style: normal; flex: none; }
+
+  .barra { height: 7px; border-radius: 999px; background: var(--n2); overflow: hidden; }
+  .barra i { display: block; height: 100%; border-radius: 999px; background: var(--ac); }
+
+  .campo { width: 100%; border: 1.5px solid var(--n3); border-radius: 14px; padding: 11px 13px; font-family: inherit; font-size: 14px; color: var(--txt); outline: none; background: #fff; }
+  .campo:focus { border-color: var(--ac); }
+  .slider { width: 100%; accent-color: var(--ac); }
+
+  .opt { display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit; background: #fff; border: 2px solid var(--n2); border-radius: 16px; padding: 13px; margin-bottom: 8px; }
+  .opt:hover { border-color: var(--ac3); }
+  .opt.on { border-color: var(--ac); background: var(--ac1); }
+  .opt b { display: block; font-size: 13.5px; font-weight: 700; }
+  .opt small { display: block; font-size: 11.5px; color: var(--n6); margin-top: 2px; }
+
+  .aviso { position: absolute; left: 14px; right: 14px; bottom: 80px; z-index: 50; background: var(--txt); color: #fff; border-radius: 15px; padding: 12px 14px; font-size: 12.5px; line-height: 1.45; font-weight: 600; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .25s, transform .25s; }
+  .aviso.on { opacity: 1; transform: none; }
+  .aviso b { color: var(--ac3); }
+
+  .fs-btn { position: absolute; top: 18px; right: -12px; z-index: 70; width: 32px; height: 32px; border-radius: 999px; background: var(--ac); color: #fff; border: 2px solid #fff; cursor: pointer; display: grid; place-items: center; font-size: 13px; box-shadow: 0 3px 12px rgba(247,154,62,.5); }
+  .fs-link { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--n6); background: #fff; border: 1px solid var(--n3); padding: 8px 16px; border-radius: 999px; user-select: none; }
+  .fs-link:hover { color: var(--ac7); border-color: var(--ac); }
+  .fone.cheio { position: fixed !important; inset: 0 !important; width: 100dvw !important; border-radius: 0 !important; padding: 0 !important; z-index: 9999 !important; }
+  .fone.cheio::before { display: none; }
+  .fone.cheio .tela { height: 100dvh !important; border-radius: 0 !important; }
+  .fone.cheio .app-corpo { padding-top: 18px; }
+  .fone.cheio .abas { padding-bottom: 12px; }
+  .fone.cheio .fs-btn { top: 12px; right: 12px; }
+  .fone.cheio ~ .fs-link { display: none; }
+  body.travado { overflow: hidden; }
+
+  /* ── SEÇÕES ── */
+  .sec { padding: 72px 0; }
+  .sec-topo { max-width: 640px; margin-bottom: 40px; }
+  .kicker { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ac7); margin-bottom: 13px; }
+  .sec-topo h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); margin-bottom: 12px; }
+  .sec-topo p { font-size: 16.5px; color: var(--n6); margin: 0; }
+
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+
+  .dado { background: var(--ac1); border-radius: var(--raio-lg); padding: 28px; }
+  .dado b { display: block; font-family: var(--head); font-size: 48px; color: var(--ac7); line-height: 1; }
+  .dado p { font-size: 14.5px; color: var(--n7); margin: 12px 0 0; font-weight: 600; }
+
+  .card { background: #fff; border: 1px solid var(--n2); border-radius: var(--raio-lg); padding: 26px; transition: transform .2s, box-shadow .2s; }
+  .card:hover { transform: translateY(-4px); box-shadow: var(--sombra); }
+  .card .ico { width: 48px; height: 48px; border-radius: 15px; display: grid; place-items: center; font-size: 22px; margin-bottom: 15px; background: var(--ac1); }
+  .card h3 { font-size: 18px; margin-bottom: 8px; }
+  .card p { font-size: 14.5px; color: var(--n6); margin: 0; }
+
+  .plano { border: 1.5px solid var(--n2); border-radius: var(--raio-lg); padding: 30px; }
+  .plano.b { border-color: var(--ac); background: linear-gradient(160deg, var(--ac1), #fff); }
+  .plano h3 { font-size: 20px; margin-bottom: 4px; }
+  .plano .preco { font-family: var(--head); font-size: 34px; margin: 10px 0 2px; }
+  .plano ul { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .plano li { font-size: 14.5px; padding-left: 25px; position: relative; }
+  .plano li::before { content: '✓'; position: absolute; left: 0; width: 17px; height: 17px; border-radius: 999px; background: var(--ac); color: #fff; font-size: 9px; font-weight: 800; display: grid; place-items: center; }
+  .plano li.no::before { content: '–'; background: var(--n3); color: var(--n6); }
+
+  .passo { display: flex; gap: 14px; align-items: flex-start; }
+  .passo .n { width: 34px; height: 34px; border-radius: 999px; background: var(--ac); color: #fff; display: grid; place-items: center; font-family: var(--head); font-size: 15px; flex: none; }
+  .passo b { display: block; font-size: 15.5px; font-weight: 700; margin-bottom: 3px; }
+  .passo span { font-size: 14px; color: var(--n6); }
+
+  footer { background: var(--ac8); color: var(--ac2); text-align: center; padding: 34px 26px; font-size: 13px; line-height: 1.8; }
+  footer strong { color: #fff; }
+  footer .cred { font-size: 11.5px; opacity: .8; }
+
+  @media (max-width: 1040px) {
+    .hero-in { grid-template-columns: 1fr; gap: 42px; justify-items: center; text-align: center; }
+    .hero p.lead { margin-left: auto; margin-right: auto; }
+    .hero-acoes, .hero-checks { justify-content: center; }
+    .palco { order: -1; }
+    .g2, .g3, .g4 { grid-template-columns: repeat(2, 1fr); }
+    .topo nav { display: none; }
+  }
+  @media (max-width: 640px) {
+    main, .topo-in, .hero-in { padding-left: 16px; padding-right: 16px; }
+    .g2, .g3, .g4 { grid-template-columns: 1fr; }
+    .fone { width: min(372px, 94vw); }
+    .tela { height: min(780px, 78vh); }
+  }
+</style>
+</head>
+<body>
+
+<div class="repo-bar">
+  <a href="index.html">← Repositório de MVPs</a> · Liga de Empreendedorismo · Grupo 8
+</div>
+
+<div class="topo">
+  <div class="topo-in">
+    <span class="marca"><span class="u">Uni</span>Match</span>
+    <nav>
+      <a href="#problema">O problema</a>
+      <a href="#diferenciais">Diferenciais</a>
+      <a href="#instituicoes">Instituições</a>
+      <a href="#planos">Planos</a>
+    </nav>
+    <div class="dir"><button class="btn btn-lar btn-sm" onclick="abrirApp('welcome')">Fazer meu match</button></div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-in">
+    <div>
+      <span class="selo">🎓 Guia de faculdades personalizado</span>
+      <h1>A faculdade certa não é a<br>melhor. É a <span>certa pra você</span>.</h1>
+      <p class="lead">Um quiz de quatro perguntas, o custo total na mesa e avaliações de quem já estudou lá. O UniMatch cruza o seu objetivo, o seu bolso e a sua rotina para dizer qual instituição faz sentido — e por quê.</p>
+      <div class="hero-acoes">
+        <button class="btn btn-lar" onclick="abrirApp('welcome')">Descobrir meu match</button>
+        <button class="btn btn-linha" onclick="abrirApp('roi')">Calcular o retorno</button>
+      </div>
+      <div class="hero-checks">
+        <span><i>✓</i> Grátis para começar</span>
+        <span><i>✓</i> Guia neutro, sem propaganda</span>
+        <span><i>✓</i> Custo total, não só a mensalidade</span>
+      </div>
+    </div>
+
+    <div class="palco">
+      <div class="fone" id="fone">
+        <button class="fs-btn" id="fs-btn" onclick="telaCheia()" title="Tela cheia">⛶</button>
+        <div class="tela">
+          <div class="app-corpo" id="app-corpo"></div>
+          <div class="aviso" id="app-aviso"></div>
+          <div class="abas" id="app-abas"></div>
+        </div>
+      </div>
+      <div class="fs-link" onclick="telaCheia()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        Ver em tela cheia
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- ── PROBLEMA ── -->
+  <section class="sec" id="problema">
+    <div class="sec-topo">
+      <span class="kicker">O problema</span>
+      <h2>Escolher faculdade hoje é juntar caco de informação</h2>
+      <p>A informação está espalhada entre site institucional, grupo de WhatsApp e feira de profissões. Ninguém mostra o custo total, a carga horária real nem o que os alunos de verdade acham.</p>
+    </div>
+    <div class="g2" style="gap:22px;margin-bottom:34px">
+      <div class="dado"><b>25%</b><p>dos estudantes abandonam o curso ainda no primeiro ano.</p></div>
+      <div class="dado" style="background:var(--s2-2)"><b style="color:var(--s2-7)">51%</b><p>não concluem a graduação no prazo previsto.</p></div>
+    </div>
+    <div class="g3">
+      <div class="card"><div class="ico">🧩</div><h3>Informação espalhada</h3><p>Cada instituição conta a própria versão. Comparar exige montar planilha à mão.</p></div>
+      <div class="card"><div class="ico">💸</div><h3>O custo total some</h3><p>Mensalidade é só parte. Transporte, material e os semestres a mais ninguém soma.</p></div>
+      <div class="card"><div class="ico">⏰</div><h3>Adulto não tem espaço</h3><p>Quem já trabalha precisa de carga horária que caiba na rotina — e quase ninguém filtra por isso.</p></div>
+    </div>
+  </section>
+
+  <!-- ── DIFERENCIAIS ── -->
+  <section class="sec" id="diferenciais" style="padding-top:0">
+    <div class="sec-topo">
+      <span class="kicker">Diferenciais</span>
+      <h2>Quatro coisas que nenhum ranking te dá</h2>
+    </div>
+    <div class="g4">
+      <div class="card"><div class="ico">📈</div><h3>Calculadora de ROI</h3><p>Quanto custa até formar, quanto se ganha depois e em quantos meses o curso se paga.</p></div>
+      <div class="card"><div class="ico">⏳</div><h3>Filtro por rotina</h3><p>Estilo de vida e carga horária — para quem trabalha e não pode largar tudo.</p></div>
+      <div class="card"><div class="ico">💬</div><h3>Avaliações sem filtro</h3><p>Alunos e ex-alunos falando o que gostaram e o que não gostaram. Sem curadoria da instituição.</p></div>
+      <div class="card"><div class="ico">🎯</div><h3>Smart Matching</h3><p>A nota de match sai do seu objetivo, não de um ranking genérico — e explica o porquê.</p></div>
+    </div>
+  </section>
+
+  <!-- ── INSTITUIÇÕES ── -->
+  <section class="sec" id="instituicoes" style="padding-top:0">
+    <div class="sec-topo">
+      <span class="kicker">Instituições</span>
+      <h2>Sete instituições na base do protótipo</h2>
+      <p>Públicas e privadas, integral e noturno, de mensalidade zero a R$ 6.900. Cada ficha traz custo total, carga horária, nota do MEC e as avaliações da comunidade.</p>
+    </div>
+    <div class="g4" id="grade-inst"></div>
+  </section>
+
+  <!-- ── COMO FUNCIONA ── -->
+  <section class="sec" style="padding-top:0">
+    <div class="sec-topo">
+      <span class="kicker">Como funciona</span>
+      <h2>Do quiz à decisão em quatro passos</h2>
+    </div>
+    <div class="g4">
+      <div class="passo"><span class="n">1</span><div><b>Responda o quiz</b><span>Objetivo, bolso, trajeto e rotina. Quatro perguntas.</span></div></div>
+      <div class="passo"><span class="n">2</span><div><b>Veja o match</b><span>Cada instituição recebe uma nota e a explicação do motivo.</span></div></div>
+      <div class="passo"><span class="n">3</span><div><b>Compare lado a lado</b><span>Custo total, carga horária, MEC e salário médio na mesma tabela.</span></div></div>
+      <div class="passo"><span class="n">4</span><div><b>Fale com a instituição</b><span>Envie seu contato e receba a proposta de bolsa direto.</span></div></div>
+    </div>
+  </section>
+
+  <!-- ── PLANOS ── -->
+  <section class="sec" id="planos" style="padding-top:0">
+    <div class="sec-topo">
+      <span class="kicker">Sistema freemium</span>
+      <h2>Comece de graça. Pague só se quiser ir fundo.</h2>
+      <p>O modelo é B2B2C: o estudante usa de graça, e a instituição paga para receber candidatos com intenção real.</p>
+    </div>
+    <div class="g2" style="gap:22px">
+      <div class="plano">
+        <h3>Plano A</h3>
+        <div class="preco">R$ 0</div>
+        <div style="font-size:14px;color:var(--n6);font-weight:600">para sempre</div>
+        <ul>
+          <li>Filtros básicos de preferências</li>
+          <li>Ficha básica da instituição</li>
+          <li>Comparador de 2 faculdades</li>
+          <li class="no">Sem filtros avançados</li>
+          <li class="no">Sem calculadora de ROI completa</li>
+        </ul>
+      </div>
+      <div class="plano b">
+        <h3>Plano B</h3>
+        <div class="preco">R$ 19,90<span style="font-family:var(--body);font-size:15px;font-weight:700;color:var(--n6)">/mês</span></div>
+        <div style="font-size:14px;color:var(--n6);font-weight:600">cancela quando quiser</div>
+        <ul>
+          <li>Filtros avançados de preferências</li>
+          <li>Ficha completa da instituição</li>
+          <li>Comparador sem limite</li>
+          <li>Calculadora de ROI completa</li>
+          <li>Avaliações sem filtro na íntegra</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PERSONAS E OPORTUNIDADE ── -->
+  <section class="sec" style="padding-top:0">
+    <div class="g2" style="gap:26px">
+      <div class="card" style="background:var(--ac1);border-color:transparent">
+        <div class="ico" style="background:#fff">🎓</div>
+        <h3>O estudante</h3>
+        <p>Do ensino médio ou já formado, em busca de uma formação certeira — sem perder tempo nem dinheiro numa escolha errada.</p>
+      </div>
+      <div class="card" style="background:#eef2e7;border-color:transparent">
+        <div class="ico" style="background:#fff">🏛️</div>
+        <h3>As instituições</h3>
+        <p>Faculdades e universidades em busca de estudantes com certeza e potencial — que chegam sabendo o que querem e desistem menos.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:22px;background:var(--txt);color:#fff;border-color:transparent">
+      <div class="kicker" style="color:var(--ac3)">A oportunidade</div>
+      <h3 style="font-size:24px;color:#fff;margin-bottom:10px">8,9 milhões de estudantes no ensino superior — 75,8% deles na rede privada</h3>
+      <p style="color:rgba(255,255,255,.78);font-size:15.5px;margin:0">É onde a decisão custa caro e a informação é mais interessada. O UniMatch se coloca como o guia neutro entre o estudante e quem quer vender uma vaga para ele.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>UniMatch</strong> · Guia de faculdades personalizado<br>
+  Liga de Empreendedorismo · Grupo 8<br>
+  Tessa Gasparelo · Olívia Silva · Gabriela Honda · Julia Emi<br>
+  <span class="cred" id="creditos-fotos"></span>
+</footer>
+
+<script>
+  /* ══════════════════════════════════════════════════════════════
+     Dados do protótipo entregue pelo grupo
+     ══════════════════════════════════════════════════════════════ */
+  var INST = [
+    { id:'insper', nome:'Insper', ini:'IN', curso:'Administração', cidade:'São Paulo · Vila Olímpia', mens:6900, meses:48, mec:5, mod:'Presencial', turno:'Integral', desloc:40, salario:8200, vida:9, estagio:9, flex:3, publica:false,
+      reviews:[{q:'Aluna, 4º sem', e:4, w:'há 2 meses', t:'Rede e carreira são reais — o career center abre portas. Mas a mensalidade pesa e a bolsa some se você cair de nota.'},
+               {q:'Ex-aluno, 2023', e:5, w:'há 1 ano', t:'Saí empregado antes de formar. Cobrança alta, ritmo puxado; não é pra quem quer trabalhar em paralelo.'}] },
+    { id:'usp', nome:'USP', ini:'SP', curso:'Engenharia de Produção', cidade:'São Paulo · Butantã', mens:0, meses:60, mec:5, mod:'Presencial', turno:'Integral', desloc:55, salario:7600, vida:10, estagio:8, flex:2, publica:true,
+      reviews:[{q:'Aluno, 8º sem', e:4, w:'há 3 semanas', t:'Ensino e pesquisa impecáveis, custo zero. A burocracia e a estrutura de alguns prédios decepcionam.'},
+               {q:'Ex-aluna, 2022', e:5, w:'há 8 meses', t:'O nome abre entrevista em qualquer lugar. Integral de verdade: esqueça trabalhar durante o curso.'}] },
+    { id:'mackenzie', nome:'Mackenzie', ini:'MK', curso:'Direito', cidade:'São Paulo · Higienópolis', mens:2950, meses:60, mec:4, mod:'Presencial', turno:'Noturno', desloc:30, salario:5400, vida:7, estagio:7, flex:7, publica:false,
+      reviews:[{q:'Aluna, 6º sem', e:4, w:'há 1 mês', t:'Noturno funciona pra quem trabalha e os professores têm prática de escritório. Turmas grandes demais.'},
+               {q:'Ex-aluno, 2021', e:3, w:'há 2 anos', t:'Diploma respeitado no fórum. Estágio você corre atrás sozinho, a faculdade ajuda pouco.'}] },
+    { id:'fgv', nome:'FGV', ini:'FG', curso:'Economia', cidade:'São Paulo · Bela Vista', mens:5600, meses:48, mec:5, mod:'Presencial', turno:'Integral', desloc:35, salario:7900, vida:8, estagio:9, flex:4, publica:false,
+      reviews:[{q:'Aluno, 2º sem', e:5, w:'há 5 dias', t:'Base quantitativa forte e muita gente de mercado dando aula. O ritmo de leitura é brutal.'},
+               {q:'Ex-aluna, 2024', e:4, w:'há 6 meses', t:'Estágio em banco no 3º semestre. Se você não gosta de matemática, repense.'}] },
+    { id:'inteli', nome:'Inteli', ini:'IT', curso:'Ciência da Computação', cidade:'São Paulo · Vila Olímpia', mens:0, meses:48, mec:4, mod:'Presencial', turno:'Integral', desloc:45, salario:8800, vida:8, estagio:9, flex:3, publica:false, bolsaTotal:true,
+      reviews:[{q:'Aluno, 4º sem', e:5, w:'há 3 semanas', t:'Projeto real com empresa a cada 10 semanas. Bolsa integral pra quem passa no processo muda o jogo.'},
+               {q:'Aluna, 6º sem', e:4, w:'há 2 meses', t:'Aprendizado por projeto é intenso; se você precisa de aula tradicional, estranha no começo.'}] },
+    { id:'unifesp', nome:'UNIFESP', ini:'UF', curso:'Ciências Biológicas', cidade:'Diadema · SP', mens:0, meses:48, mec:4, mod:'Híbrido', turno:'Matutino', desloc:70, salario:4200, vida:7, estagio:6, flex:6, publica:true,
+      reviews:[{q:'Aluna, 5º sem', e:4, w:'há 1 mês', t:'Laboratórios bons e professores acessíveis. O deslocamento até Diadema come duas horas do meu dia.'},
+               {q:'Ex-aluno, 2023', e:3, w:'há 1 ano', t:'Formação sólida pra pesquisa; se o objetivo é salário alto rápido, não é o caminho.'}] },
+    { id:'pucsp', nome:'PUC-SP', ini:'PC', curso:'Psicologia', cidade:'São Paulo · Perdizes', mens:3400, meses:60, mec:4, mod:'Híbrido', turno:'Noturno', desloc:28, salario:4600, vida:8, estagio:7, flex:8, publica:false,
+      reviews:[{q:'Aluna, 7º sem', e:5, w:'há 2 semanas', t:'Clínica-escola desde cedo e supervisão de verdade. Noturno cansa, mas dá pra conciliar com trabalho.'},
+               {q:'Ex-aluna, 2022', e:4, w:'há 1 ano', t:'Formação humana muito forte. Mensalidade sobe todo ano e o reajuste dói.'}] }
+  ];
+
+  /* Fotos reais só das instituições em que encontramos imagem de licença livre
+     e comprovadamente daquela instituição. As demais usam a ficha de iniciais —
+     rotular a foto errada seria pior do que não ter foto. */
+  var FOTOS = { usp: 1, mackenzie: 1, fgv: 1, unifesp: 1, pucsp: 1 };
+  var CREDITOS = [
+    ['USP', 'At USP 2018 · CC BY-SA 4.0'],
+    ['Mackenzie', 'Alexandre Mackenzie Building · CC BY-SA 4.0'],
+    ['FGV', 'Biblioteca Karl A. Boedecker · CC BY-SA 4.0'],
+    ['UNIFESP', 'Escola Paulista de Medicina · CC BY-SA 4.0'],
+    ['PUC-SP', 'Faculdade de Filosofia · CC BY-SA 3.0']
+  ];
+
+  var QUIZ = [
+    { id:'objetivo', t:'Qual é o seu objetivo com esse diploma?', h:'Isso define o peso do match.',
+      opts:[{v:'retorno',l:'Retorno financeiro rápido',d:'Quero pagar o curso e subir de salário'},
+            {v:'mercado',l:'Entrar num mercado específico',d:'Estágio, rede e empregabilidade'},
+            {v:'vida',l:'Experiência universitária completa',d:'Campus, intercâmbio, vida de aluno'},
+            {v:'flex',l:'Estudar sem parar de trabalhar',d:'Rotina que caiba no meu dia'}] },
+    { id:'custo', t:'Quanto cabe no seu bolso por mês?', h:'Contamos bolsa e financiamento depois.',
+      opts:[{v:1200,l:'Até R$ 1.200',d:'Priorizo pública, bolsa integral ou EAD'},
+            {v:3000,l:'Até R$ 3.000',d:'Consigo uma mensalidade média'},
+            {v:6000,l:'Até R$ 6.000',d:'Privada com bolsa parcial'},
+            {v:9000,l:'Sem teto definido',d:'Quero ver todas as opções'}] },
+    { id:'desloc', t:'Quanto tempo de trajeto você aceita?', h:'Só de ida, porta a porta.',
+      opts:[{v:25,l:'Até 25 min',d:'Preciso de algo perto de casa'},
+            {v:45,l:'Até 45 min',d:'Aceito atravessar a cidade'},
+            {v:70,l:'Até 1h10',d:'Vale a pena pela instituição certa'},
+            {v:120,l:'Tanto faz',d:'Ou pretendo morar perto do campus'}] },
+    { id:'rotina', t:'Como é a sua rotina?', h:'A gente cruza com turno e carga horária.',
+      opts:[{v:'Integral',l:'Livre o dia inteiro',d:'Dá pra fazer integral'},
+            {v:'Noturno',l:'Trabalho durante o dia',d:'Só noturno ou EAD'},
+            {v:'Matutino',l:'Manhãs livres',d:'Matutino resolve'},
+            {v:'flex',l:'Meus horários variam',d:'Preciso de flexibilidade'}] }
+  ];
+
+  var ABAS = [['home','Início','🎯'],['compare','Comparar','⚖️'],['roi','ROI','📈'],['saved','Salvos','🔖'],['profile','Perfil','👤']];
+  var TITULOS = { welcome:'UniMatch', quiz:'Seu perfil', home:'Seus matches', detail:'Instituição', compare:'Comparar', roi:'Calculadora de ROI', saved:'Salvos', profile:'Perfil' };
+
+  var state = {
+    tela: 'welcome', passo: 0, respostas: {}, plano: 'A',
+    filtros: { custo: 6000, desloc: 60, mod: [], turno: [] },
+    comparar: [], salvos: [], detalhe: null,
+    roi: { mens: 2950, meses: 60, salario: 5400 }
+  };
+  var telaAnterior = null, avisoTimer = null;
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function brl(n) { return 'R$ ' + Math.round(n).toLocaleString('pt-BR'); }
+  function setState(p) { Object.assign(state, p); render(); }
+  function inst(id) { for (var i=0;i<INST.length;i++) if (INST[i].id===id) return INST[i]; return INST[0]; }
+
+  function aviso(msg) {
+    var el = document.getElementById('app-aviso');
+    if (!el) return;
+    el.innerHTML = msg; el.classList.add('on');
+    clearTimeout(avisoTimer);
+    avisoTimer = setTimeout(function(){ el.classList.remove('on'); }, 2800);
+  }
+
+  /* ── Smart Matching: a nota sai do objetivo declarado, não de ranking ── */
+  function score(i) {
+    var f = state.filtros, obj = state.respostas.objetivo || 'retorno';
+    var s = 84;
+    if (i.mens > f.custo) s -= Math.min(38, ((i.mens - f.custo) / Math.max(f.custo, 800)) * 55);
+    else s += Math.min(10, ((f.custo - i.mens) / Math.max(f.custo, 800)) * 12);
+    if (i.desloc > f.desloc) s -= Math.min(22, (i.desloc - f.desloc) * 0.55);
+    if (f.mod.length && f.mod.indexOf(i.mod) < 0) s -= 16;
+    if (f.turno.length && f.turno.indexOf(i.turno) < 0) s -= 13;
+    var bonus = obj === 'retorno' ? (i.salario/1000 - i.mens/1400)
+              : obj === 'mercado' ? i.estagio
+              : obj === 'vida' ? i.vida : i.flex;
+    s += (bonus - 5) * 2.1;
+    s += (i.mec - 4) * 3;
+    return Math.max(31, Math.min(98, Math.round(s)));
+  }
+
+  function motivos(i) {
+    var f = state.filtros, obj = state.respostas.objetivo || 'retorno', out = [];
+    if (i.mens === 0) out.push(i.publica ? 'Pública: mensalidade zero, sobra para transporte e material.' : 'Bolsa integral no processo seletivo — custo zero de mensalidade.');
+    else if (i.mens <= f.custo) out.push('Mensalidade de ' + brl(i.mens) + ' cabe no teto que você marcou.');
+    else out.push('Mensalidade de ' + brl(i.mens) + ' passa do seu teto de ' + brl(f.custo) + '.');
+    if (i.desloc <= f.desloc) out.push(i.desloc + ' min de trajeto, dentro do que você aceita.');
+    else out.push(i.desloc + ' min de trajeto — acima dos ' + f.desloc + ' min que você marcou.');
+    if (obj === 'retorno') out.push('Salário médio de saída em ' + brl(i.salario) + ': o curso se paga em ' + mesesRetorno(i) + ' meses.');
+    else if (obj === 'mercado') out.push('Nota ' + i.estagio + '/10 em estágio e empregabilidade.');
+    else if (obj === 'vida') out.push('Nota ' + i.vida + '/10 em vida de campus.');
+    else out.push(i.turno + ' · nota ' + i.flex + '/10 em flexibilidade de rotina.');
+    return out;
+  }
+
+  function custoTotal(i) { return i.mens * i.meses; }
+  function mesesRetorno(i) {
+    if (i.mens === 0) return 0;
+    var ganho = Math.max(600, i.salario - 2500);   // acima de um salário sem diploma
+    return Math.max(1, Math.round(custoTotal(i) / ganho));
+  }
+
+  function ordenadas() {
+    return INST.map(function (i) { return { i: i, s: score(i) }; })
+               .sort(function (a, b) { return b.s - a.s; });
+  }
+
+  /* ── TELAS ── */
+  function fotoOuIniciais(i, alt) {
+    return FOTOS[i.id]
+      ? '<img src="img/uni-' + i.id + '.jpg" alt="' + esc(alt || i.nome) + '" loading="lazy">'
+      : '<div class="inst-iniciais">' + i.ini + '</div>';
+  }
+
+  function telaWelcome() {
+    return '<div class="pane" style="gap:18px;height:100%">' +
+      '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">' +
+        '<div style="font-family:var(--head);font-size:34px;line-height:1.1"><span style="color:var(--ac7)">Uni</span>Match</div>' +
+        '<div style="font-size:25px;font-family:var(--head);line-height:1.2">A faculdade certa pra você, não a mais famosa.</div>' +
+        '<p style="margin:0;font-size:14.5px;color:var(--n6);line-height:1.6">Quatro perguntas e a gente cruza objetivo, bolso, trajeto e rotina com sete instituições — mostrando o custo até formar e o que os alunos dizem de verdade.</p>' +
+        '<div class="cartao" style="background:var(--ac1);border-color:transparent">' +
+          '<div style="display:flex;gap:16px">' +
+            '<div><div style="font-family:var(--head);font-size:26px;color:var(--ac7)">25%</div><div style="font-size:11px;color:var(--n7);font-weight:600;line-height:1.3">abandonam no 1º ano</div></div>' +
+            '<div><div style="font-family:var(--head);font-size:26px;color:var(--ac7)">51%</div><div style="font-size:11px;color:var(--n7);font-weight:600;line-height:1.3">não concluem no prazo</div></div>' +
+          '</div>' +
+          '<div style="font-size:11.5px;color:var(--n6);margin-top:9px;line-height:1.5">Quase sempre porque a escolha não combinava com a vida de quem escolheu.</div>' +
+        '</div>' +
+      '</div>' +
+      '<button class="btn btn-lar" style="width:100%;padding:15px" onclick="irTela(\'quiz\')">Começar o quiz</button>' +
+      '<button class="btn btn-linha" style="width:100%;padding:13px" onclick="irTela(\'home\')">Ver as instituições primeiro</button>' +
+    '</div>';
+  }
+
+  function telaQuiz() {
+    var q = QUIZ[state.passo];
+    var atual = state.respostas[q.id];
+    var opts = q.opts.map(function (o) {
+      var on = atual === o.v;
+      return '<button class="opt' + (on ? ' on' : '') + '" onclick="responder(' + JSON.stringify(o.v).replace(/"/g,'&quot;') + ')">' +
+        '<b>' + o.l + '</b><small>' + o.d + '</small></button>';
+    }).join('');
+
+    return '<div class="pane">' +
+      '<div style="display:flex;gap:5px">' +
+        QUIZ.map(function (_, k) {
+          return '<span style="flex:1;height:5px;border-radius:999px;background:' + (k <= state.passo ? 'var(--ac)' : 'var(--n2)') + '"></span>';
+        }).join('') +
+      '</div>' +
+      '<div class="kicker-app">Pergunta ' + (state.passo + 1) + ' de ' + QUIZ.length + '</div>' +
+      '<div style="font-family:var(--head);font-size:23px;line-height:1.2">' + q.t + '</div>' +
+      '<div style="font-size:12.5px;color:var(--n6);margin-top:-6px">' + q.h + '</div>' +
+      opts +
+      (state.passo > 0 ? '<button class="btn btn-linha" style="width:100%;padding:12px" onclick="voltarQuiz()">Voltar</button>' : '') +
+    '</div>';
+  }
+
+  function telaHome() {
+    var lista = ordenadas();
+    var cards = lista.map(function (r) {
+      var i = r.i, m = motivos(i)[0];
+      return '<button class="inst" onclick="abrirDetalhe(\'' + i.id + '\')">' +
+        '<div class="inst-foto">' + fotoOuIniciais(i) +
+          '<span class="inst-score">' + r.s + '% match</span></div>' +
+        '<div class="inst-corpo">' +
+          '<div class="inst-nome">' + i.nome + '</div>' +
+          '<div class="inst-curso">' + i.curso + ' · ' + i.cidade + '</div>' +
+          '<div class="inst-tags">' +
+            '<span class="tag laranja">' + (i.mens === 0 ? (i.publica ? 'Pública' : 'Bolsa integral') : brl(i.mens) + '/mês') + '</span>' +
+            '<span class="tag">' + i.turno + '</span>' +
+            '<span class="tag">' + i.mod + '</span>' +
+            '<span class="tag amarela">MEC ' + i.mec + '</span>' +
+          '</div>' +
+          '<div class="motivo"><i>▸</i><span>' + m + '</span></div>' +
+        '</div></button>';
+    }).join('');
+
+    return '<div class="pane">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">' +
+        '<div><div class="kicker-app">Smart Matching</div>' +
+        '<div style="font-family:var(--head);font-size:22px;margin-top:2px">Seus matches</div></div>' +
+        '<span class="tag laranja" style="font-size:11px;padding:6px 11px">Plano ' + state.plano + '</span>' +
+      '</div>' +
+      '<div class="cartao" style="background:var(--ac1);border-color:transparent">' +
+        '<div style="font-size:12px;font-weight:700;margin-bottom:9px">Teto de mensalidade: <span style="color:var(--ac7)">' + brl(state.filtros.custo) + '</span></div>' +
+        '<input class="slider" type="range" min="0" max="9000" step="300" value="' + state.filtros.custo + '" oninput="setCusto(this.value)">' +
+        '<div style="font-size:12px;font-weight:700;margin:10px 0 9px">Trajeto máximo: <span style="color:var(--ac7)">' + state.filtros.desloc + ' min</span></div>' +
+        '<input class="slider" type="range" min="15" max="120" step="5" value="' + state.filtros.desloc + '" oninput="setDesloc(this.value)">' +
+        '<div style="font-size:11px;color:var(--n6);margin-top:9px">Mexa nos filtros e veja a ordem do match mudar na hora.</div>' +
+      '</div>' +
+      cards +
+    '</div>';
+  }
+
+  function telaDetalhe() {
+    var i = inst(state.detalhe);
+    var s = score(i);
+    var mot = motivos(i).map(function (m) { return '<div class="motivo"><i>▸</i><span>' + m + '</span></div>'; }).join('');
+    var revs = i.reviews.map(function (r) {
+      return '<div class="cartao" style="box-shadow:none">' +
+        '<div style="display:flex;align-items:center;gap:7px">' +
+          '<span style="font-size:12px;font-weight:700">' + r.q + '</span>' +
+          '<span style="font-size:11px;color:var(--s2-7)">' + '★'.repeat(r.e) + '<span style="color:var(--n3)">' + '★'.repeat(5-r.e) + '</span></span>' +
+          '<span style="margin-left:auto;font-size:10.5px;color:var(--n5)">' + r.w + '</span>' +
+        '</div>' +
+        '<div style="font-size:12.5px;color:var(--n7);line-height:1.55;margin-top:6px">' + esc(r.t) + '</div>' +
+      '</div>';
+    }).join('');
+    var salvo = state.salvos.indexOf(i.id) >= 0;
+    var comparando = state.comparar.indexOf(i.id) >= 0;
+
+    return '<div class="pane">' +
+      '<button class="btn btn-linha" style="align-self:flex-start;padding:8px 14px;font-size:12.5px" onclick="irTela(\'home\')">‹ Voltar</button>' +
+      '<div class="inst-foto" style="height:150px;border-radius:var(--raio);overflow:hidden">' + fotoOuIniciais(i) +
+        '<span class="inst-score">' + s + '% match</span></div>' +
+      '<div>' +
+        '<div style="font-family:var(--head);font-size:24px">' + i.nome + '</div>' +
+        '<div style="font-size:13px;color:var(--n6);font-weight:600">' + i.curso + ' · ' + i.cidade + '</div>' +
+      '</div>' +
+
+      '<div class="cartao">' +
+        '<div class="kicker-app" style="margin-bottom:9px">Custo até formar</div>' +
+        '<div style="display:flex;align-items:baseline;gap:8px">' +
+          '<span style="font-family:var(--head);font-size:26px;color:var(--ac7)">' + (i.mens === 0 ? 'R$ 0' : brl(custoTotal(i))) + '</span>' +
+          '<span style="font-size:12px;color:var(--n6);font-weight:600">' + i.meses + ' meses · ' + (i.mens === 0 ? 'sem mensalidade' : brl(i.mens) + '/mês') + '</span>' +
+        '</div>' +
+        (i.mens > 0 ? '<div style="font-size:12px;color:var(--n7);margin-top:7px">Com salário médio de ' + brl(i.salario) + ', o curso se paga em <b>' + mesesRetorno(i) + ' meses</b> de trabalho.</div>'
+                    : '<div style="font-size:12px;color:var(--n7);margin-top:7px">Sem mensalidade, o retorno começa no primeiro salário: ' + brl(i.salario) + ' de média.</div>') +
+      '</div>' +
+
+      '<div class="kicker-app">Por que esse match</div>' +
+      '<div class="cartao">' + mot + '</div>' +
+
+      '<div class="kicker-app">Ficha</div>' +
+      '<div class="cartao" style="display:grid;grid-template-columns:1fr 1fr;gap:11px">' +
+        ficha('Nota MEC', i.mec + '/5') + ficha('Modalidade', i.mod) +
+        ficha('Turno', i.turno) + ficha('Trajeto', i.desloc + ' min') +
+        ficha('Vida de campus', i.vida + '/10') + ficha('Estágio', i.estagio + '/10') +
+      '</div>' +
+
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<span class="kicker-app">Avaliações sem filtro</span>' +
+        '<span class="tag sage" style="font-size:10px">alunos e ex-alunos</span>' +
+      '</div>' + revs +
+
+      '<div style="display:flex;gap:8px">' +
+        '<button class="btn ' + (comparando ? 'btn-lar' : 'btn-linha') + '" style="flex:1;padding:12px;font-size:13px" onclick="alternarComparar(\'' + i.id + '\')">' + (comparando ? '✓ Comparando' : '⚖️ Comparar') + '</button>' +
+        '<button class="btn ' + (salvo ? 'btn-lar' : 'btn-linha') + '" style="flex:1;padding:12px;font-size:13px" onclick="alternarSalvo(\'' + i.id + '\')">' + (salvo ? '✓ Salvo' : '🔖 Salvar') + '</button>' +
+      '</div>' +
+      '<button class="btn btn-lar" style="width:100%;padding:13px" onclick="pedirContato(\'' + i.id + '\')">Quero falar com a ' + i.nome + '</button>' +
+    '</div>';
+  }
+
+  function ficha(k, v) {
+    return '<div><div style="font-size:10.5px;color:var(--n5);font-weight:700;text-transform:uppercase;letter-spacing:.06em">' + k + '</div>' +
+      '<div style="font-size:14px;font-weight:700;margin-top:2px">' + v + '</div></div>';
+  }
+
+  function telaComparar() {
+    var limite = state.plano === 'A' ? 2 : INST.length;
+    if (!state.comparar.length) {
+      return '<div class="pane">' +
+        '<div style="font-family:var(--head);font-size:22px">Comparar</div>' +
+        '<div class="cartao" style="text-align:center;padding:26px 16px">' +
+          '<div style="font-size:30px">⚖️</div>' +
+          '<div style="font-size:14px;font-weight:700;margin-top:8px">Nada para comparar ainda</div>' +
+          '<div style="font-size:12.5px;color:var(--n6);margin-top:6px;line-height:1.5">Abra uma instituição e toque em Comparar. No Plano A dá para comparar duas por vez.</div>' +
+          '<button class="btn btn-lar" style="margin-top:14px;padding:11px 20px;font-size:13px" onclick="irTela(\'home\')">Ver instituições</button>' +
+        '</div></div>';
+    }
+
+    var lista = state.comparar.map(inst);
+    var linhas = [
+      ['Mensalidade', function (i) { return i.mens === 0 ? 'R$ 0' : brl(i.mens); }],
+      ['Custo até formar', function (i) { return i.mens === 0 ? 'R$ 0' : brl(custoTotal(i)); }],
+      ['Duração', function (i) { return i.meses + ' meses'; }],
+      ['Nota MEC', function (i) { return i.mec + '/5'; }],
+      ['Turno', function (i) { return i.turno; }],
+      ['Trajeto', function (i) { return i.desloc + ' min'; }],
+      ['Salário médio', function (i) { return brl(i.salario); }],
+      ['Match', function (i) { return score(i) + '%'; }]
+    ].map(function (l) {
+      return '<tr><td style="font-size:11px;color:var(--n6);font-weight:700;padding:9px 0;border-bottom:1px solid var(--n2)">' + l[0] + '</td>' +
+        lista.map(function (i) {
+          return '<td style="font-size:12.5px;font-weight:700;text-align:right;padding:9px 0 9px 10px;border-bottom:1px solid var(--n2)">' + l[1](i) + '</td>';
+        }).join('') + '</tr>';
+    }).join('');
+
+    return '<div class="pane">' +
+      '<div style="font-family:var(--head);font-size:22px">Comparar</div>' +
+      '<div class="cartao" style="padding:12px">' +
+        '<table style="width:100%;border-collapse:collapse">' +
+          '<tr><td></td>' + lista.map(function (i) {
+            return '<td style="text-align:right;padding:0 0 8px 10px"><div style="font-family:var(--head);font-size:14px">' + i.nome + '</div>' +
+              '<div style="font-size:10.5px;color:var(--n6)">' + i.curso + '</div></td>';
+          }).join('') + '</tr>' + linhas +
+        '</table>' +
+      '</div>' +
+      (state.plano === 'A' && state.comparar.length >= limite
+        ? '<div class="cartao" style="background:var(--s2-2);border-color:transparent">' +
+            '<div style="font-size:12.5px;font-weight:700;color:var(--s2-9)">Limite do Plano A</div>' +
+            '<div style="font-size:12px;color:var(--s2-9);opacity:.85;margin-top:4px;line-height:1.5">Você está comparando ' + limite + ' instituições. No Plano B não há limite.</div>' +
+            '<button class="btn btn-lar" style="margin-top:10px;padding:10px 16px;font-size:12.5px" onclick="trocarPlano()">Testar o Plano B</button>' +
+          '</div>'
+        : '') +
+      '<button class="btn btn-linha" style="width:100%;padding:12px" onclick="limparComparar()">Limpar comparação</button>' +
+    '</div>';
+  }
+
+  function telaRoi() {
+    var r = state.roi;
+    var total = r.mens * r.meses;
+    var ganho = Math.max(600, r.salario - 2500);
+    var meses = r.mens === 0 ? 0 : Math.max(1, Math.round(total / ganho));
+
+    return '<div class="pane">' +
+      '<div><div class="kicker-app">Diferencial</div>' +
+      '<div style="font-family:var(--head);font-size:22px;margin-top:2px">Calculadora de ROI</div></div>' +
+      '<div style="font-size:13px;color:var(--n6);margin-top:-6px">Quanto custa até formar, quanto se ganha depois e em quanto tempo o curso se paga.</div>' +
+
+      '<div class="cartao">' +
+        '<div style="font-size:12px;font-weight:700;margin-bottom:8px">Mensalidade: <span style="color:var(--ac7)">' + brl(r.mens) + '</span></div>' +
+        '<input class="slider" type="range" min="0" max="9000" step="100" value="' + r.mens + '" oninput="setRoi(\'mens\', this.value)">' +
+        '<div style="font-size:12px;font-weight:700;margin:12px 0 8px">Duração: <span style="color:var(--ac7)">' + r.meses + ' meses</span></div>' +
+        '<input class="slider" type="range" min="24" max="72" step="6" value="' + r.meses + '" oninput="setRoi(\'meses\', this.value)">' +
+        '<div style="font-size:12px;font-weight:700;margin:12px 0 8px">Salário esperado: <span style="color:var(--ac7)">' + brl(r.salario) + '</span></div>' +
+        '<input class="slider" type="range" min="2000" max="12000" step="200" value="' + r.salario + '" oninput="setRoi(\'salario\', this.value)">' +
+      '</div>' +
+
+      '<div class="cartao" style="background:var(--txt);border-color:transparent;color:#fff">' +
+        '<div style="display:flex;gap:16px;flex-wrap:wrap">' +
+          '<div style="flex:1;min-width:88px"><div style="font-family:var(--head);font-size:22px;color:var(--ac3)">' + brl(total) + '</div>' +
+          '<div style="font-size:10.5px;opacity:.75;font-weight:600;margin-top:3px">Custo até formar</div></div>' +
+          '<div style="flex:1;min-width:88px"><div style="font-family:var(--head);font-size:22px;color:var(--ac3)">' + (meses === 0 ? '—' : meses + ' meses') + '</div>' +
+          '<div style="font-size:10.5px;opacity:.75;font-weight:600;margin-top:3px">Para se pagar</div></div>' +
+        '</div>' +
+        '<div style="font-size:12px;opacity:.82;line-height:1.55;margin-top:12px">' +
+          (r.mens === 0
+            ? 'Sem mensalidade, o retorno começa no primeiro salário — o investimento é o seu tempo.'
+            : 'Considerando um ganho de ' + brl(ganho) + '/mês sobre um salário sem diploma. Isso é o retorno, não a promessa.') +
+        '</div>' +
+      '</div>' +
+
+      '<div class="kicker-app">Instituições da base, por retorno</div>' +
+      INST.slice().sort(function (a, b) { return mesesRetorno(a) - mesesRetorno(b); }).slice(0, 4).map(function (i) {
+        var mr = mesesRetorno(i);
+        return '<div class="cartao" style="display:flex;align-items:center;gap:11px;padding:11px 13px;box-shadow:none">' +
+          '<span style="font-family:var(--head);font-size:14px;flex:1">' + i.nome + '</span>' +
+          '<span style="font-size:11.5px;color:var(--n6);font-weight:600">' + (i.mens === 0 ? 'sem mensalidade' : brl(custoTotal(i))) + '</span>' +
+          '<span class="tag laranja">' + (mr === 0 ? 'imediato' : mr + ' meses') + '</span>' +
+        '</div>';
+      }).join('') +
+    '</div>';
+  }
+
+  function telaSalvos() {
+    if (!state.salvos.length) {
+      return '<div class="pane">' +
+        '<div style="font-family:var(--head);font-size:22px">Salvos</div>' +
+        '<div class="cartao" style="text-align:center;padding:26px 16px">' +
+          '<div style="font-size:30px">🔖</div>' +
+          '<div style="font-size:14px;font-weight:700;margin-top:8px">Nenhuma instituição salva</div>' +
+          '<div style="font-size:12.5px;color:var(--n6);margin-top:6px;line-height:1.5">Salve as que te interessaram para comparar com calma depois.</div>' +
+        '</div></div>';
+    }
+    var cards = state.salvos.map(inst).map(function (i) {
+      return '<button class="inst" onclick="abrirDetalhe(\'' + i.id + '\')">' +
+        '<div class="inst-foto" style="height:88px">' + fotoOuIniciais(i) + '<span class="inst-score">' + score(i) + '%</span></div>' +
+        '<div class="inst-corpo"><div class="inst-nome">' + i.nome + '</div>' +
+        '<div class="inst-curso">' + i.curso + '</div></div></button>';
+    }).join('');
+    return '<div class="pane">' +
+      '<div style="font-family:var(--head);font-size:22px">Salvos</div>' +
+      '<div style="font-size:12.5px;color:var(--n6);margin-top:-6px">' + state.salvos.length + ' instituição(ões) guardada(s)</div>' +
+      cards + '</div>';
+  }
+
+  function telaPerfil() {
+    var r = state.respostas;
+    var rot = [['objetivo','Objetivo'],['custo','Teto mensal'],['desloc','Trajeto'],['rotina','Rotina']].map(function (p) {
+      var v = r[p[0]];
+      if (v === undefined) v = '—';
+      else if (p[0] === 'custo') v = brl(v);
+      else if (p[0] === 'desloc') v = v + ' min';
+      else if (p[0] === 'objetivo') v = ({retorno:'Retorno financeiro',mercado:'Entrar no mercado',vida:'Vida universitária',flex:'Sem parar de trabalhar'})[v] || v;
+      return '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--n2)">' +
+        '<span style="font-size:13px;color:var(--n6);font-weight:600">' + p[1] + '</span>' +
+        '<span style="font-size:13px;font-weight:700">' + v + '</span></div>';
+    }).join('');
+
+    return '<div class="pane">' +
+      '<div style="text-align:center;padding:6px 0">' +
+        '<div style="width:64px;height:64px;border-radius:999px;background:var(--ac2);color:var(--ac8);display:grid;place-items:center;font-family:var(--head);font-size:24px;margin:0 auto 8px">T</div>' +
+        '<div style="font-family:var(--head);font-size:19px">Tessa Gasparelo</div>' +
+        '<div style="font-size:12.5px;color:var(--n6)">3º ano do ensino médio · São Paulo</div>' +
+      '</div>' +
+      '<div class="cartao"><div class="kicker-app" style="margin-bottom:6px">Seu perfil do quiz</div>' + rot +
+        '<button class="btn btn-linha" style="width:100%;padding:11px;margin-top:12px;font-size:13px" onclick="refazerQuiz()">Refazer o quiz</button>' +
+      '</div>' +
+      '<div class="cartao" style="background:var(--ac1);border-color:transparent">' +
+        '<div class="kicker-app">Seu plano</div>' +
+        '<div style="font-family:var(--head);font-size:20px;margin:4px 0 4px">Plano ' + state.plano + '</div>' +
+        '<div style="font-size:12.5px;color:var(--n7);line-height:1.5">' +
+          (state.plano === 'A'
+            ? 'Filtros básicos, ficha básica e comparador de duas faculdades.'
+            : 'Filtros avançados, ficha completa e comparador sem limite.') + '</div>' +
+        '<button class="btn btn-lar" style="width:100%;padding:11px;margin-top:11px;font-size:13px" onclick="trocarPlano()">' +
+          (state.plano === 'A' ? 'Testar o Plano B' : 'Voltar ao Plano A') + '</button>' +
+      '</div>' +
+      '<div class="cartao" style="border-style:dashed">' +
+        '<div style="font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--n5)">Controle do protótipo</div>' +
+        '<div style="font-size:12px;color:var(--n6);line-height:1.5;margin:6px 0 9px">Volta o app ao começo para apresentar o fluxo de novo.</div>' +
+        '<button class="btn btn-linha" style="width:100%;padding:11px;font-size:13px" onclick="reiniciar()">Reiniciar demonstração</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  var TELAS = { welcome: telaWelcome, quiz: telaQuiz, home: telaHome, detail: telaDetalhe, compare: telaComparar, roi: telaRoi, saved: telaSalvos, profile: telaPerfil };
+
+  /* ── AÇÕES ── */
+  function irTela(t) { setState({ tela: t }); }
+  function abrirApp(t) { irTela(t); document.getElementById('fone').scrollIntoView({ behavior:'smooth', block:'center' }); }
+  function abrirDetalhe(id) { setState({ detalhe: id, tela: 'detail' }); }
+
+  function responder(v) {
+    var q = QUIZ[state.passo];
+    var r = Object.assign({}, state.respostas); r[q.id] = v;
+    var f = Object.assign({}, state.filtros);
+    if (q.id === 'custo') f.custo = v;
+    if (q.id === 'desloc') f.desloc = v;
+    if (q.id === 'rotina' && v !== 'flex') f.turno = [v];
+    if (state.passo < QUIZ.length - 1) setState({ respostas: r, filtros: f, passo: state.passo + 1 });
+    else { setState({ respostas: r, filtros: f, tela: 'home' }); aviso('🎯 Match calculado com o seu perfil'); }
+  }
+  function voltarQuiz() { if (state.passo > 0) setState({ passo: state.passo - 1 }); }
+  function refazerQuiz() { setState({ passo: 0, respostas: {}, tela: 'quiz' }); }
+
+  function setCusto(v) { var f = Object.assign({}, state.filtros); f.custo = Number(v); setState({ filtros: f }); }
+  function setDesloc(v) { var f = Object.assign({}, state.filtros); f.desloc = Number(v); setState({ filtros: f }); }
+  function setRoi(k, v) { var r = Object.assign({}, state.roi); r[k] = Number(v); setState({ roi: r }); }
+
+  function alternarSalvo(id) {
+    var s = state.salvos.slice(), k = s.indexOf(id);
+    if (k >= 0) s.splice(k, 1); else s.push(id);
+    setState({ salvos: s });
+    aviso(k >= 0 ? 'Removido dos salvos' : '🔖 <b>' + inst(id).nome + '</b> salva');
+  }
+
+  function alternarComparar(id) {
+    var c = state.comparar.slice(), k = c.indexOf(id);
+    var limite = state.plano === 'A' ? 2 : INST.length;
+    if (k >= 0) { c.splice(k, 1); setState({ comparar: c }); return; }
+    if (c.length >= limite) {
+      aviso('⚖️ O Plano A compara ' + limite + ' por vez. Troque de plano no Perfil.');
+      return;
+    }
+    c.push(id); setState({ comparar: c });
+    aviso('⚖️ <b>' + inst(id).nome + '</b> entrou na comparação');
+  }
+  function limparComparar() { setState({ comparar: [] }); }
+
+  function trocarPlano() {
+    var novo = state.plano === 'A' ? 'B' : 'A';
+    var c = state.comparar.slice();
+    if (novo === 'A' && c.length > 2) c = c.slice(0, 2);
+    setState({ plano: novo, comparar: c });
+    aviso(novo === 'B' ? '✨ Plano B: comparador sem limite' : 'Voltou ao Plano A');
+  }
+
+  function pedirContato(id) {
+    aviso('📨 Seu contato foi enviado para a <b>' + inst(id).nome + '</b>. Ela responde com a proposta de bolsa.');
+  }
+
+  function reiniciar() {
+    setState({ tela: 'welcome', passo: 0, respostas: {}, plano: 'A',
+      filtros: { custo: 6000, desloc: 60, mod: [], turno: [] },
+      comparar: [], salvos: [], detalhe: null, roi: { mens: 2950, meses: 60, salario: 5400 } });
+  }
+
+  /* ── RENDER ── */
+  function render() {
+    var corpo = document.getElementById('app-corpo');
+    corpo.innerHTML = (TELAS[state.tela] || telaWelcome)();
+    if (state.tela !== telaAnterior && corpo.firstChild && corpo.firstChild.classList) corpo.firstChild.classList.add('entra');
+    telaAnterior = state.tela;
+
+    var abas = document.getElementById('app-abas');
+    var mostrar = ['welcome', 'quiz'].indexOf(state.tela) < 0;
+    abas.style.display = mostrar ? '' : 'none';
+    if (mostrar) {
+      abas.innerHTML = ABAS.map(function (t) {
+        var on = state.tela === t[0] || (t[0] === 'home' && state.tela === 'detail');
+        return '<button onclick="irTela(\'' + t[0] + '\')" style="color:' + (on ? 'var(--ac7)' : 'var(--n5)') + '">' +
+          '<span style="font-size:16px;opacity:' + (on ? '1' : '.5') + '">' + t[2] + '</span>' +
+          '<span class="lb">' + t[1] + '</span></button>';
+      }).join('');
+    }
+  }
+
+  /* grade de instituições na página */
+  function renderGrade() {
+    var el = document.getElementById('grade-inst');
+    if (!el) return;
+    el.innerHTML = INST.map(function (i) {
+      return '<div class="inst" style="cursor:default">' +
+        '<div class="inst-foto">' + fotoOuIniciais(i) + '</div>' +
+        '<div class="inst-corpo">' +
+          '<div class="inst-nome">' + i.nome + '</div>' +
+          '<div class="inst-curso">' + i.curso + '</div>' +
+          '<div class="inst-tags">' +
+            '<span class="tag laranja">' + (i.mens === 0 ? (i.publica ? 'Pública' : 'Bolsa integral') : brl(i.mens) + '/mês') + '</span>' +
+            '<span class="tag">' + i.turno + '</span>' +
+          '</div>' +
+        '</div></div>';
+    }).join('');
+    var cr = document.getElementById('creditos-fotos');
+    if (cr) cr.innerHTML = 'Fotos das instituições via Wikimedia Commons — ' +
+      CREDITOS.map(function (c) { return c[0] + ': ' + c[1]; }).join(' · ');
+  }
+
+  /* ── TELA CHEIA ── */
+  function telaCheia() {
+    var f = document.getElementById('fone'), b = document.getElementById('fs-btn');
+    var cheio = f.classList.toggle('cheio');
+    document.body.classList.toggle('travado', cheio);
+    b.innerHTML = cheio ? '✕' : '⛶';
+    b.title = cheio ? 'Sair da tela cheia' : 'Tela cheia';
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.getElementById('fone').classList.contains('cheio')) telaCheia();
+  });
+
+  render();
+  renderGrade();
+</script>
+</body>
+</html>
