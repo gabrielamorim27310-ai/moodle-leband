@@ -460,16 +460,21 @@
                {q:'Ex-aluna, 2022', e:4, w:'há 1 ano', t:'Formação humana muito forte. Mensalidade sobe todo ano e o reajuste dói.'}] }
   ];
 
-  /* Fotos reais só das instituições em que encontramos imagem de licença livre
-     e comprovadamente daquela instituição. As demais usam a ficha de iniciais —
-     rotular a foto errada seria pior do que não ter foto. */
-  var FOTOS = { usp: 1, mackenzie: 1, fgv: 1, unifesp: 1, pucsp: 1 };
+  /* Foto só onde ela é comprovadamente daquela instituição; quem não tem fica
+     com a ficha de iniciais, porque rotular a foto errada seria pior do que
+     não ter foto. Cinco vêm do Wikimedia Commons (licença livre) e duas do
+     Inside University — essas últimas com o crédito da fonte no rodapé. */
+  var FOTOS = { usp: 1, mackenzie: 1, fgv: 1, unifesp: 1, pucsp: 1, insper: 1, inteli: 1 };
   var CREDITOS = [
     ['USP', 'At USP 2018 · CC BY-SA 4.0'],
     ['Mackenzie', 'Alexandre Mackenzie Building · CC BY-SA 4.0'],
     ['FGV', 'Biblioteca Karl A. Boedecker · CC BY-SA 4.0'],
     ['UNIFESP', 'Escola Paulista de Medicina · CC BY-SA 4.0'],
     ['PUC-SP', 'Faculdade de Filosofia · CC BY-SA 3.0']
+  ];
+  var CREDITOS_OUTROS = [
+    ['Insper', 'sala de aula'],
+    ['Inteli', 'campus']
   ];
 
   var QUIZ = [
@@ -1028,8 +1033,10 @@
         '</div></div>';
     }).join('');
     var cr = document.getElementById('creditos-fotos');
-    if (cr) cr.innerHTML = 'Fotos das instituições via Wikimedia Commons — ' +
-      CREDITOS.map(function (c) { return c[0] + ': ' + c[1]; }).join(' · ');
+    if (cr) cr.innerHTML =
+      'Fotos via Wikimedia Commons — ' + CREDITOS.map(function (c) { return c[0] + ': ' + c[1]; }).join(' · ') +
+      '.<br>' + CREDITOS_OUTROS.map(function (c) { return c[0] + ' (' + c[1] + ')'; }).join(' e ') +
+      ': fotos de <a href="https://insideuniversity.com.br" target="_blank" rel="noopener">Inside University</a>, usadas aqui apenas para ilustrar este protótipo acadêmico.';
   }
 
   /* ── TELA CHEIA ── */
