@@ -125,8 +125,17 @@
   .app-topo { padding: 40px 16px 10px; background: var(--bg); flex: none; display: flex; align-items: center; gap: 9px; }
   .app-topo .titulo { font-weight: 900; font-size: 16px; }
   .app-topo .xp { margin-left: auto; display: flex; align-items: center; gap: 5px; background: var(--amarelo); color: #6A4A00; font-size: 11.5px; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
-  .app-corpo { flex: 1; overflow-y: auto; padding: 4px 16px 62px; scrollbar-width: none; }
-  .app-corpo::-webkit-scrollbar { display: none; }
+  /* Rolagem: barra fina na cor da marca, sem comer o conteúdo e sem arrastar
+     a página junto quando a tela do celular chega ao fim. */
+  .app-corpo {
+    flex: 1; overflow-y: auto; padding: 4px 13px 62px 16px;
+    overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: var(--roxo-claro) transparent;
+  }
+  .app-corpo::-webkit-scrollbar { width: 8px; }
+  .app-corpo::-webkit-scrollbar-track { background: transparent; }
+  .app-corpo::-webkit-scrollbar-thumb { background: var(--roxo-claro); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+  .app-corpo::-webkit-scrollbar-thumb:hover { background: var(--roxo); background-clip: content-box; }
   .painel { animation: entra .24s ease both; }
   @keyframes entra { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
 
@@ -138,8 +147,15 @@
   /* blocos do app */
   .cartao { background: #fff; border: 1.5px solid var(--borda); border-radius: var(--raio-sm); padding: 12px; margin-bottom: 9px; }
   .rotulo { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 14px 0 8px; }
-  .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; margin-bottom: 10px; scrollbar-width: none; }
-  .chips::-webkit-scrollbar { display: none; }
+  .chips {
+    display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 8px;
+    overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: var(--roxo-claro) transparent;
+  }
+  .chips::-webkit-scrollbar { height: 7px; }
+  .chips::-webkit-scrollbar-track { background: transparent; }
+  .chips::-webkit-scrollbar-thumb { background: var(--roxo-claro); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+  .chips:hover::-webkit-scrollbar-thumb { background: var(--roxo); background-clip: content-box; }
   .chip { flex: none; padding: 6px 13px; border-radius: 999px; font-size: 12px; font-weight: 800; cursor: pointer; border: 1.5px solid var(--borda); background: #fff; color: var(--muted); font-family: inherit; }
   .chip.on { background: var(--roxo); border-color: var(--roxo); color: #fff; }
 

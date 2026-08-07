@@ -215,8 +215,19 @@
   .app-back { border: 0; background: none; padding: 0; margin: 0; font: inherit; font-size: 19px; line-height: 1; color: var(--color-accent-700); cursor: pointer; }
   .app-title { font-size: 16px; font-weight: 600; letter-spacing: .005em; }
   .app-usos { margin-left: auto; font-size: 11.5px; letter-spacing: .05em; color: var(--color-neutral-700); }
-  .app-body { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; }
-  .app-body::-webkit-scrollbar { width: 0; }
+  /* Rolagem: barra fina na cor da marca, sem comer o conteúdo e sem arrastar
+     a página junto quando a tela do celular chega ao fim. */
+  .app-body {
+    flex: 1; overflow: auto; -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    scrollbar-width: thin; scrollbar-color: var(--color-neutral-300) transparent;
+  }
+  .app-body::-webkit-scrollbar { width: 8px; height: 7px; }
+  .app-body::-webkit-scrollbar-track { background: transparent; }
+  .app-body::-webkit-scrollbar-thumb { background: var(--color-neutral-300); border: 2px solid transparent; background-clip: content-box; }
+  .app-body:hover { scrollbar-color: var(--color-neutral-400) transparent; }
+  .app-body:hover::-webkit-scrollbar-thumb { background: var(--color-neutral-400); background-clip: content-box; }
+  .app-body::-webkit-scrollbar-thumb:hover { background: var(--color-accent); background-clip: content-box; }
 
   .app-tabs { flex: none; padding: 10px 16px 42px; display: flex; gap: 4px; background: var(--color-bg); }
   .app-tabs button { flex: 1; border: 0; background: none; font: inherit; cursor: pointer; padding: 8px 4px 6px; display: flex; flex-direction: column; align-items: center; gap: 5px; }

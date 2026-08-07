@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23fff5e8'/><path d='M28 30v26a22 22 0 0 0 44 0V30' fill='none' stroke='%23f79a3e' stroke-width='11' stroke-linecap='round'/></svg>">
+<link rel="icon" href="img/unimatch-icon.png">
 <title>UniMatch — Guia de faculdades personalizado</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700;800&display=swap');
@@ -27,6 +27,11 @@
   h1, h2, h3 { font-family: var(--head); font-weight: 400; line-height: 1.14; letter-spacing: -.01em; margin: 0; }
   a { color: var(--ac7); text-decoration: none; }
   :focus-visible { outline: 3px solid var(--ac); outline-offset: 2px; }
+  html { scrollbar-width: thin; scrollbar-color: var(--n3) transparent; }
+  body::-webkit-scrollbar { width: 11px; }
+  body::-webkit-scrollbar-track { background: var(--ac1); }
+  body::-webkit-scrollbar-thumb { background: var(--ac3); border-radius: 999px; border: 3px solid var(--ac1); background-clip: content-box; }
+  body::-webkit-scrollbar-thumb:hover { background: var(--ac); background-clip: content-box; }
   ::selection { background: var(--ac2); }
 
   .repo-bar { background: var(--ac8); color: var(--ac2); padding: 9px 24px; text-align: center; font-size: 12.5px; font-weight: 500; }
@@ -36,6 +41,7 @@
   .topo-in { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 24px; padding: 13px 26px; }
   .marca { display: flex; align-items: center; gap: 9px; font-family: var(--head); font-size: 21px; }
   .marca .u { color: var(--ac7); }
+  .marca img { width: 34px; height: 34px; display: block; }
   .topo nav { display: flex; gap: 4px; margin-left: 8px; }
   .topo nav a { color: var(--n7); font-size: 14.5px; font-weight: 600; padding: 7px 12px; border-radius: 999px; }
   .topo nav a:hover { background: var(--ac1); color: var(--ac7); }
@@ -67,8 +73,44 @@
   .fone { position: relative; width: 372px; flex: none; background: #1c1917; border-radius: 46px; padding: 12px; box-shadow: var(--sombra-lg); transition: width .3s, border-radius .3s, padding .3s; }
   .fone::before { content: ''; position: absolute; top: 24px; left: 50%; transform: translateX(-50%); width: 100px; height: 28px; background: #1c1917; border-radius: 999px; z-index: 60; }
   .tela { position: relative; height: 780px; border-radius: 36px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
-  .app-corpo { flex: 1; overflow-y: auto; padding: 52px 16px 16px; scrollbar-width: none; }
-  .app-corpo::-webkit-scrollbar { display: none; }
+  /* Rolagem: barra fina de verdade, na cor da marca, que não come o conteúdo
+     e não arrasta a página junto quando chega no fim da tela do celular. */
+  .app-corpo {
+    flex: 1; overflow-y: auto; padding: 52px 13px 16px 16px;
+    overscroll-behavior: contain; scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: var(--n3) transparent;
+  }
+  .app-corpo::-webkit-scrollbar { width: 8px; }
+  .app-corpo::-webkit-scrollbar-track { background: transparent; }
+  .app-corpo::-webkit-scrollbar-thumb {
+    background: var(--n3); border-radius: 999px;
+    border: 2px solid transparent; background-clip: content-box;
+  }
+  .app-corpo:hover { scrollbar-color: var(--ac3) transparent; }
+  .app-corpo:hover::-webkit-scrollbar-thumb { background: var(--ac3); background-clip: content-box; }
+  .app-corpo::-webkit-scrollbar-thumb:hover,
+  .app-corpo::-webkit-scrollbar-thumb:active { background: var(--ac); background-clip: content-box; }
+
+  /* rolagem horizontal (chips, tabela de comparação) */
+  .rola-x {
+    overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: var(--n3) transparent;
+  }
+  .rola-x::-webkit-scrollbar { height: 7px; }
+  .rola-x::-webkit-scrollbar-track { background: transparent; }
+  .rola-x::-webkit-scrollbar-thumb {
+    background: var(--n3); border-radius: 999px;
+    border: 2px solid transparent; background-clip: content-box;
+  }
+  .rola-x:hover::-webkit-scrollbar-thumb { background: var(--ac3); background-clip: content-box; }
+  .rola-x::-webkit-scrollbar-thumb:hover { background: var(--ac); background-clip: content-box; }
+
+  /* quem prefere menos movimento não leva rolagem animada */
+  @media (prefers-reduced-motion: reduce) {
+    body, .app-corpo { scroll-behavior: auto; }
+    .pane.entra { animation: none; }
+  }
   .pane { display: flex; flex-direction: column; gap: 13px; }
   .pane.entra { animation: umFade .22s ease both; }
   @keyframes umFade { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
@@ -78,8 +120,7 @@
 
   .kicker-app { font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--ac7); }
   .cartao { background: #fff; border: 1px solid var(--n2); border-radius: var(--raio); padding: 14px; box-shadow: var(--sombra); }
-  .chip-row { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
-  .chip-row::-webkit-scrollbar { display: none; }
+  .chip-row { display: flex; gap: 6px; padding-bottom: 5px; }
   .chip { flex: none; border: 1px solid var(--n3); background: #fff; color: var(--n6); cursor: pointer; font-family: inherit; border-radius: 999px; padding: 8px 13px; font-size: 12px; font-weight: 700; }
   .chip.on { background: var(--ac); border-color: var(--ac); color: #fff; }
 
@@ -192,7 +233,7 @@
 
 <div class="topo">
   <div class="topo-in">
-    <span class="marca"><span class="u">Uni</span>Match</span>
+    <span class="marca"><img src="img/unimatch-logo.png" alt="Logo do UniMatch"><span><span class="u">Uni</span>Match</span></span>
     <nav>
       <a href="#problema">O problema</a>
       <a href="#diferenciais">Diferenciais</a>
@@ -206,7 +247,7 @@
 <div class="hero">
   <div class="hero-in">
     <div>
-      <span class="selo">🎓 Guia de faculdades personalizado</span>
+      <span class="selo"><img src="img/unimatch-logo.png" alt="" style="width:19px;height:19px;vertical-align:-4px;margin-right:5px">Guia de faculdades personalizado</span>
       <h1>A faculdade certa não é a<br>melhor. É a <span>certa pra você</span>.</h1>
       <p class="lead">Um quiz de quatro perguntas, o custo total na mesa e avaliações de quem já estudou lá. O UniMatch cruza o seu objetivo, o seu bolso e a sua rotina para dizer qual instituição faz sentido — e por quê.</p>
       <div class="hero-acoes">
@@ -352,6 +393,7 @@
 </main>
 
 <footer>
+  <img src="img/unimatch-logo.png" alt="Logo do UniMatch" style="width:46px;height:46px;display:block;margin:0 auto 10px">
   <strong>UniMatch</strong> · Guia de faculdades personalizado<br>
   Liga de Empreendedorismo · Grupo 8<br>
   Tessa Gasparelo · Olívia Silva · Gabriela Honda · Julia Emi<br>
@@ -498,7 +540,8 @@
   function telaWelcome() {
     return '<div class="pane" style="gap:18px;height:100%">' +
       '<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">' +
-        '<div style="font-family:var(--head);font-size:34px;line-height:1.1"><span style="color:var(--ac7)">Uni</span>Match</div>' +
+        '<img src="img/unimatch-logo.png" alt="Logo do UniMatch" style="width:96px;height:96px;display:block;filter:drop-shadow(0 12px 26px rgba(60,120,132,.22))">' +
+        '<div style="font-family:var(--head);font-size:34px;line-height:1.1;margin-top:-4px"><span style="color:var(--ac7)">Uni</span>Match</div>' +
         '<div style="font-size:25px;font-family:var(--head);line-height:1.2">A faculdade certa pra você, não a mais famosa.</div>' +
         '<p style="margin:0;font-size:14.5px;color:var(--n6);line-height:1.6">Quatro perguntas e a gente cruza objetivo, bolso, trajeto e rotina com sete instituições — mostrando o custo até formar e o que os alunos dizem de verdade.</p>' +
         '<div class="cartao" style="background:var(--ac1);border-color:transparent">' +
@@ -671,12 +714,15 @@
     return '<div class="pane">' +
       '<div style="font-family:var(--head);font-size:22px">Comparar</div>' +
       '<div class="cartao" style="padding:12px">' +
-        '<table style="width:100%;border-collapse:collapse">' +
+        '<div class="rola-x">' +
+        '<table style="width:100%;border-collapse:collapse;min-width:' + (96 + lista.length * 92) + 'px">' +
           '<tr><td></td>' + lista.map(function (i) {
             return '<td style="text-align:right;padding:0 0 8px 10px"><div style="font-family:var(--head);font-size:14px">' + i.nome + '</div>' +
               '<div style="font-size:10.5px;color:var(--n6)">' + i.curso + '</div></td>';
           }).join('') + '</tr>' + linhas +
         '</table>' +
+        '</div>' +
+        (lista.length > 2 ? '<div style="font-size:10.5px;color:var(--n5);margin-top:8px;text-align:right">← arraste a tabela para o lado →</div>' : '') +
       '</div>' +
       (state.plano === 'A' && state.comparar.length >= limite
         ? '<div class="cartao" style="background:var(--s2-2);border-color:transparent">' +
@@ -862,8 +908,12 @@
   /* ── RENDER ── */
   function render() {
     var corpo = document.getElementById('app-corpo');
+    var mudouTela = state.tela !== telaAnterior;
     corpo.innerHTML = (TELAS[state.tela] || telaWelcome)();
-    if (state.tela !== telaAnterior && corpo.firstChild && corpo.firstChild.classList) corpo.firstChild.classList.add('entra');
+    if (mudouTela && corpo.firstChild && corpo.firstChild.classList) corpo.firstChild.classList.add('entra');
+    /* tela nova começa do topo; ajuste dentro da mesma tela (filtro, slider)
+       mantém onde a pessoa estava lendo */
+    if (mudouTela && typeof corpo.scrollTo === 'function') corpo.scrollTo({ top: 0, behavior: 'auto' });
     telaAnterior = state.tela;
 
     var abas = document.getElementById('app-abas');
