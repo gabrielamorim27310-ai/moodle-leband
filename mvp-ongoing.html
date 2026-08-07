@@ -186,8 +186,19 @@
   .panel { height: 100%; display: flex; flex-direction: column; }
   .panel.enter { animation: ongFade .25s ease both; }
   .panel-title { font-family: var(--font-heading); font-size: 19px; }
-  .panel-scroll { flex: 1; overflow-y: auto; padding: 0 14px 14px; display: flex; flex-direction: column; gap: 10px; scrollbar-width: none; }
-  .panel-scroll::-webkit-scrollbar { display: none; }
+  /* Rolagem: barra fina na cor da marca, sem comer o conteúdo e sem arrastar
+     a página junto quando a tela do celular chega ao fim. */
+  .panel-scroll {
+    flex: 1; overflow-y: auto; padding: 0 11px 14px 14px; display: flex; flex-direction: column; gap: 10px;
+    overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: var(--color-neutral-300) transparent;
+  }
+  .panel-scroll::-webkit-scrollbar { width: 8px; }
+  .panel-scroll::-webkit-scrollbar-track { background: transparent; }
+  .panel-scroll::-webkit-scrollbar-thumb { background: var(--color-neutral-300); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+  .panel-scroll:hover { scrollbar-color: var(--color-neutral-400) transparent; }
+  .panel-scroll:hover::-webkit-scrollbar-thumb { background: var(--color-neutral-400); background-clip: content-box; }
+  .panel-scroll::-webkit-scrollbar-thumb:hover { background: var(--color-accent); background-clip: content-box; }
 
   /* mapa */
   .map-head { padding: 6px 20px 12px; display: flex; align-items: center; gap: 8px; }
@@ -268,8 +279,15 @@
   .sheet-sub { display: block; font-size: 11.5px; opacity: .6; }
 
   /* descobrir */
-  .chips-row { display: flex; gap: 6px; overflow-x: auto; padding: 0 20px 10px; scrollbar-width: none; }
-  .chips-row::-webkit-scrollbar { display: none; }
+  .chips-row {
+    display: flex; gap: 6px; overflow-x: auto; padding: 0 20px 10px;
+    overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: var(--color-neutral-300) transparent;
+  }
+  .chips-row::-webkit-scrollbar { height: 7px; }
+  .chips-row::-webkit-scrollbar-track { background: transparent; }
+  .chips-row::-webkit-scrollbar-thumb { background: var(--color-neutral-300); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+  .chips-row:hover::-webkit-scrollbar-thumb { background: var(--color-accent); background-clip: content-box; }
   .chips-row .tag { cursor: pointer; flex: none; border: 1px solid var(--color-divider); font-size: 11px; padding: 5px 11px; font-family: var(--font-body); }
   .ong-card { background: var(--color-surface); border-radius: 24px; padding: 14px; display: flex; gap: 12px; animation: ongPop .22s ease both; }
   .ong-ico { width: 42px; height: 42px; flex: none; border-radius: 999px; background: var(--color-bg); display: grid; place-items: center; font-size: 19px; }
